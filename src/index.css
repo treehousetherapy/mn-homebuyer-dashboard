@@ -4,33 +4,37 @@
 
 @layer base {
   :root {
-    --background: 220 16% 96%;
-    --foreground: 220 25% 12%;
+    --background: 216 28% 97%;
+    --foreground: 216 40% 10%;
     --card: 0 0% 100%;
-    --card-foreground: 220 25% 12%;
+    --card-foreground: 216 40% 10%;
     --popover: 0 0% 100%;
-    --popover-foreground: 220 25% 12%;
-    --primary: 200 65% 30%;
+    --popover-foreground: 216 40% 10%;
+    --primary: 216 82% 22%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 220 14% 93%;
-    --secondary-foreground: 220 25% 15%;
-    --muted: 220 12% 92%;
-    --muted-foreground: 220 8% 46%;
-    --accent: 162 50% 34%;
+    --secondary: 216 18% 94%;
+    --secondary-foreground: 216 30% 16%;
+    --muted: 216 16% 93%;
+    --muted-foreground: 216 12% 44%;
+    --accent: 176 68% 34%;
     --accent-foreground: 0 0% 100%;
-    --destructive: 0 72% 51%;
+    --destructive: 0 76% 50%;
     --destructive-foreground: 0 0% 98%;
-    --border: 220 13% 88%;
-    --input: 220 13% 88%;
-    --ring: 200 65% 30%;
-    --radius: 0.625rem;
+    --border: 216 18% 90%;
+    --input: 216 18% 90%;
+    --ring: 216 82% 22%;
+    --radius: 0.75rem;
     --font-sans: 'DM Sans', ui-sans-serif, system-ui, sans-serif;
     --font-display: 'Fraunces', Georgia, serif;
+    /* Brand tokens */
+    --navy: #0f2d5e;
+    --teal: #0d9488;
   }
 }
 
 @layer base {
   * { @apply border-border; }
+  html { scroll-behavior: smooth; }
   body {
     @apply bg-background text-foreground antialiased;
     font-family: var(--font-sans);
@@ -39,11 +43,72 @@
 
 @layer utilities {
   .font-display { font-family: var(--font-display); }
-  .fade-in { animation: _fi .5s ease both; }
-  .slide-up { animation: _su .45s ease both; }
-  @keyframes _fi { from { opacity:0; transform:translateY(8px) } to { opacity:1; transform:translateY(0) } }
-  @keyframes _su { from { opacity:0; transform:translateY(18px) } to { opacity:1; transform:translateY(0) } }
-  .gauge-anim { transition: stroke-dashoffset 1s cubic-bezier(.4,0,.2,1); }
-  .number-pop { animation: _np .35s ease; }
-  @keyframes _np { 0%{transform:scale(1)} 50%{transform:scale(1.08)} 100%{transform:scale(1)} }
+
+  /* Entrance animations */
+  .fade-in  { animation: _fi .5s ease both; }
+  .slide-up { animation: _su .5s cubic-bezier(.22,1,.36,1) both; }
+  .scale-in { animation: _si .4s cubic-bezier(.34,1.56,.64,1) both; }
+  @keyframes _fi { from { opacity:0; transform:translateY(8px)  } to { opacity:1; transform:translateY(0)  } }
+  @keyframes _su { from { opacity:0; transform:translateY(20px) } to { opacity:1; transform:translateY(0)  } }
+  @keyframes _si { from { opacity:0; transform:scale(.88)       } to { opacity:1; transform:scale(1)       } }
+
+  /* Value pop */
+  .gauge-anim  { transition: stroke-dashoffset 1.1s cubic-bezier(.4,0,.2,1); }
+  .number-pop  { animation: _np .4s cubic-bezier(.34,1.56,.64,1); }
+  @keyframes _np { 0%{transform:scale(1)} 50%{transform:scale(1.1)} 100%{transform:scale(1)} }
+
+  /* Shimmer skeleton */
+  .shimmer {
+    background: linear-gradient(90deg,transparent 0%,rgba(255,255,255,.6) 50%,transparent 100%);
+    background-size: 200% 100%;
+    animation: _sh 1.5s infinite;
+  }
+  @keyframes _sh { from{background-position:-200% 0} to{background-position:200% 0} }
+
+  /* Gradient text */
+  .gradient-text {
+    background: linear-gradient(135deg,#0f2d5e 0%,#0d9488 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Glass surface */
+  .glass {
+    background: rgba(255,255,255,.72);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(255,255,255,.55);
+  }
+
+  /* Premium card depth */
+  .card-premium {
+    box-shadow:
+      0 0 0 1px rgba(15,45,94,.05),
+      0 2px 8px rgba(15,45,94,.07),
+      0 8px 24px rgba(15,45,94,.06);
+    transition: box-shadow .25s ease, transform .25s ease;
+  }
+  .card-premium:hover {
+    box-shadow:
+      0 0 0 1px rgba(15,45,94,.07),
+      0 4px 16px rgba(15,45,94,.11),
+      0 16px 40px rgba(15,45,94,.09);
+    transform: translateY(-2px);
+  }
+
+  /* Soft inset highlight strip used on metric cards */
+  .accent-bar-teal  { border-left: 3px solid #0d9488; }
+  .accent-bar-navy  { border-left: 3px solid #0f2d5e; }
+  .accent-bar-green { border-left: 3px solid #059669; }
+  .accent-bar-amber { border-left: 3px solid #d97706; }
+  .accent-bar-red   { border-left: 3px solid #e11d48; }
+
+  /* Tab trigger active pill */
+  .tab-pill[data-state=active] {
+    background: white;
+    box-shadow: 0 1px 6px rgba(15,45,94,.14), 0 0 0 1px rgba(15,45,94,.06);
+    color: #0f2d5e;
+    font-weight: 600;
+  }
 }
