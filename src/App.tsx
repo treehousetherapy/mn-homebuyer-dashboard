@@ -192,12 +192,12 @@ const eligStyle = (e:boolean) => e?"bg-emerald-50 text-emerald-700":"bg-red-50 t
 // ━━━━━━━━━━━━━━━━━ MAIN APP ━━━━━━━━━━━━━━━━━
 export default function App() {
   const [profile, setProfile] = useState<BuyerProfile>({
-    name:"", annualIncome:90000, ficoScore:640, monthlyDebt:800,
-    isFirstTimeBuyer:true, isFirstGenBuyer:false, county:"Dakota",
-    householdSize:1, hasCompletedEducation:false, liquidAssets:10000, employmentYears:2
+    name:"", annualIncome:0, ficoScore:0, monthlyDebt:0,
+    isFirstTimeBuyer:false, isFirstGenBuyer:false, county:"",
+    householdSize:1, hasCompletedEducation:false, liquidAssets:0, employmentYears:0
   });
   const [started, setStarted] = useState(false);
-  const [price, setPrice] = useState(475000);
+  const [price, setPrice] = useState(300000);
   const [rate, setRate] = useState(7.0);
   const [downPct, setDownPct] = useState(3.5);
   const [debtAdj, setDebtAdj] = useState(0);
@@ -295,16 +295,16 @@ export default function App() {
             </div>
           </div>
           <div className="grid grid-cols-2 gap-3">
-            <div><Label className="text-xs">Annual Gross Income</Label><Input type="number" value={profile.annualIncome} onChange={e=>setProfile(p=>({...p,annualIncome:+e.target.value}))} className="mt-1"/></div>
-            <div><Label className="text-xs">FICO Score</Label><Input type="number" value={profile.ficoScore} onChange={e=>setProfile(p=>({...p,ficoScore:clamp(+e.target.value,300,850)}))} className="mt-1"/></div>
+            <div><Label className="text-xs">Annual Gross Income</Label><Input type="number" placeholder="e.g. 90000" value={profile.annualIncome||""} onChange={e=>setProfile(p=>({...p,annualIncome:+e.target.value}))} className="mt-1"/></div>
+            <div><Label className="text-xs">FICO Score</Label><Input type="number" placeholder="e.g. 640" value={profile.ficoScore||""} onChange={e=>setProfile(p=>({...p,ficoScore:clamp(+e.target.value,300,850)}))} className="mt-1"/></div>
           </div>
           <div className="grid grid-cols-2 gap-3">
-            <div><Label className="text-xs">Monthly Debt Payments</Label><Input type="number" value={profile.monthlyDebt} onChange={e=>setProfile(p=>({...p,monthlyDebt:+e.target.value}))} className="mt-1"/></div>
-            <div><Label className="text-xs">Household Size</Label><Input type="number" value={profile.householdSize} onChange={e=>setProfile(p=>({...p,householdSize:clamp(+e.target.value,1,10)}))} className="mt-1"/></div>
+            <div><Label className="text-xs">Monthly Debt Payments</Label><Input type="number" placeholder="e.g. 800" value={profile.monthlyDebt||""} onChange={e=>setProfile(p=>({...p,monthlyDebt:+e.target.value}))} className="mt-1"/></div>
+            <div><Label className="text-xs">Household Size</Label><Input type="number" placeholder="e.g. 2" value={profile.householdSize||""} onChange={e=>setProfile(p=>({...p,householdSize:clamp(+e.target.value,1,10)}))} className="mt-1"/></div>
           </div>
           <div className="grid grid-cols-2 gap-3">
-            <div><Label className="text-xs">Liquid Assets / Savings</Label><Input type="number" value={profile.liquidAssets} onChange={e=>setProfile(p=>({...p,liquidAssets:+e.target.value}))} className="mt-1"/></div>
-            <div><Label className="text-xs">Years at Current Job</Label><Input type="number" value={profile.employmentYears} onChange={e=>setProfile(p=>({...p,employmentYears:+e.target.value}))} className="mt-1"/></div>
+            <div><Label className="text-xs">Liquid Assets / Savings</Label><Input type="number" placeholder="e.g. 10000" value={profile.liquidAssets||""} onChange={e=>setProfile(p=>({...p,liquidAssets:+e.target.value}))} className="mt-1"/></div>
+            <div><Label className="text-xs">Years at Current Job</Label><Input type="number" placeholder="e.g. 2" value={profile.employmentYears||""} onChange={e=>setProfile(p=>({...p,employmentYears:+e.target.value}))} className="mt-1"/></div>
           </div>
           <Separator/>
           <div className="space-y-3">
@@ -402,14 +402,32 @@ export default function App() {
                     </div>
                   ))}
                   <Separator/>
-                  <div>
-                    <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground mb-2">Debt Reduction Scenarios</p>
-                    {[["Remove $500/mo debt",500],["Remove $926/mo (e.g. auto loan)",926],["Remove $1,705/mo (e.g. two autos)",1705],["No adjustment",0]].map(([label,amt])=>(
-                      <label key={label as string} className={`flex items-center gap-2 py-1.5 px-2 rounded cursor-pointer text-xs transition-colors ${debtAdj===amt?"bg-primary/10 font-medium":"hover:bg-muted/50"}`}>
-                        <input type="radio" name="debtadj" checked={debtAdj===amt} onChange={()=>setDebtAdj(amt as number)} className="accent-[#2d7d7d]"/>
-                        {label as string}
-                      </label>
-                    ))}
+                  <div className="space-y-3">
+                    <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">Debt Reduction Scenario</p>
+                    <p className="text-[11px] text-muted-foreground leading-relaxed">If you plan to pay off, refinance, or transfer a debt before applying for your mortgage, enter the monthly payment amount to remove from your DTI calculation.</p>
+                    <div>
+                      <Label className="text-xs">Amount to remove from monthly debt</Label>
+                      <div className="flex gap-2 mt-1 items-center">
+                        <span className="text-sm font-medium text-muted-foreground">$</span>
+                        <Input type="number" placeholder="0" value={debtAdj || ""} onChange={e=>setDebtAdj(Math.max(0,+e.target.value))} className="text-xs h-9"/>
+                        <span className="text-xs text-muted-foreground whitespace-nowrap">/ mo</span>
+                      </div>
+                    </div>
+                    <div className="rounded-lg bg-muted/50 p-2.5 space-y-1">
+                      <div className="flex justify-between text-xs">
+                        <span className="text-muted-foreground">Original monthly debt</span>
+                        <span className="font-medium">{$(profile.monthlyDebt)}</span>
+                      </div>
+                      <div className="flex justify-between text-xs">
+                        <span className="text-muted-foreground">Reduction applied</span>
+                        <span className="font-medium text-emerald-600">- {$(debtAdj)}</span>
+                      </div>
+                      <Separator className="my-1"/>
+                      <div className="flex justify-between text-xs font-bold">
+                        <span>Effective monthly debt</span>
+                        <span>{$(effectiveDebt)}</span>
+                      </div>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
