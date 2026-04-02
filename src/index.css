@@ -1,0 +1,49 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 220 16% 96%;
+    --foreground: 220 25% 12%;
+    --card: 0 0% 100%;
+    --card-foreground: 220 25% 12%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 25% 12%;
+    --primary: 200 65% 30%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 220 14% 93%;
+    --secondary-foreground: 220 25% 15%;
+    --muted: 220 12% 92%;
+    --muted-foreground: 220 8% 46%;
+    --accent: 162 50% 34%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 220 13% 88%;
+    --input: 220 13% 88%;
+    --ring: 200 65% 30%;
+    --radius: 0.625rem;
+    --font-sans: 'DM Sans', ui-sans-serif, system-ui, sans-serif;
+    --font-display: 'Fraunces', Georgia, serif;
+  }
+}
+
+@layer base {
+  * { @apply border-border; }
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: var(--font-sans);
+  }
+}
+
+@layer utilities {
+  .font-display { font-family: var(--font-display); }
+  .fade-in { animation: _fi .5s ease both; }
+  .slide-up { animation: _su .45s ease both; }
+  @keyframes _fi { from { opacity:0; transform:translateY(8px) } to { opacity:1; transform:translateY(0) } }
+  @keyframes _su { from { opacity:0; transform:translateY(18px) } to { opacity:1; transform:translateY(0) } }
+  .gauge-anim { transition: stroke-dashoffset 1s cubic-bezier(.4,0,.2,1); }
+  .number-pop { animation: _np .35s ease; }
+  @keyframes _np { 0%{transform:scale(1)} 50%{transform:scale(1.08)} 100%{transform:scale(1)} }
+}
