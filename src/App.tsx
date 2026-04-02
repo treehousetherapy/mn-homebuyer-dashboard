@@ -215,7 +215,7 @@ export default function App() {
       setActiveZillowUrl(q);
     } else {
       const slug = q.replace(/[,]/g,"").replace(/\s+/g,"-");
-      setActiveZillowUrl(`https://www.zillow.com/homes/${slug}_rb/`);
+      setActiveZillowUrl(`https://www.zillow.com/homes/${slug}/`);
     }
     setSelectedListing(null);
   }, [zillowUrl]);
