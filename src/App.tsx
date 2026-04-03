@@ -36,14 +36,16 @@ const PROGRAMS:DPA[]=[
   {id:"naf",name:"New American Funding DPA",short:"NAF DPA",max:6000,type:"Deferred",incomeLimit:999999,ficoMin:620,priceLimit:766550,status:"open",coverage:"Nationwide",url:"newamericanfunding.com",phone:"newamericanfunding.com",notes:"Combinable with MN Housing DPA.",reqFirstTime:false,reqFirstGen:false},
 ];
 const CURATED:Listing[]=[
-  {id:1,name:"Mercer Plan, Meadowview Preserve",price:489990,beds:3,baths:3,sqft:2500,city:"Farmington",builder:"Pulte",url:"https://www.zillow.com/community/meadowview-preserve/442375621_zpid/"},
-  {id:2,name:"Ivy Plan, Meadowview Preserve",price:509990,beds:3,baths:3,sqft:2800,city:"Farmington",builder:"Pulte",url:"https://www.zillow.com/community/meadowview-preserve/442375651_zpid/"},
-  {id:3,name:"Continental Plan, Meadowview Preserve",price:519990,beds:4,baths:3,sqft:3000,city:"Farmington",builder:"Pulte",url:"https://www.zillow.com/community/meadowview-preserve/442375649_zpid/"},
-  {id:4,name:"Sequoia Plan, Voyageur Farms",price:515990,beds:5,baths:3,sqft:2500,city:"Lakeville",builder:"Lennar",url:"https://www.zillow.com/community/voyageur-farms/2056470147_zpid/"},
-  {id:5,name:"Vanderbilt, Cedar Hills",price:537990,beds:4,baths:3,sqft:2200,city:"Lakeville",builder:"Lennar",url:"https://www.zillow.com/community/cedar-hills-discovery-collection/2067647389_zpid/"},
-  {id:6,name:"Vanderbilt, Amelia Meadows",price:549990,beds:4,baths:3,sqft:2200,city:"Lakeville",builder:"Lennar",url:"https://www.zillow.com/community/amelia-meadows-amelia-meadows-landmark/460901813_zpid/"},
-  {id:7,name:"19289 Everfield Ave",price:602990,beds:3,baths:3,sqft:2800,city:"Farmington",builder:"Pulte",url:"https://www.zillow.com/homedetails/19289-Everfield-Ave-Farmington-MN-55024/459962118_zpid/"},
-  {id:8,name:"Lewis Plan, Caslano",price:600990,beds:4,baths:3,sqft:2600,city:"Lakeville",builder:"Lennar",url:"https://www.zillow.com/community/caslano/2055879828_zpid/"},
+  {id:1,name:"21878 Denton Ave, Whispering Fields",price:317990,beds:3,baths:3,sqft:1782,city:"Farmington",builder:"Lennar",url:"https://www.zillow.com/farmington-mn-55024/new-homes/"},
+  {id:2,name:"21926 Wisteria Way, Wisteria",price:334990,beds:3,baths:3,sqft:1804,city:"Farmington",builder:"Lennar",url:"https://www.zillow.com/farmington-mn-55024/new-homes/"},
+  {id:3,name:"4792 218th St W, Voyageur Farms",price:358085,beds:3,baths:2,sqft:1281,city:"Farmington",builder:"Lennar",url:"https://www.zillow.com/farmington-mn/new-homes/"},
+  {id:4,name:"19139 Crystal Ter, M/I Homes",price:426990,beds:3,baths:2,sqft:1892,city:"Farmington",builder:"M/I Homes",url:"https://www.zillow.com/farmington-mn-55024/new-homes/"},
+  {id:5,name:"4870 218th Ct, Voyageur Farms",price:449390,beds:3,baths:2,sqft:1281,city:"Farmington",builder:"Lennar",url:"https://www.zillow.com/farmington-mn/new-homes/"},
+  {id:6,name:"4884 218th Ct, Voyageur Farms",price:460485,beds:5,baths:3,sqft:2505,city:"Farmington",builder:"Lennar",url:"https://www.zillow.com/farmington-mn/new-homes/"},
+  {id:7,name:"20947 Flanders Way, Whispering Fields",price:479990,beds:3,baths:3,sqft:2200,city:"Farmington",builder:"D.R. Horton",url:"https://www.zillow.com/farmington-mn-55024/new-homes/"},
+  {id:8,name:"Xxx3 217th St, Vita Attiva",price:455000,beds:2,baths:2,sqft:1503,city:"Farmington",builder:"Vita Attiva",url:"https://www.zillow.com/farmington-mn-55024/new-homes/"},
+  {id:9,name:"Cordelia Ashton Plan, Lakeville",price:499990,beds:4,baths:3,sqft:2400,city:"Lakeville",builder:"D.R. Horton",url:"https://www.zillow.com/lakeville-mn/new-homes/"},
+  {id:10,name:"Pheasant Run 6BD, Lakeville",price:515000,beds:6,baths:3,sqft:2400,city:"Lakeville",builder:"D.R. Horton",url:"https://www.zillow.com/lakeville-mn/new-homes/"},
 ];
 const CHECKLIST=[
   {id:"credit",label:"Check credit score (all 3 bureaus)",tip:"Free at annualcreditreport.com. Lenders use FICO 2, 4, 5."},
@@ -128,18 +130,17 @@ function SearchResultCard({result,maxLoan,totalDPA,buyingPower,onSelect,isSelect
   const firstGenOk=result.price<=515200;
 
   return(
-    <div className={`flex gap-3 p-2.5 rounded-lg border cursor-pointer transition-all ${isSelected?"ring-2 ring-[#2d6a2e] bg-[#2d6a2e]/5":"hover:bg-muted/50"} ${!affordable?"opacity-50":""}`} onClick={onSelect}>
-      {result.imgSrc&&<img src={result.imgSrc} alt="" className="w-20 h-16 object-cover rounded flex-shrink-0"/>}
-      <div className="flex-1 min-w-0">
+    <Card className={`overflow-hidden cursor-pointer transition-all ${isSelected?"ring-2 ring-[#2d6a2e] shadow-lg":"hover:shadow-md"} ${!affordable?"opacity-50":""}`} onClick={onSelect}>
+      {result.imgSrc&&<div className="h-36 bg-muted overflow-hidden relative"><img src={result.imgSrc} alt="" className="w-full h-full object-cover"/><Badge className="absolute top-2 left-2 text-[9px] bg-black/60 text-white border-0">{result.city}</Badge>{firstGenOk&&<Badge className="absolute top-2 right-2 text-[8px] bg-emerald-600 text-white border-0">First-Gen OK</Badge>}</div>}
+      <CardContent className="p-3 space-y-1">
         <div className="flex justify-between items-start">
-          <p className="text-sm font-bold" style={{color:"var(--brand-navy)"}}>{$(result.price)}</p>
-          {affordable?<Badge className="text-[8px] py-0 h-3.5 bg-emerald-50 text-emerald-700 border border-emerald-200">{reachWithDPA?"DPA Reach":"Affordable"}</Badge>:<Badge className="text-[8px] py-0 h-3.5 bg-red-50 text-red-700 border border-red-200">Over</Badge>}
+          <p className="text-base font-bold" style={{color:"var(--brand-navy)"}}>{$(result.price)}</p>
+          {affordable?<Badge className="text-[8px] py-0 h-3.5 bg-emerald-50 text-emerald-700 border border-emerald-200">{reachWithDPA?"DPA Reach":"Affordable"}</Badge>:<Badge className="text-[8px] py-0 h-3.5 bg-red-50 text-red-700 border border-red-200">Over Budget</Badge>}
         </div>
-        <p className="text-[10px] text-muted-foreground truncate">{result.address}</p>
-        <p className="text-[10px] text-muted-foreground">{result.bedrooms}bd {result.bathrooms}ba {result.livingArea?.toLocaleString()}sf</p>
-        {firstGenOk&&<Badge className="text-[7px] py-0 h-3 bg-emerald-50 text-emerald-700 border border-emerald-200 mt-0.5">First-Gen OK</Badge>}
-      </div>
-    </div>
+        <p className="text-[11px] text-muted-foreground truncate">{result.address}</p>
+        <p className="text-[11px] text-muted-foreground">{result.bedrooms}bd · {result.bathrooms}ba · {result.livingArea?.toLocaleString()}sf</p>
+      </CardContent>
+    </Card>
   );
 }
 
@@ -148,26 +149,65 @@ const STORAGE_KEY="mn_homebuyer_v2";
 function loadProfile():Profile|null{try{const d=localStorage.getItem(STORAGE_KEY);return d?JSON.parse(d):null;}catch{return null;}}
 function saveProfile(p:Profile){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(p));}catch{}}
 
-// ══════════ RAPIDAPI CONFIG ══════════
-const RAPIDAPI_KEY = ""; // User adds their key here
-const RAPIDAPI_HOST = "zillow-com1.p.rapidapi.com";
+// ══════════ API CONFIG ══════════
+// Property search: https://rapidapi.com/letscrape-6bRBa3QguO5/api/real-time-zillow-data
+const RAPIDAPI_KEY = ""; // Paste your RapidAPI key here
+const RAPIDAPI_HOST = "real-time-zillow-data.p.rapidapi.com";
+
+// Mortgage rates: https://fred.stlouisfed.org/docs/api/api_key.html (free, instant)
+const FRED_API_KEY = "bc24a6a30bee3e3219bbd6dd8bb7e01d";
+
+async function fetchFredRate(series:string):Promise<{rate:number;date:string}|null>{
+  if(!FRED_API_KEY)return null;
+  try{
+    const res=await fetch(`https://api.stlouisfed.org/fred/series/observations?series_id=${series}&api_key=${FRED_API_KEY}&file_type=json&sort_order=desc&limit=1`);
+    const data=await res.json();
+    const obs=data?.observations?.[0];
+    if(!obs||obs.value===".")return null;
+    return{rate:parseFloat(obs.value),date:obs.date};
+  }catch{return null;}
+}
+
+async function fetchLiveRates():Promise<{rate30:number;rate15:number;date:string}|null>{
+  if(!FRED_API_KEY)return null;
+  try{
+    const [r30,r15]=await Promise.all([fetchFredRate("MORTGAGE30US"),fetchFredRate("MORTGAGE15US")]);
+    if(!r30)return null;
+    return{rate30:r30.rate,rate15:r15?.rate||0,date:r30.date};
+  }catch{return null;}
+}
 
 async function searchProperties(query:string):Promise<SearchResult[]>{
-  // If no API key, return empty (fall back to curated)
-  if(!RAPIDAPI_KEY){return[];}
+  if(!RAPIDAPI_KEY)return[];
   try{
-    const res=await fetch(`https://${RAPIDAPI_HOST}/propertyExtendedSearch?location=${encodeURIComponent(query)}&status_type=ForSale&home_type=Houses`,{headers:{"X-RapidAPI-Key":RAPIDAPI_KEY,"X-RapidAPI-Host":RAPIDAPI_HOST}});
+    const res=await fetch(`https://${RAPIDAPI_HOST}/propertyExtendedSearch?location=${encodeURIComponent(query)}&status_type=ForSale&home_type=Houses&sort=Price_Low_High`,{
+      headers:{"X-RapidAPI-Key":RAPIDAPI_KEY,"X-RapidAPI-Host":RAPIDAPI_HOST}
+    });
     const data=await res.json();
-    if(!data?.props)return[];
-    return data.props.slice(0,20).map((p:any)=>({zpid:p.zpid||"",address:p.address||"",price:p.price||0,bedrooms:p.bedrooms||0,bathrooms:p.bathrooms||0,livingArea:p.livingArea||0,imgSrc:p.imgSrc||"",detailUrl:p.detailUrl?`https://www.zillow.com${p.detailUrl}`:""  ,city:p.address?.split(",")[1]?.trim()||""}));
+    const props=data?.props||data?.results||[];
+    if(!Array.isArray(props)||props.length===0)return[];
+    return props.slice(0,24).map((p:any)=>({
+      zpid:String(p.zpid||p.id||Math.random()),
+      address:p.address||p.streetAddress||p.formattedAddress||"Unknown",
+      price:p.price||p.listPrice||0,
+      bedrooms:p.bedrooms||p.beds||0,
+      bathrooms:p.bathrooms||p.baths||0,
+      livingArea:p.livingArea||p.livingAreaValue||p.sqft||0,
+      imgSrc:p.imgSrc||p.image||p.primaryPhoto||p.hiResImageLink||p.thumbnail||"",
+      detailUrl:p.detailUrl?(p.detailUrl.startsWith("http")?p.detailUrl:`https://www.zillow.com${p.detailUrl}`):p.url||`https://www.zillow.com/homedetails/${p.zpid}_zpid/`,
+      city:p.addressCity||p.city||(typeof p.address==="string"?p.address.split(",")[1]?.trim():"")||"",
+    })).filter((r:SearchResult)=>r.price>0);
   }catch{return[];}
 }
 
 // ══════════ MAIN APP ══════════
 export default function App(){
+  // Clear legacy storage key from previous versions
+  useEffect(()=>{try{localStorage.removeItem("mn_homebuyer_profile");}catch{}},[]);
+
   const saved=loadProfile();
   const [p,setP]=useState<Profile>(saved||{name:"",income:0,fico:0,debt:0,savings:0,county:"",household:1,jobYears:0,firstTime:false,firstGen:false,education:false,studentLoanBal:0,studentLoanIDR:false,isSelfEmployed:false,debtReduce:0});
-  const [started,setStarted]=useState(!!saved);
+  const [started,setStarted]=useState(false); // Always show onboarding first after deploy
   const [view,setView]=useState("ready");
   const [price,setPrice]=useState(350000);
   const [rate,setRate]=useState(7.0);
@@ -183,6 +223,11 @@ export default function App(){
   const [selectedResult,setSelectedResult]=useState<SearchResult|null>(null);
   const [selectedCurated,setSelectedCurated]=useState<number|null>(null);
   const [searchMode,setSearchMode]=useState<"curated"|"api">("curated");
+  const [customPrice,setCustomPrice]=useState(0);
+  const [liveRates,setLiveRates]=useState<{rate30:number;rate15:number;date:string}|null>(null);
+
+  // Fetch live mortgage rates on mount
+  useEffect(()=>{fetchLiveRates().then(r=>{if(r){setLiveRates(r);setRate(r.rate30);}});},[]);
 
   useEffect(()=>{if(started)saveProfile(p);},[p,started]);
 
@@ -311,7 +356,7 @@ export default function App(){
           {/* KPIs */}
           <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
             <KPI label="Buying Power" value={buyingPower.totalPower>0?$k(buyingPower.totalPower):"--"} sub={`DTI: ${$k(buyingPower.dtiMax)} + DPA`} color="var(--brand-navy)" icon="🏠" onClick={()=>setView("afford")}/>
-            <KPI label="Est. Monthly" value={p.income>0?$(mort.total):"--"} sub={`${$(price)} &middot; ${rate}%`} color={mort.bDTI<=43?"#2d6a2e":mort.bDTI<=50?"#d4a017":"#dc2626"} icon="📅" onClick={()=>setView("afford")}/>
+            <KPI label="Est. Monthly" value={p.income>0?$(mort.total):"--"} sub={`${$(price)} · ${rate}%${liveRates?" (live)":""}`} color={mort.bDTI<=43?"#2d6a2e":mort.bDTI<=50?"#d4a017":"#dc2626"} icon="📅" onClick={()=>setView("afford")}/>
             <KPI label="Cash to Close" value={$(mort.oop)} sub={mort.oop===0?"DPA covers all":"After DPA"} color={mort.oop===0?"#2d6a2e":"var(--brand-navy)"} icon="💵" onClick={()=>setView("afford")}/>
             <KPI label="DPA Available" value={$k(totalDPA)} sub={`${selProgs.size} program(s)`} color="var(--brand-green)" icon="🎁" onClick={()=>setView("programs")}/>
             <KPI label="Readiness" value={`${readiness.score}%`} sub={readiness.label} color={readiness.color} icon="📊" onClick={()=>setView("ready")}/>
@@ -340,6 +385,12 @@ export default function App(){
                 <h4 className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground mb-3">Payment at {$(price)}</h4>
                 <DonutChart size={175} label={$(mort.total)} segments={[{value:mort.pi,color:"var(--brand-navy)",label:`P&I ${$(mort.pi)}`},{value:mort.tax,color:"var(--brand-green)",label:`Tax ${$(mort.tax)}`},{value:mort.ins,color:"var(--brand-gold)",label:`Ins ${$(mort.ins)}`},{value:mort.mip+mort.pmi,color:"var(--brand-sky)",label:`${loanType==="fha"?"MIP":"PMI"} ${$(mort.mip+mort.pmi)}`}]}/>
                 <p className="text-[10px] text-center text-muted-foreground mt-2">Tax: {(taxRate*100).toFixed(2)}% ({p.county||"est."} county)</p>
+                {liveRates&&<div className="rounded-lg bg-emerald-50 border border-emerald-200 p-2.5 mt-3 space-y-1">
+                  <p className="text-[10px] font-semibold text-emerald-700 uppercase tracking-widest">Current Mortgage Rates</p>
+                  <div className="flex justify-between text-xs"><span className="text-muted-foreground">30-Year Fixed</span><span className="font-bold text-emerald-700">{liveRates.rate30}%</span></div>
+                  <div className="flex justify-between text-xs"><span className="text-muted-foreground">15-Year Fixed</span><span className="font-bold text-emerald-700">{liveRates.rate15}%</span></div>
+                  <p className="text-[9px] text-muted-foreground">Week of {liveRates.date} · Freddie Mac PMMS via FRED</p>
+                </div>}
               </div>
             </div></CardContent></Card>
           </div>)}
@@ -348,6 +399,14 @@ export default function App(){
           {view==="afford"&&(<div className="grid lg:grid-cols-3 gap-4 fade-in">
             <Card><CardHeader className="pb-2"><CardTitle className="text-base font-bold">Scenario Builder</CardTitle></CardHeader><CardContent className="space-y-4">
               {([["Target Price",price,setPrice,100000,750000,5000,$(price)],["Interest Rate",rate,setRate,4.5,9.5,0.125,`${rate}%`],["Down Payment",downPct,setDownPct,0,20,0.5,`${downPct}%`]] as [string,number,(v:number)=>void,number,number,number,string][]).map(([label,val,setter,min,max,step,display])=>(<div key={label}><div className="flex justify-between"><Label className="text-xs">{label}</Label><span className="text-xs font-bold">{display}</span></div><Slider min={min} max={max} step={step} value={[val]} onValueChange={([v])=>setter(v)} className="mt-2"/></div>))}
+              {liveRates&&<div className="rounded-lg bg-emerald-50 border border-emerald-200 p-2.5 space-y-1">
+                <p className="text-[10px] font-semibold text-emerald-700 uppercase tracking-widest">Live Freddie Mac Rates</p>
+                <div className="flex justify-between text-xs"><span className="text-muted-foreground">30-Year Fixed</span><span className="font-bold text-emerald-700">{liveRates.rate30}%</span></div>
+                <div className="flex justify-between text-xs"><span className="text-muted-foreground">15-Year Fixed</span><span className="font-bold text-emerald-700">{liveRates.rate15}%</span></div>
+                <p className="text-[9px] text-muted-foreground">Week of {liveRates.date} &middot; Source: FRED / Freddie Mac PMMS</p>
+                <div className="flex gap-1.5 mt-1"><Button variant="outline" size="sm" className="text-[10px] h-6 flex-1" onClick={()=>setRate(liveRates.rate30)}>Use 30yr ({liveRates.rate30}%)</Button><Button variant="outline" size="sm" className="text-[10px] h-6 flex-1" onClick={()=>setRate(liveRates.rate15)}>Use 15yr ({liveRates.rate15}%)</Button></div>
+              </div>}
+              {!liveRates&&!FRED_API_KEY&&<p className="text-[9px] text-muted-foreground">Add a free FRED API key in App.tsx for live mortgage rates from Freddie Mac.</p>}
               {price>515200&&<p className="text-[10px] text-destructive">Over $515,200 First-Gen DPA limit</p>}
               <div><Label className="text-xs">Loan Type</Label><div className="flex gap-2 mt-1">{(["fha","conv"] as const).map(t=>(<Button key={t} variant={loanType===t?"default":"outline"} size="sm" className="flex-1 text-xs h-8" onClick={()=>setLoanType(t)}>{t==="fha"?"FHA (3.5%)":"Conventional"}</Button>))}</div></div>
               <Separator/>
@@ -388,26 +447,40 @@ export default function App(){
             <div className="lg:col-span-2 space-y-3">
               <Card><CardHeader className="pb-2"><CardTitle className="text-base font-bold">Find Homes</CardTitle>{buyingPower.totalPower>0&&<CardDescription className="text-xs">Budget: up to <strong style={{color:"var(--brand-green)"}}>{$(buyingPower.totalPower)}</strong> (with DPA)</CardDescription>}</CardHeader>
               <CardContent className="space-y-3">
-                <div><Label className="text-[10px] uppercase tracking-widest text-muted-foreground">Search by city, zip, or address</Label>
-                  <div className="flex gap-2 mt-1"><Input placeholder="e.g. Farmington MN, 55024..." value={searchQuery} onChange={e=>setSearchQuery(e.target.value)} onKeyDown={e=>{if(e.key==="Enter")doSearch();}} className="text-xs h-8"/><Button size="sm" className="h-8 text-xs px-3 brand-btn text-white" onClick={doSearch} disabled={isSearching}>{isSearching?"...":"Search"}</Button></div>
+                <div className="space-y-2">
+                  <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">Search on Zillow</p>
+                  <p className="text-[11px] text-muted-foreground">Click to open Zillow filtered to your budget. Find a home, copy the price back here to analyze it.</p>
+                  <div className="grid grid-cols-2 gap-1.5">
+                    {[
+                      ["Farmington","Farmington-MN"],["Lakeville","Lakeville-MN"],["Eagan","Eagan-MN"],["Apple Valley","Apple-Valley-MN"],
+                      ["Rosemount","Rosemount-MN"],["Burnsville","Burnsville-MN"],["Dakota County","dakota-county-mn"],["South Metro","twin-cities-mn"],
+                    ].map(([label,slug])=>(
+                      <a key={label} href={`https://www.zillow.com/${slug}/?searchQueryState=${encodeURIComponent(JSON.stringify({filterState:{price:{max:buyingPower.totalPower||550000},beds:{min:2},isNewConstruction:{value:true}}}))}` } target="_blank" rel="noopener">
+                        <Button variant="outline" size="sm" className="text-[10px] h-7 w-full justify-start gap-1.5">
+                          <span>↗</span> {label}
+                        </Button>
+                      </a>
+                    ))}
+                  </div>
+                  {buyingPower.totalPower>0&&<p className="text-[10px] text-muted-foreground">Results pre-filtered to your max budget: <strong style={{color:"var(--brand-green)"}}>{$(buyingPower.totalPower)}</strong></p>}
                 </div>
-                <div className="grid grid-cols-3 gap-1.5">
-                  {[["Farmington","Farmington MN"],["Lakeville","Lakeville MN"],["Eagan","Eagan MN"],["Apple Valley","Apple Valley MN"],["Rosemount","Rosemount MN"],["Dakota Co.","Dakota County MN"]].map(([label,q])=>(
-                    <Button key={label} variant="outline" size="sm" className="text-[10px] h-6" onClick={()=>{setSearchQuery(q);}}>{label}</Button>
-                  ))}
+                <Separator/>
+                <div>
+                  <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">Analyze Any Listing</p>
+                  <p className="text-[11px] text-muted-foreground mb-2">Found a home on Zillow? Enter the price to see your DTI, monthly payment, and DPA coverage instantly.</p>
+                  <div className="flex gap-2 items-center">
+                    <span className="text-xs text-muted-foreground">$</span>
+                    <Input type="number" placeholder="e.g. 425000" value={customPrice||""} onChange={e=>setCustomPrice(+e.target.value)} className="text-xs h-8"/>
+                    <Button size="sm" className="h-8 text-xs px-4 brand-btn text-white" disabled={!customPrice} onClick={()=>{if(customPrice){setPrice(customPrice);setSelectedCurated(null);setSelectedResult({zpid:"custom",address:`Custom listing at ${$(customPrice)}`,price:customPrice,bedrooms:0,bathrooms:0,livingArea:0,imgSrc:"",detailUrl:"",city:""});}}}>Analyze</Button>
+                  </div>
                 </div>
-                {!RAPIDAPI_KEY&&<div className="p-2 rounded-lg bg-amber-50 border border-amber-200 text-[10px] text-amber-800">API key not configured. Showing curated listings. Add a RapidAPI Zillow key in App.tsx to enable live search.</div>}
               </CardContent></Card>
 
               {/* Results Feed */}
-              <Card><CardHeader className="pb-2"><CardTitle className="text-sm font-semibold">{searchMode==="api"&&searchResults.length>0?`${searchResults.length} Results`:"Curated Listings"}</CardTitle></CardHeader>
+              <Card><CardHeader className="pb-2"><CardTitle className="text-sm font-semibold">South Metro New Construction</CardTitle></CardHeader>
               <CardContent className="p-0">
                 <div className="max-h-[450px] overflow-y-auto px-4 pb-3 space-y-2">
-                  {searchMode==="api"&&searchResults.length>0?
-                    searchResults.map(r=>(<SearchResultCard key={r.zpid} result={r} maxLoan={buyingPower.maxLoan} totalDPA={totalDPA} buyingPower={buyingPower.totalPower} onSelect={()=>selectSearchResult(r)} isSelected={selectedResult?.zpid===r.zpid}/>))
-                  :
-                    CURATED.map(l=>(<PropertyCard key={l.id} listing={l} maxLoan={buyingPower.maxLoan} totalDPA={totalDPA} buyingPower={buyingPower.totalPower} onSelect={()=>selectProperty(l)} isSelected={selectedCurated===l.id}/>))
-                  }
+                  {CURATED.map(l=>(<PropertyCard key={l.id} listing={l} maxLoan={buyingPower.maxLoan} totalDPA={totalDPA} buyingPower={buyingPower.totalPower} onSelect={()=>selectProperty(l)} isSelected={selectedCurated===l.id}/>))}
                 </div>
               </CardContent></Card>
             </div>
