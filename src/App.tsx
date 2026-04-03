@@ -83,8 +83,13 @@ function KPI({label,value,sub,color,icon,onClick}:{label:string;value:string;sub
 }
 
 function Gauge({score,label,color}:{score:number;label:string;color:string}){
-  const r=48,cx=60,cy=58,circ=2*Math.PI*r,arc=circ*0.75,off=arc-(score/100)*arc;
-  return(<svg width="120" height="96" viewBox="0 0 120 96"><path d="M 12 84 A 48 48 0 1 1 108 84" fill="none" stroke="hsl(var(--muted))" strokeWidth="8" strokeLinecap="round"/><path d="M 12 84 A 48 48 0 1 1 108 84" fill="none" stroke={color} strokeWidth="8" strokeLinecap="round" strokeDasharray={arc} strokeDashoffset={off} className="gauge-anim"/><text x={cx} y="54" textAnchor="middle" style={{fontSize:"22px",fontWeight:700,fill:"hsl(var(--foreground))"}}>{score}%</text><text x={cx} y="72" textAnchor="middle" style={{fontSize:"10px",fill:color,fontWeight:600}}>{label}</text></svg>);
+  const r=70,cx=90,cy=85,circ=2*Math.PI*r,arc=circ*0.75,off=arc-(score/100)*arc;
+  return(<svg width="180" height="140" viewBox="0 0 180 140" style={{shapeRendering:"geometricPrecision"}}>
+    <path d="M 17 122 A 70 70 0 1 1 163 122" fill="none" stroke="hsl(var(--muted))" strokeWidth="10" strokeLinecap="round"/>
+    <path d="M 17 122 A 70 70 0 1 1 163 122" fill="none" stroke={color} strokeWidth="10" strokeLinecap="round" strokeDasharray={arc} strokeDashoffset={off} className="gauge-anim"/>
+    <text x={cx} y="80" textAnchor="middle" style={{fontSize:"28px",fontWeight:700,fill:"hsl(var(--foreground))"}}>{score}%</text>
+    <text x={cx} y="102" textAnchor="middle" style={{fontSize:"13px",fill:color,fontWeight:600}}>{label}</text>
+  </svg>);
 }
 
 function Row({l,v,bold,green}:{l:string;v:string;bold?:boolean;green?:boolean}){return(<div className={`flex justify-between py-1 ${bold?"font-semibold":""}`}><span className="text-xs text-muted-foreground">{l}</span><span className={`text-xs ${green?"text-emerald-600":""} ${bold?"text-sm font-bold":""}`}>{v}</span></div>);}
@@ -292,8 +297,8 @@ export default function App(){
   // ══════════ ONBOARDING ══════════
   if(!started) return(
     <TooltipProvider>
-    <div className="min-h-screen flex items-center justify-center p-4" style={{background:"linear-gradient(160deg,#1a2e44 0%,#1e4a2a 40%,#2d6a2e 70%,#1a2e44 100%)"}}>
-      <Card className="w-full max-w-lg shadow-2xl border-0 fade-in">
+    <div className="min-h-screen flex items-center justify-center p-4" style={{background:"#ffffff"}}>
+      <Card className="w-full max-w-lg shadow-xl border fade-in">
         <CardHeader className="text-center pb-2 pt-6">
           <img src={logoImg} alt="MN Homebuyer Dashboard" className="mx-auto w-28 h-auto mb-2 drop-shadow-lg"/>
           <CardTitle className="text-xl font-bold" style={{color:"var(--brand-navy)"}}>MN Homebuyer Dashboard</CardTitle>
