@@ -1,5 +1,8 @@
 import { useState, useMemo, useCallback, useEffect } from "react";
-import logoImg from "./logo.png";
+// Logo is loaded via <link rel="icon"> in index.html which Parcel hashes and copies to dist.
+// We read the href at runtime to get the correct hashed path.
+const faviconLink = document.querySelector('link[rel="icon"]') as HTMLLinkElement|null;
+const logoImg = faviconLink?.href || "./logo.png";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
