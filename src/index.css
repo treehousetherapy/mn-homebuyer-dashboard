@@ -4,31 +4,36 @@
 
 @layer base {
   :root {
-    --background: 220 15% 96%;
-    --foreground: 220 20% 12%;
-    --card: 0 0% 100%;
-    --card-foreground: 220 20% 12%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 220 20% 12%;
-    --primary: 200 70% 28%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 220 14% 93%;
-    --secondary-foreground: 220 20% 15%;
-    --muted: 220 10% 92%;
-    --muted-foreground: 220 8% 46%;
-    --accent: 162 48% 34%;
-    --accent-foreground: 0 0% 100%;
+    --background: 100 10% 96%;
+    --foreground: 210 30% 14%;
+    --card: 60 20% 99%;
+    --card-foreground: 210 30% 14%;
+    --popover: 60 20% 99%;
+    --popover-foreground: 210 30% 14%;
+    --primary: 210 42% 18%;
+    --primary-foreground: 60 20% 97%;
+    --secondary: 100 10% 93%;
+    --secondary-foreground: 210 30% 16%;
+    --muted: 100 8% 91%;
+    --muted-foreground: 210 8% 45%;
+    --accent: 125 40% 30%;
+    --accent-foreground: 60 20% 97%;
     --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 98%;
-    --border: 220 12% 88%;
-    --input: 220 12% 88%;
-    --ring: 200 70% 28%;
+    --border: 100 10% 87%;
+    --input: 100 10% 87%;
+    --ring: 210 42% 18%;
     --radius: 0.5rem;
-    --sidebar: 216 28% 14%;
-    --sidebar-foreground: 220 10% 85%;
-    --kpi-green: 158 60% 36%;
-    --kpi-amber: 38 92% 50%;
-    --kpi-red: 0 72% 51%;
+    --sidebar: 210 40% 16%;
+    --sidebar-foreground: 100 10% 85%;
+    /* Brand palette from logo */
+    --brand-navy: #1a2e44;
+    --brand-green: #2d6a2e;
+    --brand-gold: #d4a017;
+    --brand-sky: #4a90c4;
+    --brand-cream: #f5f7f2;
+    --brand-forest: #1e5631;
+    --brand-lime: #4a8c3f;
   }
 }
 
@@ -38,11 +43,14 @@
 }
 
 @layer utilities {
-  .sidebar-bg { background: hsl(var(--sidebar)); }
+  .sidebar-bg { background: linear-gradient(180deg, var(--brand-navy) 0%, #152438 100%); }
   .fade-in { animation: _fi .45s ease both; }
   .slide-up { animation: _su .4s ease both; }
   @keyframes _fi { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
   @keyframes _su { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
   .gauge-anim { transition: stroke-dashoffset 1s cubic-bezier(.4,0,.2,1); }
   .chart-anim { transition: stroke-dasharray .8s cubic-bezier(.4,0,.2,1), stroke-dashoffset .8s cubic-bezier(.4,0,.2,1); }
+  .brand-gradient { background: linear-gradient(135deg, var(--brand-navy), var(--brand-forest)); }
+  .brand-btn { background: linear-gradient(135deg, var(--brand-navy) 0%, var(--brand-green) 100%); }
+  .gold-accent { color: var(--brand-gold); }
 }
