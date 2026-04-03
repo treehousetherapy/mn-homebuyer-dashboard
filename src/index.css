@@ -4,46 +4,45 @@
 
 @layer base {
   :root {
-    --background: 220 16% 96%;
-    --foreground: 220 25% 12%;
+    --background: 220 15% 96%;
+    --foreground: 220 20% 12%;
     --card: 0 0% 100%;
-    --card-foreground: 220 25% 12%;
+    --card-foreground: 220 20% 12%;
     --popover: 0 0% 100%;
-    --popover-foreground: 220 25% 12%;
-    --primary: 200 65% 30%;
+    --popover-foreground: 220 20% 12%;
+    --primary: 200 70% 28%;
     --primary-foreground: 0 0% 100%;
     --secondary: 220 14% 93%;
-    --secondary-foreground: 220 25% 15%;
-    --muted: 220 12% 92%;
+    --secondary-foreground: 220 20% 15%;
+    --muted: 220 10% 92%;
     --muted-foreground: 220 8% 46%;
-    --accent: 162 50% 34%;
+    --accent: 162 48% 34%;
     --accent-foreground: 0 0% 100%;
     --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 98%;
-    --border: 220 13% 88%;
-    --input: 220 13% 88%;
-    --ring: 200 65% 30%;
-    --radius: 0.625rem;
-    --font-sans: 'DM Sans', ui-sans-serif, system-ui, sans-serif;
-    --font-display: 'Fraunces', Georgia, serif;
+    --border: 220 12% 88%;
+    --input: 220 12% 88%;
+    --ring: 200 70% 28%;
+    --radius: 0.5rem;
+    --sidebar: 216 28% 14%;
+    --sidebar-foreground: 220 10% 85%;
+    --kpi-green: 158 60% 36%;
+    --kpi-amber: 38 92% 50%;
+    --kpi-red: 0 72% 51%;
   }
 }
 
 @layer base {
   * { @apply border-border; }
-  body {
-    @apply bg-background text-foreground antialiased;
-    font-family: var(--font-sans);
-  }
+  body { @apply bg-background text-foreground antialiased; font-family: 'DM Sans', system-ui, -apple-system, sans-serif; }
 }
 
 @layer utilities {
-  .font-display { font-family: var(--font-display); }
-  .fade-in { animation: _fi .5s ease both; }
-  .slide-up { animation: _su .45s ease both; }
-  @keyframes _fi { from { opacity:0; transform:translateY(8px) } to { opacity:1; transform:translateY(0) } }
-  @keyframes _su { from { opacity:0; transform:translateY(18px) } to { opacity:1; transform:translateY(0) } }
+  .sidebar-bg { background: hsl(var(--sidebar)); }
+  .fade-in { animation: _fi .45s ease both; }
+  .slide-up { animation: _su .4s ease both; }
+  @keyframes _fi { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
+  @keyframes _su { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
   .gauge-anim { transition: stroke-dashoffset 1s cubic-bezier(.4,0,.2,1); }
-  .number-pop { animation: _np .35s ease; }
-  @keyframes _np { 0%{transform:scale(1)} 50%{transform:scale(1.08)} 100%{transform:scale(1)} }
+  .chart-anim { transition: stroke-dasharray .8s cubic-bezier(.4,0,.2,1), stroke-dashoffset .8s cubic-bezier(.4,0,.2,1); }
 }
