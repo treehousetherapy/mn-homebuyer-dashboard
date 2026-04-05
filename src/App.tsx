@@ -50,18 +50,31 @@ const PROGRAMS:DPA[]=[
   {id:"chenoa",name:"Chenoa Fund DPA",short:"Chenoa Fund",max:20000,pctCap:3.5,type:"Forgivable (3yr)",forgiveYrs:3,incomeLimit:999999,ficoMin:620,priceLimit:552000,status:"open",coverage:"Nationwide",url:"chenoafund.org",phone:"chenoafund.org",notes:"Covers FHA 3.5% as second mortgage.",reqFirstTime:false,reqFirstGen:false},
   {id:"naf",name:"New American Funding DPA",short:"NAF DPA",max:6000,type:"Deferred",incomeLimit:999999,ficoMin:620,priceLimit:766550,status:"open",coverage:"Nationwide",url:"newamericanfunding.com",phone:"newamericanfunding.com",notes:"Combinable with MN Housing DPA.",reqFirstTime:false,reqFirstGen:false},
 ];
-// Illustrative sample photos (Unsplash CDN, hotlink-allowed). Not actual MLS photos.
+// Illustrative sample photos (Unsplash CDN, free to use). Not actual MLS photos.
+const IMG=[
+  "https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=480&h=300&fit=crop",  // tan house + garage
+  "https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=480&h=300&fit=crop",  // beige ranch house
+  "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=480&h=300&fit=crop",  // white house blue sky
+  "https://images.unsplash.com/photo-1599427303058-f04cbcf4756f?w=480&h=300&fit=crop",  // two-story gray
+  "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=480&h=300&fit=crop",  // modern white exterior
+  "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=480&h=300&fit=crop",  // large craftsman
+  "https://images.unsplash.com/photo-1583608205776-bfd35f0d9f83?w=480&h=300&fit=crop",  // yellow house garage
+  "https://images.unsplash.com/photo-1605276374104-dee2a0ed3cd6?w=480&h=300&fit=crop",  // white two-story
+  "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=480&h=300&fit=crop",  // luxury beige home
+  "https://images.unsplash.com/photo-1523217582562-09d0def993a6?w=480&h=300&fit=crop",  // dark modern house
+];
+
 const CURATED:Listing[]=[
-  {id:1,name:"21878 Denton Ave, Whispering Fields",price:317990,beds:3,baths:3,sqft:1782,city:"Farmington",builder:"Lennar",url:"https://www.zillow.com/farmington-mn-55024/new-homes/",image:"https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=480&h=300&fit=crop&auto=format"},
-  {id:2,name:"21926 Wisteria Way, Wisteria",price:334990,beds:3,baths:3,sqft:1804,city:"Farmington",builder:"Lennar",url:"https://www.zillow.com/farmington-mn-55024/new-homes/",image:"https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=480&h=300&fit=crop&auto=format"},
-  {id:3,name:"4792 218th St W, Voyageur Farms",price:358085,beds:3,baths:2,sqft:1281,city:"Farmington",builder:"Lennar",url:"https://www.zillow.com/farmington-mn/new-homes/",image:"https://images.unsplash.com/photo-1582063289852-62e3ba2747f8?w=480&h=300&fit=crop&auto=format"},
-  {id:4,name:"19139 Crystal Ter, M/I Homes",price:426990,beds:3,baths:2,sqft:1892,city:"Farmington",builder:"M/I Homes",url:"https://www.zillow.com/farmington-mn-55024/new-homes/",image:"https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=480&h=300&fit=crop&auto=format"},
-  {id:5,name:"4870 218th Ct, Voyageur Farms",price:449390,beds:3,baths:2,sqft:1281,city:"Farmington",builder:"Lennar",url:"https://www.zillow.com/farmington-mn/new-homes/",image:"https://images.unsplash.com/photo-1523217582562-09d0def993a6?w=480&h=300&fit=crop&auto=format"},
-  {id:6,name:"4884 218th Ct, Voyageur Farms",price:460485,beds:5,baths:3,sqft:2505,city:"Farmington",builder:"Lennar",url:"https://www.zillow.com/farmington-mn/new-homes/",image:"https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=480&h=300&fit=crop&auto=format"},
-  {id:7,name:"20947 Flanders Way, Whispering Fields",price:479990,beds:3,baths:3,sqft:2200,city:"Farmington",builder:"D.R. Horton",url:"https://www.zillow.com/farmington-mn-55024/new-homes/",image:"https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=480&h=300&fit=crop&auto=format"},
-  {id:8,name:"Xxx3 217th St, Vita Attiva",price:455000,beds:2,baths:2,sqft:1503,city:"Farmington",builder:"Vita Attiva",url:"https://www.zillow.com/farmington-mn-55024/new-homes/",image:"https://images.unsplash.com/photo-1576941089067-2de3c901e126?w=480&h=300&fit=crop&auto=format"},
-  {id:9,name:"Cordelia Ashton Plan, Lakeville",price:499990,beds:4,baths:3,sqft:2400,city:"Lakeville",builder:"D.R. Horton",url:"https://www.zillow.com/lakeville-mn/new-homes/",image:"https://images.unsplash.com/photo-1599427303058-f04cbcf4756f?w=480&h=300&fit=crop&auto=format"},
-  {id:10,name:"Pheasant Run 6BD, Lakeville",price:515000,beds:6,baths:3,sqft:2400,city:"Lakeville",builder:"D.R. Horton",url:"https://www.zillow.com/lakeville-mn/new-homes/",image:"https://images.unsplash.com/photo-1560185007-cde436f6a4d0?w=480&h=300&fit=crop&auto=format"},
+  {id:1,name:"21878 Denton Ave, Whispering Fields",price:317990,beds:3,baths:3,sqft:1782,city:"Farmington",builder:"Lennar",url:"https://www.zillow.com/farmington-mn-55024/new-homes/",image:IMG[0]},
+  {id:2,name:"21926 Wisteria Way, Wisteria",price:334990,beds:3,baths:3,sqft:1804,city:"Farmington",builder:"Lennar",url:"https://www.zillow.com/farmington-mn-55024/new-homes/",image:IMG[1]},
+  {id:3,name:"4792 218th St W, Voyageur Farms",price:358085,beds:3,baths:2,sqft:1281,city:"Farmington",builder:"Lennar",url:"https://www.zillow.com/farmington-mn/new-homes/",image:IMG[2]},
+  {id:4,name:"19139 Crystal Ter, M/I Homes",price:426990,beds:3,baths:2,sqft:1892,city:"Farmington",builder:"M/I Homes",url:"https://www.zillow.com/farmington-mn-55024/new-homes/",image:IMG[3]},
+  {id:5,name:"4870 218th Ct, Voyageur Farms",price:449390,beds:3,baths:2,sqft:1281,city:"Farmington",builder:"Lennar",url:"https://www.zillow.com/farmington-mn/new-homes/",image:IMG[4]},
+  {id:6,name:"4884 218th Ct, Voyageur Farms",price:460485,beds:5,baths:3,sqft:2505,city:"Farmington",builder:"Lennar",url:"https://www.zillow.com/farmington-mn/new-homes/",image:IMG[5]},
+  {id:7,name:"20947 Flanders Way, Whispering Fields",price:479990,beds:3,baths:3,sqft:2200,city:"Farmington",builder:"D.R. Horton",url:"https://www.zillow.com/farmington-mn-55024/new-homes/",image:IMG[6]},
+  {id:8,name:"Xxx3 217th St, Vita Attiva",price:455000,beds:2,baths:2,sqft:1503,city:"Farmington",builder:"Vita Attiva",url:"https://www.zillow.com/farmington-mn-55024/new-homes/",image:IMG[7]},
+  {id:9,name:"Cordelia Ashton Plan, Lakeville",price:499990,beds:4,baths:3,sqft:2400,city:"Lakeville",builder:"D.R. Horton",url:"https://www.zillow.com/lakeville-mn/new-homes/",image:IMG[8]},
+  {id:10,name:"Pheasant Run 6BD, Lakeville",price:515000,beds:6,baths:3,sqft:2400,city:"Lakeville",builder:"D.R. Horton",url:"https://www.zillow.com/lakeville-mn/new-homes/",image:IMG[9]},
 ];
 const CHECKLIST=[
   {id:"credit",label:"Check credit score (all 3 bureaus)",tip:"Free at annualcreditreport.com. Lenders use FICO 2, 4, 5."},
