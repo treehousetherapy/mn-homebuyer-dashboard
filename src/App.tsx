@@ -50,17 +50,18 @@ const PROGRAMS:DPA[]=[
   {id:"chenoa",name:"Chenoa Fund DPA",short:"Chenoa Fund",max:20000,pctCap:3.5,type:"Forgivable (3yr)",forgiveYrs:3,incomeLimit:999999,ficoMin:620,priceLimit:552000,status:"open",coverage:"Nationwide",url:"chenoafund.org",phone:"chenoafund.org",notes:"Covers FHA 3.5% as second mortgage.",reqFirstTime:false,reqFirstGen:false},
   {id:"naf",name:"New American Funding DPA",short:"NAF DPA",max:6000,type:"Deferred",incomeLimit:999999,ficoMin:620,priceLimit:766550,status:"open",coverage:"Nationwide",url:"newamericanfunding.com",phone:"newamericanfunding.com",notes:"Combinable with MN Housing DPA.",reqFirstTime:false,reqFirstGen:false},
 ];
+// Illustrative sample photos (Unsplash CDN, hotlink-allowed). Not actual MLS photos.
 const CURATED:Listing[]=[
-  {id:1,name:"21878 Denton Ave, Whispering Fields",price:317990,beds:3,baths:3,sqft:1782,city:"Farmington",builder:"Lennar",url:"https://www.zillow.com/farmington-mn-55024/new-homes/"},
-  {id:2,name:"21926 Wisteria Way, Wisteria",price:334990,beds:3,baths:3,sqft:1804,city:"Farmington",builder:"Lennar",url:"https://www.zillow.com/farmington-mn-55024/new-homes/"},
-  {id:3,name:"4792 218th St W, Voyageur Farms",price:358085,beds:3,baths:2,sqft:1281,city:"Farmington",builder:"Lennar",url:"https://www.zillow.com/farmington-mn/new-homes/"},
-  {id:4,name:"19139 Crystal Ter, M/I Homes",price:426990,beds:3,baths:2,sqft:1892,city:"Farmington",builder:"M/I Homes",url:"https://www.zillow.com/farmington-mn-55024/new-homes/"},
-  {id:5,name:"4870 218th Ct, Voyageur Farms",price:449390,beds:3,baths:2,sqft:1281,city:"Farmington",builder:"Lennar",url:"https://www.zillow.com/farmington-mn/new-homes/"},
-  {id:6,name:"4884 218th Ct, Voyageur Farms",price:460485,beds:5,baths:3,sqft:2505,city:"Farmington",builder:"Lennar",url:"https://www.zillow.com/farmington-mn/new-homes/"},
-  {id:7,name:"20947 Flanders Way, Whispering Fields",price:479990,beds:3,baths:3,sqft:2200,city:"Farmington",builder:"D.R. Horton",url:"https://www.zillow.com/farmington-mn-55024/new-homes/"},
-  {id:8,name:"Xxx3 217th St, Vita Attiva",price:455000,beds:2,baths:2,sqft:1503,city:"Farmington",builder:"Vita Attiva",url:"https://www.zillow.com/farmington-mn-55024/new-homes/"},
-  {id:9,name:"Cordelia Ashton Plan, Lakeville",price:499990,beds:4,baths:3,sqft:2400,city:"Lakeville",builder:"D.R. Horton",url:"https://www.zillow.com/lakeville-mn/new-homes/"},
-  {id:10,name:"Pheasant Run 6BD, Lakeville",price:515000,beds:6,baths:3,sqft:2400,city:"Lakeville",builder:"D.R. Horton",url:"https://www.zillow.com/lakeville-mn/new-homes/"},
+  {id:1,name:"21878 Denton Ave, Whispering Fields",price:317990,beds:3,baths:3,sqft:1782,city:"Farmington",builder:"Lennar",url:"https://www.zillow.com/farmington-mn-55024/new-homes/",image:"https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=480&h=300&fit=crop&auto=format"},
+  {id:2,name:"21926 Wisteria Way, Wisteria",price:334990,beds:3,baths:3,sqft:1804,city:"Farmington",builder:"Lennar",url:"https://www.zillow.com/farmington-mn-55024/new-homes/",image:"https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=480&h=300&fit=crop&auto=format"},
+  {id:3,name:"4792 218th St W, Voyageur Farms",price:358085,beds:3,baths:2,sqft:1281,city:"Farmington",builder:"Lennar",url:"https://www.zillow.com/farmington-mn/new-homes/",image:"https://images.unsplash.com/photo-1582063289852-62e3ba2747f8?w=480&h=300&fit=crop&auto=format"},
+  {id:4,name:"19139 Crystal Ter, M/I Homes",price:426990,beds:3,baths:2,sqft:1892,city:"Farmington",builder:"M/I Homes",url:"https://www.zillow.com/farmington-mn-55024/new-homes/",image:"https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=480&h=300&fit=crop&auto=format"},
+  {id:5,name:"4870 218th Ct, Voyageur Farms",price:449390,beds:3,baths:2,sqft:1281,city:"Farmington",builder:"Lennar",url:"https://www.zillow.com/farmington-mn/new-homes/",image:"https://images.unsplash.com/photo-1523217582562-09d0def993a6?w=480&h=300&fit=crop&auto=format"},
+  {id:6,name:"4884 218th Ct, Voyageur Farms",price:460485,beds:5,baths:3,sqft:2505,city:"Farmington",builder:"Lennar",url:"https://www.zillow.com/farmington-mn/new-homes/",image:"https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=480&h=300&fit=crop&auto=format"},
+  {id:7,name:"20947 Flanders Way, Whispering Fields",price:479990,beds:3,baths:3,sqft:2200,city:"Farmington",builder:"D.R. Horton",url:"https://www.zillow.com/farmington-mn-55024/new-homes/",image:"https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=480&h=300&fit=crop&auto=format"},
+  {id:8,name:"Xxx3 217th St, Vita Attiva",price:455000,beds:2,baths:2,sqft:1503,city:"Farmington",builder:"Vita Attiva",url:"https://www.zillow.com/farmington-mn-55024/new-homes/",image:"https://images.unsplash.com/photo-1576941089067-2de3c901e126?w=480&h=300&fit=crop&auto=format"},
+  {id:9,name:"Cordelia Ashton Plan, Lakeville",price:499990,beds:4,baths:3,sqft:2400,city:"Lakeville",builder:"D.R. Horton",url:"https://www.zillow.com/lakeville-mn/new-homes/",image:"https://images.unsplash.com/photo-1599427303058-f04cbcf4756f?w=480&h=300&fit=crop&auto=format"},
+  {id:10,name:"Pheasant Run 6BD, Lakeville",price:515000,beds:6,baths:3,sqft:2400,city:"Lakeville",builder:"D.R. Horton",url:"https://www.zillow.com/lakeville-mn/new-homes/",image:"https://images.unsplash.com/photo-1560185007-cde436f6a4d0?w=480&h=300&fit=crop&auto=format"},
 ];
 const CHECKLIST=[
   {id:"credit",label:"Check credit score (all 3 bureaus)",tip:"Free at annualcreditreport.com. Lenders use FICO 2, 4, 5."},
@@ -84,28 +85,45 @@ function eligibleFor(pr:DPA,p:Profile):{ok:boolean;reason:string}{if(pr.reqFirst
 function Tip({term,children}:{term:string;children:string}){return(<Tooltip><TooltipTrigger asChild><span className="inline-flex items-center gap-0.5 cursor-help border-b border-dotted border-muted-foreground/40">{term}<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="opacity-40"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></span></TooltipTrigger><TooltipContent className="max-w-xs text-xs">{children}</TooltipContent></Tooltip>);}
 
 // ══════════ MICRO COMPONENTS ══════════
-function DonutChart({segments,size=170,label}:{segments:{value:number;color:string;label:string}[];size?:number;label?:string}){
+function arcPath(cx:number,cy:number,r:number,startAngle:number,endAngle:number):string{
+  const s=startAngle*Math.PI/180,e=endAngle*Math.PI/180;
+  const x1=cx+r*Math.cos(s),y1=cy+r*Math.sin(s);
+  const x2=cx+r*Math.cos(e),y2=cy+r*Math.sin(e);
+  const large=endAngle-startAngle>180?1:0;
+  return `M${x1},${y1} A${r},${r},0,${large},1,${x2},${y2}`;
+}
+
+function DonutChart({segments,size=175,label}:{segments:{value:number;color:string;label:string}[];size?:number;label?:string}){
   const total=segments.reduce((a,s)=>a+s.value,0);if(total===0)return null;
-  const r=size*0.36,cx=size/2,cy=size/2,circ=2*Math.PI*r;let offset=circ*0.25;
-  const sw=Math.max(10, size*0.072);
+  const cx=size/2,cy=size/2,r=size*0.33,sw=size*0.085,gap=1.8;
+  let angle=-90;
+  const arcs=segments.map(s=>{
+    const sweep=(s.value/total)*360;
+    const a0=angle+gap/2,a1=angle+sweep-gap/2;
+    angle+=sweep;
+    return{...s,d:arcPath(cx,cy,r,a0,a1)};
+  });
   return(
-    <div className="flex flex-col items-center">
-      <div className="relative rounded-2xl border border-slate-200/60 bg-gradient-to-b from-white to-slate-50/50 px-2 py-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.95)]">
-        <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} className="overflow-visible">
-          {segments.map((s,i)=>{const len=(s.value/total)*circ;const el=(<circle key={i} cx={cx} cy={cy} r={r} fill="none" stroke={s.color} strokeWidth={sw} strokeDasharray={`${len} ${circ-len}`} strokeDashoffset={-offset} strokeLinecap="round" className="chart-anim"/>);offset+=len;return el;})}
+    <div className="flex flex-col items-center gap-4">
+      <div className="relative">
+        <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} aria-hidden>
+          <circle cx={cx} cy={cy} r={r} fill="none" stroke="hsl(214 30% 92%)" strokeWidth={sw}/>
+          {arcs.map((a,i)=>(
+            <path key={i} d={a.d} fill="none" stroke={a.color} strokeWidth={sw} strokeLinecap="round" className="chart-anim" style={{filter:`drop-shadow(0 1px 2px ${a.color}33)`}}/>
+          ))}
           {label&&(
             <>
-              <text x={cx} y={cy - size * 0.02} textAnchor="middle" className="fill-slate-900" style={{fontSize: size * 0.11, fontWeight: 650, fontFeatureSettings: '"tnum","lnum"'}}>{label}</text>
-              <text x={cx} y={cy + size * 0.065} textAnchor="middle" className="fill-slate-500" style={{fontSize: size * 0.052, fontWeight: 500, letterSpacing: "0.06em"}}>PER MONTH</text>
+              <text x={cx} y={cy+2} textAnchor="middle" fill="hsl(222 47% 11%)" style={{fontSize:size*0.115,fontWeight:700,fontFeatureSettings:'"tnum","lnum"'}}>{label}</text>
+              <text x={cx} y={cy+size*0.115} textAnchor="middle" fill="hsl(215 16% 52%)" style={{fontSize:size*0.052,fontWeight:500,letterSpacing:"0.08em"}}>/ MONTH</text>
             </>
           )}
         </svg>
       </div>
-      <div className="mt-3 grid w-full max-w-[260px] grid-cols-2 gap-x-4 gap-y-2 text-left">
+      <div className="w-full grid grid-cols-2 gap-x-5 gap-y-2.5">
         {segments.map((s,i)=>(
-          <div key={i} className="flex items-baseline gap-2 border-b border-slate-100/90 pb-1.5 last:border-0">
-            <span className="mt-1.5 h-2 w-2 shrink-0 rounded-sm shadow-sm" style={{background:s.color}}/>
-            <span className="text-[11px] leading-snug text-slate-600">{s.label}</span>
+          <div key={i} className="flex items-center gap-2 min-w-0">
+            <span className="h-2.5 w-2.5 shrink-0 rounded-sm" style={{background:s.color}}/>
+            <span className="text-[11px] leading-tight text-slate-600 truncate">{s.label}</span>
           </div>
         ))}
       </div>
@@ -143,13 +161,16 @@ function KPI({label,value,sub,color,icon,onClick,semantic}:{label:string;value:s
 function ListingMedia({image,builder,city}:{image?:string;builder:string;city:string}){
   const initial=builder.replace(/[^A-Za-z0-9]/g,"").slice(0,2).toUpperCase()||"NH";
   return(
-    <div className="relative h-40 w-full shrink-0 overflow-hidden bg-muted">
+    <div className="relative h-44 w-full shrink-0 overflow-hidden bg-slate-100">
       {image?(
-        <img src={image} alt="" className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.03]" loading="lazy"/>
+        <>
+          <img src={image} alt="" className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.04]" loading="lazy"/>
+          <span className="absolute bottom-2 right-2 rounded-md bg-black/50 px-1.5 py-0.5 text-[9px] font-medium uppercase tracking-wider text-white/90 backdrop-blur-sm">Illustrative photo</span>
+        </>
       ):(
         <div className="listing-media-sample property-card-media-fallback relative flex h-full w-full flex-col items-center justify-center gap-1 p-4 text-center">
           <span className="absolute top-2 right-2 rounded bg-black/35 px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wider text-white/95 backdrop-blur-sm">Sample</span>
-          <span className="text-2xl font-bold tabular-nums tracking-tight text-white">{initial}</span>
+          <span className="text-3xl font-bold tracking-tight text-white">{initial}</span>
           <span className="text-[11px] font-medium text-white/85">{builder}</span>
           <span className="text-[10px] uppercase tracking-[0.15em] text-white/55">{city}</span>
         </div>
@@ -180,7 +201,14 @@ function Gauge({score,label,color}:{score:number;label:string;color:string}){
   );
 }
 
-function Row({l,v,bold,green}:{l:string;v:string;bold?:boolean;green?:boolean}){return(<div className={`flex justify-between py-1 ${bold?"font-semibold":""}`}><span className="text-xs text-muted-foreground">{l}</span><span className={`text-xs ${green?"text-emerald-600":""} ${bold?"text-sm font-bold":""}`}>{v}</span></div>);}
+function Row({l,v,bold,green}:{l:string;v:string;bold?:boolean;green?:boolean}){
+  return(
+    <div className={`flex items-baseline justify-between py-1.5 border-b border-slate-100/80 last:border-0 ${bold?"":"opacity-90"}`}>
+      <span className={`text-xs ${bold?"font-medium text-slate-700":"text-slate-500"}`}>{l}</span>
+      <span className={`text-xs tabular-nums ${green?"text-emerald-600 font-semibold":""} ${bold?"text-sm font-bold text-slate-900":""}`}>{v}</span>
+    </div>
+  );
+}
 
 function PropertyCard({listing,maxLoan,totalDPA,buyingPower,onSelect,isSelected}:{listing:Listing;maxLoan:number;totalDPA:number;buyingPower:number;onSelect:()=>void;isSelected:boolean}){
   const affordable=listing.price<=buyingPower;
