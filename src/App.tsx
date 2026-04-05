@@ -1,4 +1,17 @@
-import { useState, useMemo, useCallback, useEffect } from "react";
+import { useState, useMemo, useCallback, useEffect, type ReactNode, type KeyboardEvent } from "react";
+import {
+  Home,
+  LineChart,
+  Wallet,
+  Banknote,
+  Gift,
+  ClipboardCheck,
+  PieChart,
+  Building2,
+  Search,
+  CalendarDays,
+  type LucideIcon,
+} from "lucide-react";
 // Logo is loaded via <link rel="icon"> in index.html which Parcel hashes and copies to dist.
 // We read the href at runtime to get the correct hashed path.
 const faviconLink = document.querySelector('link[rel="icon"]') as HTMLLinkElement|null;
@@ -37,17 +50,24 @@ const PROGRAMS:DPA[]=[
   {id:"chenoa",name:"Chenoa Fund DPA",short:"Chenoa Fund",max:20000,pctCap:3.5,type:"Forgivable (3yr)",forgiveYrs:3,incomeLimit:999999,ficoMin:620,priceLimit:552000,status:"open",coverage:"Nationwide",url:"chenoafund.org",phone:"chenoafund.org",notes:"Covers FHA 3.5% as second mortgage.",reqFirstTime:false,reqFirstGen:false},
   {id:"naf",name:"New American Funding DPA",short:"NAF DPA",max:6000,type:"Deferred",incomeLimit:999999,ficoMin:620,priceLimit:766550,status:"open",coverage:"Nationwide",url:"newamericanfunding.com",phone:"newamericanfunding.com",notes:"Combinable with MN Housing DPA.",reqFirstTime:false,reqFirstGen:false},
 ];
+const CURATED_IMAGES=[
+  "https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=800&q=80&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&q=80&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&q=80&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800&q=80&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=800&q=80&auto=format&fit=crop",
+];
 const CURATED:Listing[]=[
-  {id:1,name:"21878 Denton Ave, Whispering Fields",price:317990,beds:3,baths:3,sqft:1782,city:"Farmington",builder:"Lennar",url:"https://www.zillow.com/farmington-mn-55024/new-homes/"},
-  {id:2,name:"21926 Wisteria Way, Wisteria",price:334990,beds:3,baths:3,sqft:1804,city:"Farmington",builder:"Lennar",url:"https://www.zillow.com/farmington-mn-55024/new-homes/"},
-  {id:3,name:"4792 218th St W, Voyageur Farms",price:358085,beds:3,baths:2,sqft:1281,city:"Farmington",builder:"Lennar",url:"https://www.zillow.com/farmington-mn/new-homes/"},
-  {id:4,name:"19139 Crystal Ter, M/I Homes",price:426990,beds:3,baths:2,sqft:1892,city:"Farmington",builder:"M/I Homes",url:"https://www.zillow.com/farmington-mn-55024/new-homes/"},
-  {id:5,name:"4870 218th Ct, Voyageur Farms",price:449390,beds:3,baths:2,sqft:1281,city:"Farmington",builder:"Lennar",url:"https://www.zillow.com/farmington-mn/new-homes/"},
-  {id:6,name:"4884 218th Ct, Voyageur Farms",price:460485,beds:5,baths:3,sqft:2505,city:"Farmington",builder:"Lennar",url:"https://www.zillow.com/farmington-mn/new-homes/"},
-  {id:7,name:"20947 Flanders Way, Whispering Fields",price:479990,beds:3,baths:3,sqft:2200,city:"Farmington",builder:"D.R. Horton",url:"https://www.zillow.com/farmington-mn-55024/new-homes/"},
-  {id:8,name:"Xxx3 217th St, Vita Attiva",price:455000,beds:2,baths:2,sqft:1503,city:"Farmington",builder:"Vita Attiva",url:"https://www.zillow.com/farmington-mn-55024/new-homes/"},
-  {id:9,name:"Cordelia Ashton Plan, Lakeville",price:499990,beds:4,baths:3,sqft:2400,city:"Lakeville",builder:"D.R. Horton",url:"https://www.zillow.com/lakeville-mn/new-homes/"},
-  {id:10,name:"Pheasant Run 6BD, Lakeville",price:515000,beds:6,baths:3,sqft:2400,city:"Lakeville",builder:"D.R. Horton",url:"https://www.zillow.com/lakeville-mn/new-homes/"},
+  {id:1,name:"21878 Denton Ave, Whispering Fields",price:317990,beds:3,baths:3,sqft:1782,city:"Farmington",builder:"Lennar",image:CURATED_IMAGES[0],url:"https://www.zillow.com/farmington-mn-55024/new-homes/"},
+  {id:2,name:"21926 Wisteria Way, Wisteria",price:334990,beds:3,baths:3,sqft:1804,city:"Farmington",builder:"Lennar",image:CURATED_IMAGES[1],url:"https://www.zillow.com/farmington-mn-55024/new-homes/"},
+  {id:3,name:"4792 218th St W, Voyageur Farms",price:358085,beds:3,baths:2,sqft:1281,city:"Farmington",builder:"Lennar",image:CURATED_IMAGES[2],url:"https://www.zillow.com/farmington-mn/new-homes/"},
+  {id:4,name:"19139 Crystal Ter, M/I Homes",price:426990,beds:3,baths:2,sqft:1892,city:"Farmington",builder:"M/I Homes",image:CURATED_IMAGES[3],url:"https://www.zillow.com/farmington-mn-55024/new-homes/"},
+  {id:5,name:"4870 218th Ct, Voyageur Farms",price:449390,beds:3,baths:2,sqft:1281,city:"Farmington",builder:"Lennar",image:CURATED_IMAGES[4],url:"https://www.zillow.com/farmington-mn/new-homes/"},
+  {id:6,name:"4884 218th Ct, Voyageur Farms",price:460485,beds:5,baths:3,sqft:2505,city:"Farmington",builder:"Lennar",image:CURATED_IMAGES[0],url:"https://www.zillow.com/farmington-mn/new-homes/"},
+  {id:7,name:"20947 Flanders Way, Whispering Fields",price:479990,beds:3,baths:3,sqft:2200,city:"Farmington",builder:"D.R. Horton",image:CURATED_IMAGES[1],url:"https://www.zillow.com/farmington-mn-55024/new-homes/"},
+  {id:8,name:"Xxx3 217th St, Vita Attiva",price:455000,beds:2,baths:2,sqft:1503,city:"Farmington",builder:"Vita Attiva",image:CURATED_IMAGES[2],url:"https://www.zillow.com/farmington-mn-55024/new-homes/"},
+  {id:9,name:"Cordelia Ashton Plan, Lakeville",price:499990,beds:4,baths:3,sqft:2400,city:"Lakeville",builder:"D.R. Horton",image:CURATED_IMAGES[3],url:"https://www.zillow.com/lakeville-mn/new-homes/"},
+  {id:10,name:"Pheasant Run 6BD, Lakeville",price:515000,beds:6,baths:3,sqft:2400,city:"Lakeville",builder:"D.R. Horton",image:CURATED_IMAGES[4],url:"https://www.zillow.com/lakeville-mn/new-homes/"},
 ];
 const CHECKLIST=[
   {id:"credit",label:"Check credit score (all 3 bureaus)",tip:"Free at annualcreditreport.com. Lenders use FICO 2, 4, 5."},
@@ -80,8 +100,43 @@ function DonutChart({segments,size=170,label}:{segments:{value:number;color:stri
   </svg><div className="flex flex-wrap gap-x-3 gap-y-1 justify-center mt-1">{segments.map((s,i)=>(<div key={i} className="flex items-center gap-1"><div className="w-2 h-2 rounded-full" style={{background:s.color}}/><span className="text-[10px] text-muted-foreground">{s.label}</span></div>))}</div></div>);
 }
 
-function KPI({label,value,sub,color,icon,onClick}:{label:string;value:string;sub?:string;color?:string;icon?:string;onClick?:()=>void}){
-  return(<Card className={`hover:shadow-lg transition-all ${onClick?"cursor-pointer":""}`} onClick={onClick}><CardContent className="p-4"><div className="flex items-start justify-between"><div><p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground mb-1">{label}</p><p className="text-2xl font-bold leading-tight" style={{color:color||"hsl(var(--foreground))"}}>{value}</p>{sub&&<p className="text-[11px] text-muted-foreground mt-0.5">{sub}</p>}</div>{icon&&<span className="text-2xl opacity-15">{icon}</span>}</div></CardContent></Card>);
+function KPI({label,value,sub,color,icon,onClick}:{label:string;value:string;sub?:string;color?:string;icon?:ReactNode;onClick?:()=>void}){
+  return(
+    <Card
+      className={`kpi-card min-h-[108px] hover:shadow-lg transition-all ${onClick?"cursor-pointer focus-within:ring-2 focus-within:ring-[var(--brand-navy)]/25":""}`}
+      onClick={onClick}
+      role={onClick?"button":undefined}
+      tabIndex={onClick?0:undefined}
+      onKeyDown={onClick?(e)=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();onClick();}}:undefined}
+    >
+      <CardContent className="p-4 h-full flex flex-col justify-between">
+        <div className="flex items-start justify-between gap-2">
+          <div className="min-w-0 flex-1">
+            <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground mb-1">{label}</p>
+            <p className="text-2xl font-bold leading-tight tabular-nums" style={{color:color||"hsl(var(--foreground))"}}>{value}</p>
+            {sub&&<p className="text-[11px] text-muted-foreground mt-0.5 leading-snug">{sub}</p>}
+          </div>
+          {icon&&<div className="text-[color:var(--brand-navy)] opacity-[0.18] shrink-0 mt-0.5">{icon}</div>}
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
+function ListingMedia({image,builder,city}:{image?:string;builder:string;city:string}){
+  const initial=builder.replace(/[^A-Za-z0-9]/g,"").slice(0,2).toUpperCase()||"NH";
+  return(
+    <div className="relative h-40 w-full shrink-0 overflow-hidden bg-muted">
+      {image?(
+        <img src={image} alt="" className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.03]" loading="lazy"/>
+      ):(
+        <div className="property-card-media-fallback flex h-full w-full flex-col items-center justify-center gap-1 p-4 text-center">
+          <span className="text-2xl font-bold tracking-tight text-white/90">{initial}</span>
+          <span className="text-[10px] font-medium uppercase tracking-widest text-white/70">{city}</span>
+        </div>
+      )}
+    </div>
+  );
 }
 
 function Gauge({score,label,color}:{score:number;label:string;color:string}){
@@ -97,29 +152,36 @@ function PropertyCard({listing,maxLoan,totalDPA,buyingPower,onSelect,isSelected}
   const reachWithDPA=!withinDTI&&affordable;
   const firstGenOk=listing.price<=515200;
   const matchPct=affordable?clamp(Math.round((1-(listing.price/buyingPower))*100+70),50,99):clamp(Math.round((buyingPower/listing.price)*80),10,49);
+  const onKeyDown=(e:KeyboardEvent)=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();onSelect();}};
 
   return(
-    <Card className={`overflow-hidden transition-all cursor-pointer ${isSelected?"ring-2 ring-[#2d6a2e] shadow-lg":"hover:shadow-md"} ${!affordable?"opacity-60":""}`} onClick={onSelect}>
-      {listing.image&&<div className="h-32 bg-muted overflow-hidden"><img src={listing.image} alt="" className="w-full h-full object-cover"/></div>}
-      <CardContent className="p-3 space-y-1.5">
-        <div className="flex justify-between items-start">
-          <p className="text-lg font-bold" style={{color:"var(--brand-navy)"}}>{$(listing.price)}</p>
-          <div className="text-right">
-            <p className="text-xs font-bold" style={{color:matchPct>=70?"#2d6a2e":matchPct>=50?"#d4a017":"#dc2626"}}>{matchPct}%</p>
-            <p className="text-[9px] text-muted-foreground">match</p>
+    <Card
+      className={`group overflow-hidden transition-all duration-200 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2d6a2e] focus-visible:ring-offset-2 ${isSelected?"ring-2 ring-[#2d6a2e] shadow-lg":"hover:shadow-lg hover:-translate-y-0.5"} ${!affordable?"opacity-65":""}`}
+      onClick={onSelect}
+      onKeyDown={onKeyDown}
+      tabIndex={0}
+      role="button"
+    >
+      <ListingMedia image={listing.image} builder={listing.builder} city={listing.city}/>
+      <CardContent className="p-3.5 space-y-2 min-h-[7.5rem]">
+        <div className="flex justify-between items-start gap-2">
+          <p className="text-xl font-bold tabular-nums leading-none" style={{color:"var(--brand-navy)"}}>{$(listing.price)}</p>
+          <div className="text-right shrink-0">
+            <p className="text-sm font-bold tabular-nums" style={{color:matchPct>=70?"#2d6a2e":matchPct>=50?"#d4a017":"#dc2626"}}>{matchPct}%</p>
+            <p className="text-[10px] text-muted-foreground">match</p>
           </div>
         </div>
-        <p className="text-xs font-medium leading-tight">{listing.name}</p>
-        <p className="text-[10px] text-muted-foreground">{listing.beds}bd {listing.baths}ba {listing.sqft.toLocaleString()}sf &middot; {listing.city}</p>
-        <div className="flex gap-1 flex-wrap">
-          {listing.builder&&<Badge variant="outline" className="text-[8px] py-0 h-3.5">{listing.builder}</Badge>}
-          {firstGenOk&&<Badge className="text-[8px] py-0 h-3.5 bg-emerald-50 text-emerald-700 border-emerald-200 border">First-Gen Eligible</Badge>}
-          {withinDTI&&<Badge className="text-[8px] py-0 h-3.5 bg-emerald-50 text-emerald-700 border border-emerald-200">Within Budget</Badge>}
-          {reachWithDPA&&<Badge className="text-[8px] py-0 h-3.5 bg-blue-50 text-blue-700 border border-blue-200">Reach with DPA</Badge>}
-          {!affordable&&<Badge className="text-[8px] py-0 h-3.5 bg-red-50 text-red-700 border border-red-200">Over Budget</Badge>}
+        <p className="text-sm font-semibold leading-snug line-clamp-2">{listing.name}</p>
+        <p className="text-xs text-muted-foreground">{listing.beds} bd · {listing.baths} ba · {listing.sqft.toLocaleString()} sf · {listing.city}</p>
+        <div className="flex gap-1.5 flex-wrap">
+          {listing.builder&&<Badge variant="outline" className="text-[10px] py-0.5 h-5 font-normal">{listing.builder}</Badge>}
+          {firstGenOk&&<Badge className="text-[10px] py-0.5 h-5 bg-emerald-50 text-emerald-800 border border-emerald-200/80">First-Gen</Badge>}
+          {withinDTI&&<Badge className="text-[10px] py-0.5 h-5 bg-emerald-50 text-emerald-800 border border-emerald-200/80">In budget</Badge>}
+          {reachWithDPA&&<Badge className="text-[10px] py-0.5 h-5 bg-sky-50 text-sky-800 border border-sky-200/80">DPA reach</Badge>}
+          {!affordable&&<Badge className="text-[10px] py-0.5 h-5 bg-red-50 text-red-800 border border-red-200/80">Over</Badge>}
         </div>
-        {reachWithDPA&&<p className="text-[9px] text-blue-600 bg-blue-50 p-1.5 rounded">Reachable with your {$(totalDPA)} in selected DPA</p>}
-        {!affordable&&listing.price<buyingPower*1.15&&<p className="text-[9px] text-amber-600 bg-amber-50 p-1.5 rounded">Tip: Reducing monthly debt by {$(Math.round((listing.price-buyingPower)*0.006))} could make this affordable</p>}
+        {reachWithDPA&&<p className="text-[11px] text-sky-800 bg-sky-50/90 border border-sky-100 p-2 rounded-md leading-snug">Reachable with {$(totalDPA)} in selected DPA.</p>}
+        {!affordable&&listing.price<buyingPower*1.15&&<p className="text-[11px] text-amber-800 bg-amber-50 border border-amber-100 p-2 rounded-md leading-snug">Tip: ~{$(Math.round((listing.price-buyingPower)*0.006))}/mo less debt could qualify this price.</p>}
       </CardContent>
     </Card>
   );
@@ -146,7 +208,14 @@ function SearchResultCard({result,maxLoan,totalDPA,buyingPower,onSelect,isSelect
   );
 }
 
-const NAV=[{id:"ready",label:"Readiness",icon:"📊"},{id:"afford",label:"Affordability",icon:"💰"},{id:"programs",label:"DPA Programs",icon:"🏛"},{id:"search",label:"Home Search",icon:"🏡"},{id:"checklist",label:"Milestones",icon:"✅"}];
+const NAV:{id:string;label:string;Icon:LucideIcon}[]=[
+  {id:"ready",label:"Readiness",Icon:LineChart},
+  {id:"afford",label:"Affordability",Icon:Wallet},
+  {id:"programs",label:"DPA Programs",Icon:Building2},
+  {id:"search",label:"Home Search",Icon:Search},
+  {id:"checklist",label:"Milestones",Icon:ClipboardCheck},
+];
+const VIEW_TITLES:Record<string,string>={ready:"Readiness",afford:"Affordability",programs:"DPA Programs",search:"Home Search",checklist:"Milestones"};
 const STORAGE_KEY="mn_homebuyer_v2";
 function loadProfile():Profile|null{try{const d=localStorage.getItem(STORAGE_KEY);return d?JSON.parse(d):null;}catch{return null;}}
 function saveProfile(p:Profile){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(p));}catch{}}
@@ -277,6 +346,11 @@ export default function App(){
     return{maxLoan,dtiMax,totalPower};
   },[p.income,effDebt,rate,totalDPA]);
 
+  const curatedInBudgetCount=useMemo(()=>{
+    if(buyingPower.totalPower<=0)return 0;
+    return CURATED.filter(l=>l.price<=buyingPower.totalPower).length;
+  },[buyingPower.totalPower]);
+
   const toggleProg=useCallback((id:string)=>{setSelProgs(prev=>{const n=new Set(prev);n.has(id)?n.delete(id):n.add(id);return n;});},[]);
 
   const doSearch=useCallback(async()=>{
@@ -340,28 +414,39 @@ export default function App(){
   // ══════════ DASHBOARD ══════════
   return(
     <TooltipProvider>
-    <div className="min-h-screen flex" style={{background:"var(--brand-cream)"}}>
+    <div className="min-h-screen flex">
       {/* SIDEBAR */}
       <aside className={`sidebar-bg text-white flex-shrink-0 transition-all duration-300 ${sidebarOpen?"w-52":"w-14"} hidden md:flex flex-col`} style={{minHeight:"100vh",position:"sticky",top:0}}>
         <div className="p-3 flex items-center gap-2 border-b border-white/10">
-          <button onClick={()=>setSidebarOpen(!sidebarOpen)} className="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-white/10"><img src={logoImg} alt="" className="w-7 h-7 object-contain"/></button>
-          {sidebarOpen&&<span className="text-sm font-semibold gold-accent">MN Homebuyer</span>}
+          <button type="button" onClick={()=>setSidebarOpen(!sidebarOpen)} className="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-white/10" aria-label={sidebarOpen?"Collapse sidebar":"Expand sidebar"}><img src={logoImg} alt="" className="w-7 h-7 object-contain"/></button>
+          {sidebarOpen&&<span className="text-sm font-semibold gold-accent tracking-tight">MN Homebuyer</span>}
         </div>
-        <nav className="flex-1 py-2">{NAV.map(n=>(<button key={n.id} onClick={()=>setView(n.id)} className={`w-full flex items-center gap-3 px-3 py-2.5 text-left transition-colors ${view===n.id?"bg-white/15 text-white":"text-white/60 hover:text-white/90 hover:bg-white/5"}`}><span className="text-base w-5 text-center">{n.icon}</span>{sidebarOpen&&<span className="text-xs font-medium">{n.label}</span>}</button>))}</nav>
-        {sidebarOpen&&<div className="p-3 border-t border-white/10 text-[10px]"><p className="text-white/40 uppercase tracking-widest mb-1">Profile</p><p className="text-white/80">{p.name||"User"} &middot; {p.county}</p><p className="text-white/50">{$(p.income)}/yr &middot; FICO {p.fico}</p><Button variant="ghost" size="sm" className="w-full text-[10px] text-white/50 hover:text-white h-6 mt-1" onClick={()=>{localStorage.removeItem(STORAGE_KEY);setStarted(false);}}>Edit Profile</Button></div>}
+        <nav className="flex-1 py-2">{NAV.map(n=>(<button key={n.id} type="button" onClick={()=>setView(n.id)} className={`w-full flex items-center gap-3 px-3 py-2.5 text-left transition-colors border-l-2 ${view===n.id?"border-amber-400/90 bg-white/10 text-white":"border-transparent text-white/70 hover:text-white hover:bg-white/5"}`}><n.Icon className="h-4 w-4 shrink-0 opacity-95" aria-hidden />{sidebarOpen&&<span className="text-xs font-medium">{n.label}</span>}</button>))}</nav>
+        {sidebarOpen&&<div className="p-3 border-t border-white/10 text-[10px] space-y-2"><div><p className="text-white/40 uppercase tracking-widest mb-1">Profile</p><p className="text-white/85">{p.name||"User"} · {p.county}</p><p className="text-white/55">{$(p.income)}/yr · FICO {p.fico}</p></div><Button variant="ghost" size="sm" className="w-full text-[10px] text-white/80 hover:text-white h-8 justify-start gap-2" onClick={()=>setStarted(false)}><Home className="h-3.5 w-3.5 shrink-0"/>Welcome screen</Button><Button variant="ghost" size="sm" className="w-full text-[10px] text-white/45 hover:text-red-200 h-7 justify-start" onClick={()=>{localStorage.removeItem(STORAGE_KEY);setStarted(false);}}>Reset profile</Button></div>}
       </aside>
       {/* MOBILE NAV */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white border-t flex justify-around py-1.5">{NAV.map(n=>(<button key={n.id} onClick={()=>setView(n.id)} className={`flex flex-col items-center gap-0.5 px-2 py-1 ${view===n.id?"text-[color:var(--brand-navy)]":"text-muted-foreground"}`}><span className="text-lg">{n.icon}</span><span className="text-[9px]">{n.label}</span></button>))}</div>
+      <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-t border-border/80 flex justify-around py-2 shadow-[0_-8px_30px_rgba(26,46,68,0.08)]">{NAV.map(n=>(<button key={n.id} type="button" onClick={()=>setView(n.id)} className={`flex flex-col items-center gap-0.5 px-2 py-1 rounded-xl min-w-[3.25rem] transition-colors ${view===n.id?"text-[color:var(--brand-navy)] bg-[color:var(--brand-cream)]":"text-muted-foreground"}`}><n.Icon className="h-5 w-5" aria-hidden /><span className="text-[9px] font-medium leading-tight text-center">{n.label}</span></button>))}</div>
 
-      <div className="flex-1 overflow-auto pb-20 md:pb-0">
-        <div className="max-w-[1300px] mx-auto p-4 lg:p-6 space-y-4">
+      <div className="flex-1 overflow-auto pb-20 md:pb-0 dashboard-page-bg">
+        <div className="max-w-[1300px] mx-auto p-4 lg:p-6 space-y-5">
+          <header className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:gap-4 fade-in border-b border-border/50 pb-4">
+            <div className="min-w-0">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">{VIEW_TITLES[view]}</p>
+              <h1 className="text-xl sm:text-2xl font-bold tracking-tight mt-1" style={{color:"var(--brand-navy)"}}>MN Homebuyer Dashboard</h1>
+              <p className="text-sm text-muted-foreground mt-1 max-w-xl leading-relaxed">Profile-driven estimates for South Metro buyers and DPA stacking.</p>
+            </div>
+            <Button type="button" variant="outline" size="sm" className="gap-2 shrink-0 border-[color:var(--brand-navy)]/20 text-[color:var(--brand-navy)] hover:bg-[color:var(--brand-cream)]" onClick={()=>setStarted(false)}>
+              <Home className="h-4 w-4" /> Welcome
+            </Button>
+          </header>
+
           {/* KPIs */}
           <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
-            <KPI label="Buying Power" value={buyingPower.totalPower>0?$k(buyingPower.totalPower):"--"} sub={`DTI: ${$k(buyingPower.dtiMax)} + DPA`} color="var(--brand-navy)" icon="🏠" onClick={()=>setView("afford")}/>
-            <KPI label="Est. Monthly" value={p.income>0?$(mort.total):"--"} sub={`${$(price)} · ${rate}%${liveRates?" (live)":""}`} color={mort.bDTI<=43?"#2d6a2e":mort.bDTI<=50?"#d4a017":"#dc2626"} icon="📅" onClick={()=>setView("afford")}/>
-            <KPI label="Cash to Close" value={$(mort.oop)} sub={mort.oop===0?"DPA covers all":"After DPA"} color={mort.oop===0?"#2d6a2e":"var(--brand-navy)"} icon="💵" onClick={()=>setView("afford")}/>
-            <KPI label="DPA Available" value={$k(totalDPA)} sub={`${selProgs.size} program(s)`} color="var(--brand-green)" icon="🎁" onClick={()=>setView("programs")}/>
-            <KPI label="Readiness" value={`${readiness.score}%`} sub={readiness.label} color={readiness.color} icon="📊" onClick={()=>setView("ready")}/>
+            <KPI label="Buying Power" value={buyingPower.totalPower>0?$k(buyingPower.totalPower):"--"} sub={`DTI: ${$k(buyingPower.dtiMax)} + DPA`} color="var(--brand-navy)" icon={<Building2 className="h-5 w-5" strokeWidth={1.5} />} onClick={()=>setView("afford")}/>
+            <KPI label="Est. Monthly" value={p.income>0?$(mort.total):"--"} sub={`${$(price)} · ${rate}%${liveRates?" (live)":""}`} color={mort.bDTI<=43?"#2d6a2e":mort.bDTI<=50?"#d4a017":"#dc2626"} icon={<CalendarDays className="h-5 w-5" strokeWidth={1.5} />} onClick={()=>setView("afford")}/>
+            <KPI label="Cash to Close" value={$(mort.oop)} sub={mort.oop===0?"DPA covers all":"After DPA"} color={mort.oop===0?"#2d6a2e":"var(--brand-navy)"} icon={<Banknote className="h-5 w-5" strokeWidth={1.5} />} onClick={()=>setView("afford")}/>
+            <KPI label="DPA Available" value={$k(totalDPA)} sub={`${selProgs.size} program(s)`} color="var(--brand-green)" icon={<Gift className="h-5 w-5" strokeWidth={1.5} />} onClick={()=>setView("programs")}/>
+            <KPI label="Readiness" value={`${readiness.score}%`} sub={readiness.label} color={readiness.color} icon={<PieChart className="h-5 w-5" strokeWidth={1.5} />} onClick={()=>setView("ready")}/>
           </div>
 
           {/* ═══ READINESS ═══ */}
@@ -480,13 +565,30 @@ export default function App(){
                 </div>
               </CardContent></Card>
 
-              {/* Results Feed */}
-              <Card><CardHeader className="pb-2"><CardTitle className="text-sm font-semibold">South Metro New Construction</CardTitle></CardHeader>
-              <CardContent className="p-0">
-                <div className="max-h-[450px] overflow-y-auto px-4 pb-3 space-y-2">
-                  {CURATED.map(l=>(<PropertyCard key={l.id} listing={l} maxLoan={buyingPower.maxLoan} totalDPA={totalDPA} buyingPower={buyingPower.totalPower} onSelect={()=>selectProperty(l)} isSelected={selectedCurated===l.id}/>))}
+              {/* Curated spotlight */}
+              <Card className="overflow-hidden border-[color:var(--brand-navy)]/10 shadow-md">
+                <div className="bg-gradient-to-br from-[#1a2e44] via-[#1e4a2a] to-[#2d6a2e] px-4 py-3 text-white">
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-white/70">South Metro spotlight</p>
+                  <CardTitle className="text-base font-bold text-white mt-1">Curated new construction</CardTitle>
+                  <p className="text-xs text-white/85 mt-1.5 leading-relaxed">Sample South Metro inventory for your buyer&apos;s profile—match scores and DPA tags update live as programs change.</p>
+                  <div className="flex flex-wrap gap-2 mt-3">
+                    <Badge className="bg-white/15 text-white border-0 text-[11px] font-medium">{CURATED.length} listings</Badge>
+                    {buyingPower.totalPower>0&&(
+                      <Badge className="bg-emerald-400/25 text-emerald-50 border border-emerald-300/40 text-[11px] font-medium">{curatedInBudgetCount} within {$(buyingPower.totalPower)} budget</Badge>
+                    )}
+                    {buyingPower.totalPower<=0&&(
+                      <Badge variant="secondary" className="bg-white/10 text-white/90 border-0 text-[11px]">Enter income to see budget match</Badge>
+                    )}
+                  </div>
                 </div>
-              </CardContent></Card>
+                <CardContent className="p-3 sm:p-4">
+                  <div className="max-h-[min(520px,55vh)] overflow-y-auto pr-1 -mr-1">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      {CURATED.map(l=>(<PropertyCard key={l.id} listing={l} maxLoan={buyingPower.maxLoan} totalDPA={totalDPA} buyingPower={buyingPower.totalPower} onSelect={()=>selectProperty(l)} isSelected={selectedCurated===l.id}/>))}
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
             </div>
 
             {/* RIGHT: Property Detail / Analysis */}
