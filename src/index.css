@@ -4,10 +4,10 @@
 
 @layer base {
   :root {
-    --background: 100 10% 96%;
-    --foreground: 210 30% 14%;
-    --card: 60 20% 99%;
-    --card-foreground: 210 30% 14%;
+    --background: 210 20% 98%;
+    --foreground: 215 25% 15%;
+    --card: 0 0% 100%;
+    --card-foreground: 215 25% 15%;
     --popover: 60 20% 99%;
     --popover-foreground: 210 30% 14%;
     --primary: 210 42% 18%;
@@ -31,7 +31,7 @@
     --brand-green: #2d6a2e;
     --brand-gold: #d4a017;
     --brand-sky: #4a90c4;
-    --brand-cream: #f5f7f2;
+    --brand-cream: #f4f6f9;
     --brand-forest: #1e5631;
     --brand-lime: #4a8c3f;
   }
@@ -39,7 +39,8 @@
 
 @layer base {
   * { @apply border-border; }
-  body { @apply bg-background text-foreground antialiased; font-family: 'DM Sans', system-ui, -apple-system, sans-serif; }
+  body { @apply bg-background text-foreground antialiased; font-family: 'IBM Plex Sans', system-ui, -apple-system, sans-serif; font-feature-settings: "tnum" 1, "lnum" 1; }
+  .font-display { font-family: 'Fraunces', Georgia, 'Times New Roman', serif; }
 }
 
 @layer utilities {
@@ -54,13 +55,30 @@
   .brand-btn { background: linear-gradient(135deg, var(--brand-navy) 0%, var(--brand-green) 100%); }
   .gold-accent { color: var(--brand-gold); }
   .dashboard-page-bg {
-    background-color: var(--brand-cream);
+    background-color: hsl(var(--background));
     background-image:
-      radial-gradient(ellipse 100% 80% at 50% -30%, rgba(26, 46, 68, 0.07), transparent 55%),
-      radial-gradient(ellipse 70% 50% at 100% 20%, rgba(45, 106, 46, 0.05), transparent 50%),
-      radial-gradient(ellipse 60% 40% at 0% 80%, rgba(212, 160, 23, 0.04), transparent 45%);
+      radial-gradient(ellipse 90% 60% at 50% -20%, rgba(26, 46, 68, 0.04), transparent 50%),
+      linear-gradient(180deg, hsl(var(--background)) 0%, hsl(210 18% 97%) 100%);
+  }
+  .dashboard-card {
+    @apply bg-card border border-slate-200/90 shadow-sm rounded-xl;
+  }
+  .landing-shell {
+    min-height: 100vh;
+    background-color: hsl(215 22% 97%);
+    background-image:
+      linear-gradient(rgba(26, 46, 68, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(26, 46, 68, 0.03) 1px, transparent 1px);
+    background-size: 24px 24px;
   }
   .property-card-media-fallback {
-    background: linear-gradient(145deg, var(--brand-navy) 0%, #243d52 40%, var(--brand-forest) 100%);
+    background: linear-gradient(155deg, #1a2e44 0%, #1e3d52 45%, #1e5631 100%);
+  }
+  .listing-media-sample {
+    background-color: #1e2a3a;
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+    background-size: 12px 12px;
   }
 }
