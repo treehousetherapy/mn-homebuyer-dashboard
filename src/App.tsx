@@ -27,7 +27,7 @@ import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import { DPAWatchlist } from "@/components/DPAWatchlist";
 import { AIChatbot } from "@/components/AIChatbot";
 
@@ -36,6 +36,7 @@ interface Profile{name:string;income:number;fico:number;debt:number;savings:numb
 interface DPA{id:string;name:string;short:string;max:number;pctCap?:number;type:string;forgiveYrs?:number;incomeLimit:number;ficoMin:number;priceLimit:number;status:"open"|"closed";coverage:string;url:string;phone:string;notes:string;reqFirstTime:boolean;reqFirstGen:boolean;}
 interface Listing{id:number;name:string;price:number;beds:number;baths:number;sqft:number;city:string;builder:string;url:string;image?:string;}
 interface SearchResult{zpid:string;address:string;price:number;bedrooms:number;bathrooms:number;livingArea:number;imgSrc:string;detailUrl:string;city:string;}
+type ToggleField = "firstTime" | "firstGen" | "education" | "isSelfEmployed";
 
 // ══════════ DATA ══════════
 const COUNTY_TAX:Record<string,number>={"Anoka":0.0115,"Carver":0.0105,"Chisago":0.011,"Dakota":0.011,"Hennepin":0.0125,"Isanti":0.0115,"Ramsey":0.013,"Scott":0.0108,"Sherburne":0.011,"Washington":0.0112,"Wright":0.0108};
@@ -81,8 +82,6 @@ const pmtCalc=(principal:number,r:number,y:number)=>{const mr=r/100/12,n=y*12;re
 const clamp=(v:number,lo:number,hi:number)=>Math.min(hi,Math.max(lo,v));
 const getTax=(c:string)=>COUNTY_TAX[c]||0.012;
 function eligibleFor(pr:DPA,p:Profile):{ok:boolean;reason:string}{if(pr.reqFirstGen&&!p.firstGen)return{ok:false,reason:"First-gen only"};if(pr.reqFirstTime&&!p.firstTime)return{ok:false,reason:"First-time only"};if(p.income>pr.incomeLimit&&pr.incomeLimit<900000)return{ok:false,reason:"Income over limit"};if(p.fico<pr.ficoMin&&pr.ficoMin>0)return{ok:false,reason:`FICO < ${pr.ficoMin}`};return{ok:true,reason:"Eligible"};}
-
-function Tip({term,children}:{term:string;children:string}){return(<Tooltip><TooltipTrigger asChild><span className="inline-flex items-center gap-0.5 cursor-help border-b border-dotted border-muted-foreground/40">{term}<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="opacity-40"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></span></TooltipTrigger><TooltipContent className="max-w-xs text-xs">{children}</TooltipContent></Tooltip>);}
 
 // ══════════ MICRO COMPONENTS ══════════
 function arcPath(cx:number,cy:number,r:number,startAngle:number,endAngle:number):string{
@@ -178,7 +177,7 @@ function ListingMedia({image,builder,city}:{image?:string;builder:string;city:st
 
 function Gauge({score,label,color}:{score:number;label:string;color:string}){
   const gid=useId().replace(/:/g,"");
-  const r=50,cx=64,cy=62,circ=2*Math.PI*r,arc=circ*0.75,off=arc-(score/100)*arc;
+  const r=50,cx=64,circ=2*Math.PI*r,arc=circ*0.75,off=arc-(score/100)*arc;
   const endGreen="#0f766e";
   return(
     <div className="w-full rounded-2xl border border-slate-200/70 bg-gradient-to-b from-white via-white to-slate-50/60 p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.95),0_1px_2px_rgba(15,23,42,0.04)]">
@@ -248,27 +247,6 @@ function PropertyCard({listing,maxLoan,totalDPA,buyingPower,onSelect,isSelected}
   );
 }
 
-function SearchResultCard({result,maxLoan,totalDPA,buyingPower,onSelect,isSelected}:{result:SearchResult;maxLoan:number;totalDPA:number;buyingPower:number;onSelect:()=>void;isSelected:boolean}){
-  const affordable=result.price<=buyingPower;
-  const withinDTI=result.price<=maxLoan/(1-0.035);
-  const reachWithDPA=!withinDTI&&affordable;
-  const firstGenOk=result.price<=515200;
-
-  return(
-    <Card className={`overflow-hidden cursor-pointer transition-all ${isSelected?"ring-2 ring-[#2d6a2e] shadow-lg":"hover:shadow-md"} ${!affordable?"opacity-50":""}`} onClick={onSelect}>
-      {result.imgSrc&&<div className="h-36 bg-muted overflow-hidden relative"><img src={result.imgSrc} alt="" className="w-full h-full object-cover"/><Badge className="absolute top-2 left-2 text-[9px] bg-black/60 text-white border-0">{result.city}</Badge>{firstGenOk&&<Badge className="absolute top-2 right-2 text-[8px] bg-emerald-600 text-white border-0">First-Gen OK</Badge>}</div>}
-      <CardContent className="p-3 space-y-1">
-        <div className="flex justify-between items-start">
-          <p className="text-base font-bold" style={{color:"var(--brand-navy)"}}>{$(result.price)}</p>
-          {affordable?<Badge className="text-[8px] py-0 h-3.5 bg-emerald-50 text-emerald-700 border border-emerald-200">{reachWithDPA?"DPA Reach":"Affordable"}</Badge>:<Badge className="text-[8px] py-0 h-3.5 bg-red-50 text-red-700 border border-red-200">Over Budget</Badge>}
-        </div>
-        <p className="text-[11px] text-muted-foreground truncate">{result.address}</p>
-        <p className="text-[11px] text-muted-foreground">{result.bedrooms}bd · {result.bathrooms}ba · {result.livingArea?.toLocaleString()}sf</p>
-      </CardContent>
-    </Card>
-  );
-}
-
 const NAV:{id:string;label:string;Icon:LucideIcon}[]=[
   {id:"ready",label:"Readiness",Icon:LineChart},
   {id:"afford",label:"Affordability",Icon:Wallet},
@@ -282,10 +260,6 @@ function loadProfile():Profile|null{try{const d=localStorage.getItem(STORAGE_KEY
 function saveProfile(p:Profile){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(p));}catch{}}
 
 // ══════════ API CONFIG ══════════
-// Property search: https://rapidapi.com/letscrape-6bRBa3QguO5/api/real-time-zillow-data
-const RAPIDAPI_KEY = ""; // Paste your RapidAPI key here
-const RAPIDAPI_HOST = "real-time-zillow-data.p.rapidapi.com";
-
 // Mortgage rates: https://fred.stlouisfed.org/docs/api/api_key.html (free, instant)
 const FRED_API_KEY = "bc24a6a30bee3e3219bbd6dd8bb7e01d";
 
@@ -309,29 +283,6 @@ async function fetchLiveRates():Promise<{rate30:number;rate15:number;date:string
   }catch{return null;}
 }
 
-async function searchProperties(query:string):Promise<SearchResult[]>{
-  if(!RAPIDAPI_KEY)return[];
-  try{
-    const res=await fetch(`https://${RAPIDAPI_HOST}/propertyExtendedSearch?location=${encodeURIComponent(query)}&status_type=ForSale&home_type=Houses&sort=Price_Low_High`,{
-      headers:{"X-RapidAPI-Key":RAPIDAPI_KEY,"X-RapidAPI-Host":RAPIDAPI_HOST}
-    });
-    const data=await res.json();
-    const props=data?.props||data?.results||[];
-    if(!Array.isArray(props)||props.length===0)return[];
-    return props.slice(0,24).map((p:any)=>({
-      zpid:String(p.zpid||p.id||Math.random()),
-      address:p.address||p.streetAddress||p.formattedAddress||"Unknown",
-      price:p.price||p.listPrice||0,
-      bedrooms:p.bedrooms||p.beds||0,
-      bathrooms:p.bathrooms||p.baths||0,
-      livingArea:p.livingArea||p.livingAreaValue||p.sqft||0,
-      imgSrc:p.imgSrc||p.image||p.primaryPhoto||p.hiResImageLink||p.thumbnail||"",
-      detailUrl:p.detailUrl?(p.detailUrl.startsWith("http")?p.detailUrl:`https://www.zillow.com${p.detailUrl}`):p.url||`https://www.zillow.com/homedetails/${p.zpid}_zpid/`,
-      city:p.addressCity||p.city||(typeof p.address==="string"?p.address.split(",")[1]?.trim():"")||"",
-    })).filter((r:SearchResult)=>r.price>0);
-  }catch{return[];}
-}
-
 // ══════════ MAIN APP ══════════
 export default function App(){
   // Clear legacy storage key from previous versions
@@ -348,13 +299,8 @@ export default function App(){
   const [checks,setChecks]=useState<Set<string>>(new Set());
   const [sidebarOpen,setSidebarOpen]=useState(true);
   const [loanType,setLoanType]=useState<"fha"|"conv">("fha");
-  // Search state
-  const [searchQuery,setSearchQuery]=useState("");
-  const [searchResults,setSearchResults]=useState<SearchResult[]>([]);
-  const [isSearching,setIsSearching]=useState(false);
   const [selectedResult,setSelectedResult]=useState<SearchResult|null>(null);
   const [selectedCurated,setSelectedCurated]=useState<number|null>(null);
-  const [,setSearchMode]=useState<"curated"|"api">("curated");
   const [spotlightListings,setSpotlightListings]=useState<Listing[]>(CURATED);
   const [spotlightLoading,setSpotlightLoading]=useState(false);
   const [customPrice,setCustomPrice]=useState(0);
@@ -402,19 +348,27 @@ export default function App(){
   },[p,mi,effDebt]);
 
   const eligProgs=useMemo(()=>PROGRAMS.map(pr=>({...pr,...eligibleFor(pr,p)})),[p]);
-  useEffect(()=>{if(started){const s=new Set<string>();eligProgs.forEach(pr=>{if(pr.ok&&pr.status!=="closed")s.add(pr.id)});setSelProgs(s);}},[started]);
+  useEffect(()=>{
+    if(!started)return;
+    setSelProgs(prev=>{
+      if(prev.size>0)return prev;
+      const s=new Set<string>();
+      eligProgs.forEach(pr=>{if(pr.ok&&pr.status!=="closed")s.add(pr.id);});
+      return s;
+    });
+  },[started,eligProgs]);
 
   const totalDPA=useMemo(()=>{let t=0;selProgs.forEach(id=>{const pr=PROGRAMS.find(x=>x.id===id);if(!pr)return;let a=pr.max;if(pr.pctCap)a=Math.min(a,price*pr.pctCap/100);t+=a;});return t;},[selProgs,price]);
 
-  const calcMort=(lType:"fha"|"conv")=>{
+  const calcMort=useCallback((lType:"fha"|"conv")=>{
     const dpPct=lType==="fha"?3.5:downPct;const dp=price*dpPct/100;const cc=price*0.03;const cash=dp+cc;const oop=Math.max(0,cash-totalDPA);
     const loan=price-dp;const mipUp=lType==="fha"?loan*0.0175:0;const tl=loan+mipUp;const piAmt=pmtCalc(tl,rate,30);
     const tax=(price*taxRate)/12;const ins=200;const mip=lType==="fha"?(loan*0.0055)/12:0;const pmi=lType==="conv"&&dpPct<20?(loan*0.007)/12:0;
     const total=piAmt+tax+ins+mip+pmi;const fDTI=mi>1?(total/mi)*100:0;const bDTI=mi>1?((total+effDebt)/mi)*100:0;
     return{dp,cc,cash,oop,loan,tl,pi:piAmt,tax,ins,mip,pmi,total,fDTI,bDTI,dpPct};
-  };
-  const mort=useMemo(()=>calcMort(loanType),[price,rate,downPct,loanType,p.income,effDebt,totalDPA,taxRate]);
-  const mortAlt=useMemo(()=>calcMort(loanType==="fha"?"conv":"fha"),[price,rate,downPct,loanType,p.income,effDebt,totalDPA,taxRate]);
+  },[downPct,effDebt,mi,price,rate,taxRate,totalDPA]);
+  const mort=useMemo(()=>calcMort(loanType),[calcMort,loanType]);
+  const mortAlt=useMemo(()=>calcMort(loanType==="fha"?"conv":"fha"),[calcMort,loanType]);
 
   // Buying power: DTI-based max loan + DPA + savings
   const buyingPower=useMemo(()=>{
@@ -432,19 +386,16 @@ export default function App(){
     return spotlightListings.filter(l=>l.price<=buyingPower.totalPower).length;
   },[buyingPower.totalPower,spotlightListings]);
 
-  const toggleProg=useCallback((id:string)=>{setSelProgs(prev=>{const n=new Set(prev);n.has(id)?n.delete(id):n.add(id);return n;});},[]);
-
-  const doSearch=useCallback(async()=>{
-    if(!searchQuery.trim())return;
-    setIsSearching(true);setSelectedResult(null);setSelectedCurated(null);
-    const results=await searchProperties(searchQuery);
-    if(results.length>0){setSearchResults(results);setSearchMode("api");}
-    else{setSearchMode("curated");} // Fallback to curated if no API key or no results
-    setIsSearching(false);
-  },[searchQuery]);
+  const toggleProg=useCallback((id:string)=>{
+    setSelProgs(prev=>{
+      const n=new Set(prev);
+      if(n.has(id))n.delete(id);
+      else n.add(id);
+      return n;
+    });
+  },[]);
 
   const selectProperty=(listing:Listing)=>{setSelectedCurated(listing.id);setSelectedResult(null);setPrice(listing.price);};
-  const selectSearchResult=(r:SearchResult)=>{setSelectedResult(r);setSelectedCurated(null);setPrice(r.price);};
 
   // ══════════ ONBOARDING ══════════
   if(!started) return(
@@ -498,8 +449,8 @@ export default function App(){
           </div>
           <Separator/>
           <div className="space-y-2">
-            {([["First-time homebuyer","firstTime"],["First-generation buyer","firstGen"],["Completed homebuyer education","education"],["Self-employed / commission","isSelfEmployed"]] as [string,keyof Profile][]).map(([label,key])=>(
-              <div key={key} className="flex items-center justify-between"><Label className="text-xs">{label}</Label><Switch checked={!!(p as any)[key]} onCheckedChange={v=>setP(x=>({...x,[key]:v}))}/></div>
+            {([["First-time homebuyer","firstTime"],["First-generation buyer","firstGen"],["Completed homebuyer education","education"],["Self-employed / commission","isSelfEmployed"]] as [string,ToggleField][]).map(([label,key])=>(
+              <div key={key} className="flex items-center justify-between"><Label className="text-xs">{label}</Label><Switch checked={Boolean(p[key])} onCheckedChange={v=>setP(x=>({...x,[key]:v}))}/></div>
             ))}
           </div>
           {(!p.income||!p.fico||!p.county)&&<p className="text-xs text-destructive">Enter income, FICO, and county to continue.</p>}
@@ -726,7 +677,7 @@ export default function App(){
                 const affordable=sel.price<=buyingPower.totalPower;
                 const firstGenOk=sel.price<=515200;
                 return(<div className="space-y-0">
-                  {(sel as any).image&&<div className="h-52 bg-muted overflow-hidden"><img src={(sel as any).image} alt="" className="w-full h-full object-cover"/></div>}
+                  {sel.image&&<div className="h-52 bg-muted overflow-hidden"><img src={sel.image} alt="" className="w-full h-full object-cover"/></div>}
                   <div className="p-5 space-y-4">
                     <div className="flex items-start justify-between">
                       <div><h3 className="text-lg font-bold" style={{color:"var(--brand-navy)"}}>{sel.name}</h3><p className="text-xs text-muted-foreground">{sel.beds}bd {sel.baths}ba {sel.sqft?.toLocaleString()}sf &middot; {sel.city}</p></div>
@@ -756,7 +707,7 @@ export default function App(){
           {/* ═══ MILESTONES ═══ */}
           {view==="checklist"&&(<div className="grid lg:grid-cols-2 gap-4 fade-in">
             <Card className="dashboard-card"><CardHeader className="pb-2"><CardTitle className="font-display text-base font-semibold">Homebuying Milestones</CardTitle><CardDescription className="text-xs">{checks.size}/{CHECKLIST.length} complete</CardDescription></CardHeader><CardContent className="space-y-1">
-              {CHECKLIST.map((item,i)=>(<div key={item.id} className={`flex items-start gap-3 p-2.5 rounded-lg transition-colors ${checks.has(item.id)?"bg-emerald-50":"hover:bg-muted/50"}`}><Checkbox checked={checks.has(item.id)} onCheckedChange={v=>{setChecks(prev=>{const n=new Set(prev);v?n.add(item.id):n.delete(item.id);return n;});}}/><div><p className={`text-sm ${checks.has(item.id)?"line-through text-muted-foreground":"font-medium"}`}><span className="text-muted-foreground mr-1">{i+1}.</span>{item.label}</p><p className="text-[10px] text-muted-foreground">{item.tip}</p></div></div>))}
+              {CHECKLIST.map((item,i)=>(<div key={item.id} className={`flex items-start gap-3 p-2.5 rounded-lg transition-colors ${checks.has(item.id)?"bg-emerald-50":"hover:bg-muted/50"}`}><Checkbox checked={checks.has(item.id)} onCheckedChange={v=>{setChecks(prev=>{const n=new Set(prev);if(v)n.add(item.id);else n.delete(item.id);return n;});}}/><div><p className={`text-sm ${checks.has(item.id)?"line-through text-muted-foreground":"font-medium"}`}><span className="text-muted-foreground mr-1">{i+1}.</span>{item.label}</p><p className="text-[10px] text-muted-foreground">{item.tip}</p></div></div>))}
               <div className="mt-4"><Progress value={(checks.size/CHECKLIST.length)*100} className="h-2"/></div>
             </CardContent></Card>
             <div className="space-y-3">
