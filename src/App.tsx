@@ -50,18 +50,18 @@ const PROGRAMS:DPA[]=[
   {id:"chenoa",name:"Chenoa Fund DPA",short:"Chenoa Fund",max:20000,pctCap:3.5,type:"Forgivable (3yr)",forgiveYrs:3,incomeLimit:999999,ficoMin:620,priceLimit:552000,status:"open",coverage:"Nationwide",url:"chenoafund.org",phone:"chenoafund.org",notes:"Covers FHA 3.5% as second mortgage.",reqFirstTime:false,reqFirstGen:false},
   {id:"naf",name:"New American Funding DPA",short:"NAF DPA",max:6000,type:"Deferred",incomeLimit:999999,ficoMin:620,priceLimit:766550,status:"open",coverage:"Nationwide",url:"newamericanfunding.com",phone:"newamericanfunding.com",notes:"Combinable with MN Housing DPA.",reqFirstTime:false,reqFirstGen:false},
 ];
-// Illustrative sample photos (Unsplash CDN, free to use). Not actual MLS photos.
+// Illustrative sample photos verified directly from Unsplash search results. Not actual MLS photos.
 const IMG=[
-  "https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=480&h=300&fit=crop",  // tan house + garage
-  "https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=480&h=300&fit=crop",  // beige ranch house
-  "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=480&h=300&fit=crop",  // white house blue sky
-  "https://images.unsplash.com/photo-1599427303058-f04cbcf4756f?w=480&h=300&fit=crop",  // two-story gray
-  "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=480&h=300&fit=crop",  // modern white exterior
-  "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=480&h=300&fit=crop",  // large craftsman
-  "https://images.unsplash.com/photo-1583608205776-bfd35f0d9f83?w=480&h=300&fit=crop",  // yellow house garage
-  "https://images.unsplash.com/photo-1605276374104-dee2a0ed3cd6?w=480&h=300&fit=crop",  // white two-story
-  "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=480&h=300&fit=crop",  // luxury beige home
-  "https://images.unsplash.com/photo-1523217582562-09d0def993a6?w=480&h=300&fit=crop",  // dark modern house
+  "https://images.unsplash.com/photo-1768941124460-6fa7161715ff?w=480&h=300&fit=crop&auto=format",  // suburban house, garage, manicured bushes
+  "https://images.unsplash.com/photo-1761494657203-c8e02a1ac818?w=480&h=300&fit=crop&auto=format",  // two cars parked in front of a garage
+  "https://images.unsplash.com/photo-1774743101904-f7769eb411db?w=480&h=300&fit=crop&auto=format",  // house with garage and lawn
+  "https://images.unsplash.com/photo-1764339838883-4728d4bcfe49?w=480&h=300&fit=crop&auto=format",  // white two-story house with garage
+  "https://images.unsplash.com/photo-1760648984277-2c7ea436a10b?w=480&h=300&fit=crop&auto=format",  // large modern house, garage, green lawn
+  "https://images.unsplash.com/photo-1773427621086-1f8511c78e39?w=480&h=300&fit=crop&auto=format",  // large suburban house with green lawn
+  "https://images.unsplash.com/photo-1766804627085-66e8c60a9208?w=480&h=300&fit=crop&auto=format",  // brick house with garage and tiled roof
+  "https://images.unsplash.com/photo-1761494666841-dec7dc336e83?w=480&h=300&fit=crop&auto=format",  // two garages with solar panels
+  "https://images.unsplash.com/photo-1773427640897-98400b5fe05f?w=480&h=300&fit=crop&auto=format",  // modern brick house with large green lawn
+  "https://images.unsplash.com/photo-1759355787121-eaef014a501d?w=480&h=300&fit=crop&auto=format",  // modern house with garage and balcony
 ];
 
 const CURATED:Listing[]=[
