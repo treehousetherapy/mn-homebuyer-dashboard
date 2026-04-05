@@ -1,5 +1,12 @@
 {
-  "buildCommand": "npx parcel build index.html --dist-dir dist --public-url ./",
+  "buildCommand": "pnpm build",
   "outputDirectory": "dist",
-  "framework": null
+  "framework": null,
+  "rewrites": [
+    { "source": "/api/(.*)", "destination": "/api/$1" },
+    { "source": "/(.*)", "destination": "/index.html" }
+  ],
+  "crons": [
+    { "path": "/api/dpa-alert-check", "schedule": "0 9 * * 1" }
+  ]
 }
