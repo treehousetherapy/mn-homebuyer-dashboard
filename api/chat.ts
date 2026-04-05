@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
-import { streamText } from 'ai'
+import { streamText, convertToModelMessages, validateUIMessages } from 'ai'
 import { openai } from '@ai-sdk/openai'
 
 export const config = { runtime: 'nodejs' }
@@ -38,11 +38,15 @@ Rules:
 - If unsure about a program detail, say so and point to mnhousing.gov
 - Be warm and encouraging — many first-gen buyers feel intimidated`
 
-  const result = await streamText({
+  // Convert UI messages to model messages (ai v6 format)
+  const validatedMessages = validateUIMessages(messages)
+  const modelMessages = convertToModelMessages(validatedMessages)
+
+  const result = streamText({
     model: openai('gpt-4o-mini'),
     system: systemPrompt,
-    messages,
+    messages: modelMessages,
   })
 
-  result.pipeDataStreamToResponse(res)
+  return result.pipeUIMessageStreamToResponse(res)
 }

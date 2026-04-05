@@ -15,6 +15,8 @@ import { Separator } from "@/components/ui/separator";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { DPAWatchlist } from "@/components/DPAWatchlist";
+import { AIChatbot } from "@/components/AIChatbot";
 
 // ══════════ TYPES ══════════
 interface Profile{name:string;income:number;fico:number;debt:number;savings:number;county:string;household:number;jobYears:number;firstTime:boolean;firstGen:boolean;education:boolean;studentLoanBal:number;studentLoanIDR:boolean;isSelfEmployed:boolean;debtReduce:number;}
@@ -439,6 +441,8 @@ export default function App(){
               <p className="text-[10px] text-muted-foreground mt-2 border-t pt-1.5">{pr.notes}</p>
               <a href={`https://${pr.url}`} target="_blank" rel="noopener" className="text-[10px] text-primary hover:underline" onClick={e=>e.stopPropagation()}>{pr.url}</a>
             </CardContent></Card>))}</div>
+            {/* DPA Waitlist — notified when First-Gen portal reopens */}
+            <DPAWatchlist />
           </div>)}
 
           {/* ═══ HOME SEARCH ═══ */}
@@ -537,6 +541,13 @@ export default function App(){
               </CardContent></Card>
             </div>
           </div>)}
+
+          {/* ═══ AI COACH ═══ */}
+          {view==="checklist"&&(
+            <div className="mt-4">
+              <AIChatbot buyerProfile={{annualIncome: p.income, creditScore: p.fico, isFirstGen: p.firstGen, targetCity: p.county, monthlyDebt: p.debt}} />
+            </div>
+          )}
 
           {/* FOOTER */}
           <div className="text-center py-3 space-y-1">

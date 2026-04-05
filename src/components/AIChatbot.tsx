@@ -1,4 +1,6 @@
-import { useChat } from 'ai/react'
+import { useState, useMemo } from 'react'
+import { useChat } from '@ai-sdk/react'
+import { DefaultChatTransport, type UIMessage } from 'ai'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { ScrollArea } from '@/components/ui/scroll-area'
@@ -9,20 +11,48 @@ interface AIChatbotProps {
   buyerProfile: BuyerProfile
 }
 
+const WELCOME_MESSAGE: UIMessage = {
+  id: 'welcome',
+  role: 'assistant',
+  parts: [
+    {
+      type: 'text',
+      text: "Hi! I'm your MN homebuying guide. I can help you understand programs like Minnesota Housing Start Up, the First-Gen DPA Fund, and what steps to take next. What questions do you have?",
+    },
+  ],
+}
+
 export function AIChatbot({ buyerProfile }: AIChatbotProps) {
-  const { messages, input, handleInputChange, handleSubmit, isLoading } = useChat({
-    api: '/api/chat',
-    body: { buyerProfile },
-    initialMessages: [
-      {
-        id: 'welcome',
-        role: 'assistant',
-        content: `Hi! I'm your MN homebuying guide. I can help you understand programs like Minnesota Housing Start Up${
-          buyerProfile.isFirstGen ? ', the First-Gen DPA Fund,' : ''
-        } and what steps to take next. What questions do you have?`,
-      },
-    ],
+  const [inputValue, setInputValue] = useState('')
+
+  const transport = useMemo(
+    () => new DefaultChatTransport({ api: '/api/chat', body: { buyerProfile } }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  )
+
+  const { messages, sendMessage, status } = useChat({
+    transport,
+    messages: [WELCOME_MESSAGE],
   })
+
+  const isLoading = status === 'streaming' || status === 'submitted'
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!inputValue.trim() || isLoading) return
+    sendMessage({ role: 'user', parts: [{ type: 'text', text: inputValue }] })
+    setInputValue('')
+  }
+
+  // Extract text from message parts
+  const getMessageText = (msg: UIMessage): string => {
+    if (!msg.parts?.length) return ''
+    return msg.parts
+      .filter((p) => p.type === 'text')
+      .map((p) => (p as { type: 'text'; text: string }).text)
+      .join('')
+  }
 
   return (
     <div className="flex flex-col h-[500px] border rounded-lg bg-white">
@@ -39,9 +69,7 @@ export function AIChatbot({ buyerProfile }: AIChatbotProps) {
           {messages.map(m => (
             <div
               key={m.id}
-              className={`flex gap-2 ${
-                m.role === 'user' ? 'flex-row-reverse' : 'flex-row'
-              }`}
+              className={`flex gap-2 ${m.role === 'user' ? 'flex-row-reverse' : 'flex-row'}`}
             >
               <div className={`shrink-0 w-7 h-7 rounded-full flex items-center justify-center ${
                 m.role === 'user' ? 'bg-blue-100' : 'bg-slate-100'
@@ -55,7 +83,7 @@ export function AIChatbot({ buyerProfile }: AIChatbotProps) {
                   ? 'bg-blue-600 text-white rounded-tr-none'
                   : 'bg-slate-100 text-slate-800 rounded-tl-none'
               }`}>
-                {m.content}
+                {getMessageText(m)}
               </div>
             </div>
           ))}
@@ -77,18 +105,15 @@ export function AIChatbot({ buyerProfile }: AIChatbotProps) {
       </ScrollArea>
 
       {/* Input */}
-      <form
-        onSubmit={handleSubmit}
-        className="flex gap-2 p-3 border-t"
-      >
+      <form onSubmit={handleSubmit} className="flex gap-2 p-3 border-t">
         <Input
-          value={input}
-          onChange={handleInputChange}
+          value={inputValue}
+          onChange={e => setInputValue(e.target.value)}
           placeholder="Ask about down payment help, credit, loan types…"
           disabled={isLoading}
           className="flex-1 text-sm"
         />
-        <Button type="submit" size="icon" disabled={isLoading || !input.trim()}>
+        <Button type="submit" size="icon" disabled={isLoading || !inputValue.trim()}>
           <Send className="h-4 w-4" />
         </Button>
       </form>
