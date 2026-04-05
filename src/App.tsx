@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback, useEffect, type ReactNode, type KeyboardEvent } from "react";
+import { useState, useMemo, useCallback, useEffect, useId, type ReactNode, type KeyboardEvent } from "react";
 import {
   Home,
   LineChart,
@@ -86,30 +86,54 @@ function Tip({term,children}:{term:string;children:string}){return(<Tooltip><Too
 // ══════════ MICRO COMPONENTS ══════════
 function DonutChart({segments,size=170,label}:{segments:{value:number;color:string;label:string}[];size?:number;label?:string}){
   const total=segments.reduce((a,s)=>a+s.value,0);if(total===0)return null;
-  const r=size*0.35,cx=size/2,cy=size/2,circ=2*Math.PI*r;let offset=circ*0.25;
-  return(<div className="flex flex-col items-center"><svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
-    {segments.map((s,i)=>{const len=(s.value/total)*circ;const el=(<circle key={i} cx={cx} cy={cy} r={r} fill="none" stroke={s.color} strokeWidth={size*0.1} strokeDasharray={`${len} ${circ-len}`} strokeDashoffset={-offset} strokeLinecap="round" className="chart-anim"/>);offset+=len;return el;})}
-    {label&&<><text x={cx} y={cy-2} textAnchor="middle" style={{fontSize:size*0.11,fontWeight:700,fill:"hsl(var(--foreground))"}}>{label}</text><text x={cx} y={cy+size*0.08} textAnchor="middle" style={{fontSize:size*0.055,fill:"hsl(var(--muted-foreground))"}}>/ month</text></>}
-  </svg><div className="flex flex-wrap gap-x-3 gap-y-1 justify-center mt-1">{segments.map((s,i)=>(<div key={i} className="flex items-center gap-1"><div className="w-2 h-2 rounded-full" style={{background:s.color}}/><span className="text-[10px] text-muted-foreground">{s.label}</span></div>))}</div></div>);
+  const r=size*0.36,cx=size/2,cy=size/2,circ=2*Math.PI*r;let offset=circ*0.25;
+  const sw=Math.max(10, size*0.072);
+  return(
+    <div className="flex flex-col items-center">
+      <div className="relative rounded-2xl border border-slate-200/60 bg-gradient-to-b from-white to-slate-50/50 px-2 py-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.95)]">
+        <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} className="overflow-visible">
+          {segments.map((s,i)=>{const len=(s.value/total)*circ;const el=(<circle key={i} cx={cx} cy={cy} r={r} fill="none" stroke={s.color} strokeWidth={sw} strokeDasharray={`${len} ${circ-len}`} strokeDashoffset={-offset} strokeLinecap="round" className="chart-anim"/>);offset+=len;return el;})}
+          {label&&(
+            <>
+              <text x={cx} y={cy - size * 0.02} textAnchor="middle" className="fill-slate-900" style={{fontSize: size * 0.11, fontWeight: 650, fontFeatureSettings: '"tnum","lnum"'}}>{label}</text>
+              <text x={cx} y={cy + size * 0.065} textAnchor="middle" className="fill-slate-500" style={{fontSize: size * 0.052, fontWeight: 500, letterSpacing: "0.06em"}}>PER MONTH</text>
+            </>
+          )}
+        </svg>
+      </div>
+      <div className="mt-3 grid w-full max-w-[260px] grid-cols-2 gap-x-4 gap-y-2 text-left">
+        {segments.map((s,i)=>(
+          <div key={i} className="flex items-baseline gap-2 border-b border-slate-100/90 pb-1.5 last:border-0">
+            <span className="mt-1.5 h-2 w-2 shrink-0 rounded-sm shadow-sm" style={{background:s.color}}/>
+            <span className="text-[11px] leading-snug text-slate-600">{s.label}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
 }
 
-function KPI({label,value,sub,color,icon,onClick}:{label:string;value:string;sub?:string;color?:string;icon?:ReactNode;onClick?:()=>void}){
+function KPI({label,value,sub,color,icon,onClick,semantic}:{label:string;value:string;sub?:string;color?:string;icon?:ReactNode;onClick?:()=>void;semantic?:boolean}){
   return(
     <Card
-      className={`dashboard-card kpi-card min-h-[108px] hover:shadow-md transition-shadow ${onClick?"cursor-pointer focus-within:ring-2 focus-within:ring-[var(--brand-navy)]/20":""}`}
+      className={`dashboard-card kpi-card min-h-[108px] transition-[box-shadow,border-color] duration-200 ${onClick?"cursor-pointer focus-within:ring-2 focus-within:ring-slate-400/30":""}`}
       onClick={onClick}
       role={onClick?"button":undefined}
       tabIndex={onClick?0:undefined}
       onKeyDown={onClick?(e)=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();onClick();}}:undefined}
     >
       <CardContent className="p-4 h-full flex flex-col justify-between">
-        <div className="flex items-start justify-between gap-2">
+        <div className="flex items-start justify-between gap-3">
           <div className="min-w-0 flex-1">
-            <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground mb-1">{label}</p>
-            <p className="text-2xl font-bold leading-tight tabular-nums" style={{color:color||"hsl(var(--foreground))"}}>{value}</p>
-            {sub&&<p className="text-[11px] text-muted-foreground mt-0.5 leading-snug">{sub}</p>}
+            <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-slate-500 mb-1">{label}</p>
+            <p className={`text-2xl font-semibold leading-tight tabular-nums tracking-tight ${semantic&&color?"":"text-slate-900"}`} style={semantic&&color?{color}:undefined}>{value}</p>
+            {sub&&<p className="text-[11px] text-slate-500 mt-1 leading-snug">{sub}</p>}
           </div>
-          {icon&&<div className="text-[color:var(--brand-navy)] opacity-[0.18] shrink-0 mt-0.5">{icon}</div>}
+          {icon&&(
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-slate-200/80 bg-slate-50 text-slate-500 shadow-[inset_0_1px_0_rgba(255,255,255,0.9)]">
+              {icon}
+            </div>
+          )}
         </div>
       </CardContent>
     </Card>
@@ -135,8 +159,25 @@ function ListingMedia({image,builder,city}:{image?:string;builder:string;city:st
 }
 
 function Gauge({score,label,color}:{score:number;label:string;color:string}){
-  const r=48,cx=60,cy=58,circ=2*Math.PI*r,arc=circ*0.75,off=arc-(score/100)*arc;
-  return(<svg width="120" height="96" viewBox="0 0 120 96"><path d="M 12 84 A 48 48 0 1 1 108 84" fill="none" stroke="hsl(var(--muted))" strokeWidth="8" strokeLinecap="round"/><path d="M 12 84 A 48 48 0 1 1 108 84" fill="none" stroke={color} strokeWidth="8" strokeLinecap="round" strokeDasharray={arc} strokeDashoffset={off} className="gauge-anim"/><text x={cx} y="54" textAnchor="middle" style={{fontSize:"22px",fontWeight:700,fill:"hsl(var(--foreground))"}}>{score}%</text><text x={cx} y="72" textAnchor="middle" style={{fontSize:"10px",fill:color,fontWeight:600}}>{label}</text></svg>);
+  const gid=useId().replace(/:/g,"");
+  const r=50,cx=64,cy=62,circ=2*Math.PI*r,arc=circ*0.75,off=arc-(score/100)*arc;
+  const endGreen="#0f766e";
+  return(
+    <div className="w-full rounded-2xl border border-slate-200/70 bg-gradient-to-b from-white via-white to-slate-50/60 p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.95),0_1px_2px_rgba(15,23,42,0.04)]">
+      <svg width="100%" height="112" viewBox="0 0 128 104" className="max-w-[200px] mx-auto overflow-visible" aria-hidden>
+        <defs>
+          <linearGradient id={`${gid}-g`} x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor={color} />
+            <stop offset="100%" stopColor={endGreen} />
+          </linearGradient>
+        </defs>
+        <path d="M 14 80 A 50 50 0 1 1 114 80" fill="none" stroke="hsl(214 32% 91%)" strokeWidth="11" strokeLinecap="round"/>
+        <path d="M 14 80 A 50 50 0 1 1 114 80" fill="none" stroke={`url(#${gid}-g)`} strokeWidth="11" strokeLinecap="round" strokeDasharray={arc} strokeDashoffset={off} className="gauge-anim"/>
+        <text x={cx} y="56" textAnchor="middle" fill="hsl(222 47% 11%)" style={{fontSize:"26px",fontWeight:650,fontFeatureSettings:'"tnum","lnum"'}}>{score}%</text>
+        <text x={cx} y="78" textAnchor="middle" fill="hsl(215 16% 42%)" style={{fontSize:"10px",fontWeight:600,letterSpacing:"0.12em"}}>{label.toUpperCase()}</text>
+      </svg>
+    </div>
+  );
 }
 
 function Row({l,v,bold,green}:{l:string;v:string;bold?:boolean;green?:boolean}){return(<div className={`flex justify-between py-1 ${bold?"font-semibold":""}`}><span className="text-xs text-muted-foreground">{l}</span><span className={`text-xs ${green?"text-emerald-600":""} ${bold?"text-sm font-bold":""}`}>{v}</span></div>);}
@@ -457,10 +498,10 @@ export default function App(){
           </div>
         </div>
         <div className="mx-auto w-full max-w-[1300px] space-y-5 p-4 lg:p-6">
-          <header className="fade-in flex flex-col gap-3 border-b border-slate-200/80 pb-4 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
+          <header className="fade-in flex flex-col gap-3 border-b border-slate-200/70 pb-4 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
             <div className="min-w-0">
-              <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-500">{VIEW_TITLES[view]}</p>
-              <h1 className="font-display mt-1 text-xl font-bold tracking-tight text-slate-900 sm:text-2xl" style={{color:"var(--brand-navy)"}}>MN Homebuyer Dashboard</h1>
+              <p className="text-[10px] font-medium uppercase tracking-[0.18em] text-slate-500">{VIEW_TITLES[view]}</p>
+              <h1 className="mt-1 text-xl font-semibold tracking-tight text-slate-900 sm:text-2xl">MN Homebuyer Dashboard</h1>
               <p className="mt-1 max-w-xl text-sm leading-relaxed text-slate-600">Profile-driven estimates for South Metro buyers and DPA stacking.</p>
             </div>
             <Button type="button" variant="outline" size="sm" className="hidden h-9 shrink-0 gap-2 border-slate-200 bg-white px-4 text-slate-800 shadow-sm sm:inline-flex" onClick={()=>setStarted(false)}>
@@ -470,24 +511,34 @@ export default function App(){
 
           {/* KPIs */}
           <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
-            <KPI label="Buying Power" value={buyingPower.totalPower>0?$k(buyingPower.totalPower):"--"} sub={`DTI: ${$k(buyingPower.dtiMax)} + DPA`} color="var(--brand-navy)" icon={<Building2 className="h-5 w-5" strokeWidth={1.5} />} onClick={()=>setView("afford")}/>
-            <KPI label="Est. Monthly" value={p.income>0?$(mort.total):"--"} sub={`${$(price)} · ${rate}%${liveRates?" (live)":""}`} color={mort.bDTI<=43?"#2d6a2e":mort.bDTI<=50?"#d4a017":"#dc2626"} icon={<CalendarDays className="h-5 w-5" strokeWidth={1.5} />} onClick={()=>setView("afford")}/>
-            <KPI label="Cash to Close" value={$(mort.oop)} sub={mort.oop===0?"DPA covers all":"After DPA"} color={mort.oop===0?"#2d6a2e":"var(--brand-navy)"} icon={<Banknote className="h-5 w-5" strokeWidth={1.5} />} onClick={()=>setView("afford")}/>
-            <KPI label="DPA Available" value={$k(totalDPA)} sub={`${selProgs.size} program(s)`} color="var(--brand-green)" icon={<Gift className="h-5 w-5" strokeWidth={1.5} />} onClick={()=>setView("programs")}/>
-            <KPI label="Readiness" value={`${readiness.score}%`} sub={readiness.label} color={readiness.color} icon={<PieChart className="h-5 w-5" strokeWidth={1.5} />} onClick={()=>setView("ready")}/>
+            <KPI label="Buying Power" value={buyingPower.totalPower>0?$k(buyingPower.totalPower):"--"} sub={`DTI: ${$k(buyingPower.dtiMax)} + DPA`} icon={<Building2 className="h-5 w-5" strokeWidth={1.5} />} onClick={()=>setView("afford")}/>
+            <KPI label="Est. Monthly" value={p.income>0?$(mort.total):"--"} sub={`${$(price)} · ${rate}%${liveRates?" (live)":""}`} color={mort.bDTI<=43?"#15803d":mort.bDTI<=50?"#b45309":"#b91c1c"} semantic icon={<CalendarDays className="h-5 w-5" strokeWidth={1.5} />} onClick={()=>setView("afford")}/>
+            <KPI label="Cash to Close" value={$(mort.oop)} sub={mort.oop===0?"DPA covers all":"After DPA"} color={mort.oop===0?"#15803d":undefined} semantic={mort.oop===0} icon={<Banknote className="h-5 w-5" strokeWidth={1.5} />} onClick={()=>setView("afford")}/>
+            <KPI label="DPA Available" value={$k(totalDPA)} sub={`${selProgs.size} program(s)`} icon={<Gift className="h-5 w-5" strokeWidth={1.5} />} onClick={()=>setView("programs")}/>
+            <KPI label="Readiness" value={`${readiness.score}%`} sub={readiness.label} color={readiness.color} semantic icon={<PieChart className="h-5 w-5" strokeWidth={1.5} />} onClick={()=>setView("ready")}/>
           </div>
 
           {/* ═══ READINESS ═══ */}
           {view==="ready"&&(<div className="grid lg:grid-cols-3 gap-4 fade-in">
-            <Card className="dashboard-card"><CardHeader className="pb-2"><CardTitle className="font-display text-base font-semibold">Mortgage Readiness</CardTitle></CardHeader><CardContent className="space-y-4">
+            <Card className="dashboard-card overflow-hidden"><CardHeader className="dashboard-card-head pb-3 rounded-t-xl"><CardTitle className="text-base font-semibold text-slate-800">Mortgage Readiness</CardTitle></CardHeader><CardContent className="space-y-4 pt-4">
               <div className="flex justify-center"><Gauge score={readiness.score} label={readiness.label} color={readiness.color}/></div>
-              <div className="space-y-2">{readiness.items.map(item=>(<div key={item.label} className="flex items-start gap-2"><div className={`w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 text-[10px] font-bold ${item.ok?"bg-emerald-100 text-emerald-700":"bg-red-100 text-red-600"}`}>{item.ok?"✓":"✗"}</div><div><p className="text-xs font-medium">{item.label}</p><p className="text-[10px] text-muted-foreground">{item.detail}</p></div></div>))}</div>
+              <div className="divide-y divide-slate-100 rounded-lg border border-slate-100 bg-slate-50/40">
+                {readiness.items.map(item=>(
+                  <div key={item.label} className="flex items-start gap-3 px-3 py-2.5 first:rounded-t-lg last:rounded-b-lg">
+                    <div className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded border text-[10px] font-bold ${item.ok?"border-emerald-200 bg-emerald-50 text-emerald-800":"border-red-200 bg-red-50 text-red-700"}`}>{item.ok?"✓":"✗"}</div>
+                    <div className="min-w-0 flex-1">
+                      <p className="text-xs font-medium text-slate-800">{item.label}</p>
+                      <p className="text-[11px] text-slate-500">{item.detail}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
               {p.isSelfEmployed&&p.jobYears<2&&<div className="p-2.5 rounded-lg bg-amber-50 border border-amber-200 text-[11px] text-amber-800">Self-employed &lt;2yr: lenders require 2-year income average.</div>}
               {studentDebt>0&&<div className="p-2.5 rounded-lg bg-blue-50 border border-blue-200 text-[11px] text-blue-800">Student loans (IDR): lenders impute {$(studentDebt)}/mo into DTI even if actual payment is $0.</div>}
             </CardContent></Card>
-            <Card className="dashboard-card lg:col-span-2"><CardHeader className="pb-2"><CardTitle className="font-display text-base font-semibold">Financial Snapshot</CardTitle></CardHeader><CardContent><div className="grid sm:grid-cols-2 gap-6">
+            <Card className="dashboard-card lg:col-span-2 overflow-hidden"><CardHeader className="dashboard-card-head pb-3 rounded-t-xl"><CardTitle className="text-base font-semibold text-slate-800">Financial Snapshot</CardTitle></CardHeader><CardContent className="pt-4"><div className="grid sm:grid-cols-2 gap-6">
               <div>
-                <h4 className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground mb-3">Income & Debt</h4>
+                <h4 className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-500 mb-3">Income & Debt</h4>
                 <Row l="Gross Monthly Income" v={$(p.income/12)}/><Row l="Monthly Debt" v={$(p.debt)}/>
                 {studentDebt>0&&<Row l="Student Loan (IDR)" v={`+ ${$(studentDebt)}`}/>}
                 {p.debtReduce>0&&<Row l="Debt Reduction" v={`- ${$(p.debtReduce)}`} green/>}
@@ -497,9 +548,9 @@ export default function App(){
                 <div className="mt-3"><Label className="text-xs">Debt reduction ($/mo)</Label><Input type="number" placeholder="0" value={p.debtReduce||""} onChange={e=>setP(x=>({...x,debtReduce:Math.max(0,+e.target.value)}))} className="mt-1 h-8 text-xs"/></div>
               </div>
               <div>
-                <h4 className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground mb-3">Payment at {$(price)}</h4>
-                <DonutChart size={175} label={$(mort.total)} segments={[{value:mort.pi,color:"var(--brand-navy)",label:`P&I ${$(mort.pi)}`},{value:mort.tax,color:"var(--brand-green)",label:`Tax ${$(mort.tax)}`},{value:mort.ins,color:"var(--brand-gold)",label:`Ins ${$(mort.ins)}`},{value:mort.mip+mort.pmi,color:"var(--brand-sky)",label:`${loanType==="fha"?"MIP":"PMI"} ${$(mort.mip+mort.pmi)}`}]}/>
-                <p className="text-[10px] text-center text-muted-foreground mt-2">Tax: {(taxRate*100).toFixed(2)}% ({p.county||"est."} county)</p>
+                <h4 className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-500 mb-3">Payment at {$(price)}</h4>
+                <DonutChart size={175} label={$(mort.total)} segments={[{value:mort.pi,color:"#1e3a5f",label:`P&I ${$(mort.pi)}`},{value:mort.tax,color:"#3f5e4f",label:`Tax ${$(mort.tax)}`},{value:mort.ins,color:"#9a7b2e",label:`Ins ${$(mort.ins)}`},{value:mort.mip+mort.pmi,color:"#4a6fa5",label:`${loanType==="fha"?"MIP":"PMI"} ${$(mort.mip+mort.pmi)}`}]}/>
+                <p className="text-[10px] text-center text-slate-500 mt-2">Tax: {(taxRate*100).toFixed(2)}% ({p.county||"est."} county)</p>
                 {liveRates&&<div className="rounded-lg bg-emerald-50 border border-emerald-200 p-2.5 mt-3 space-y-1">
                   <p className="text-[10px] font-semibold text-emerald-700 uppercase tracking-widest">Current Mortgage Rates</p>
                   <div className="flex justify-between text-xs"><span className="text-muted-foreground">30-Year Fixed</span><span className="font-bold text-emerald-700">{liveRates.rate30}%</span></div>
@@ -512,7 +563,7 @@ export default function App(){
 
           {/* ═══ AFFORDABILITY ═══ */}
           {view==="afford"&&(<div className="grid lg:grid-cols-3 gap-4 fade-in">
-            <Card className="dashboard-card"><CardHeader className="pb-2"><CardTitle className="font-display text-base font-semibold">Scenario Builder</CardTitle></CardHeader><CardContent className="space-y-4">
+            <Card className="dashboard-card overflow-hidden"><CardHeader className="dashboard-card-head pb-3 rounded-t-xl"><CardTitle className="text-base font-semibold text-slate-800">Scenario Builder</CardTitle></CardHeader><CardContent className="space-y-4 pt-4">
               {([["Target Price",price,setPrice,100000,750000,5000,$(price)],["Interest Rate",rate,setRate,4.5,9.5,0.125,`${rate}%`],["Down Payment",downPct,setDownPct,0,20,0.5,`${downPct}%`]] as [string,number,(v:number)=>void,number,number,number,string][]).map(([label,val,setter,min,max,step,display])=>(<div key={label}><div className="flex justify-between"><Label className="text-xs">{label}</Label><span className="text-xs font-bold">{display}</span></div><Slider min={min} max={max} step={step} value={[val]} onValueChange={([v])=>setter(v)} className="mt-2"/></div>))}
               {liveRates&&<div className="rounded-lg bg-emerald-50 border border-emerald-200 p-2.5 space-y-1">
                 <p className="text-[10px] font-semibold text-emerald-700 uppercase tracking-widest">Live Freddie Mac Rates</p>
@@ -531,7 +582,7 @@ export default function App(){
                 <Row l="Target" v={$(price)}/><Row l={price<=buyingPower.totalPower?"Within budget":"Over budget"} v={price<=buyingPower.totalPower?"✓":"⚠"} bold green={price<=buyingPower.totalPower}/>
               </div>
             </CardContent></Card>
-            <Card className="dashboard-card lg:col-span-2"><CardHeader className="pb-2"><CardTitle className="font-display text-base font-semibold">FHA vs Conventional</CardTitle></CardHeader><CardContent><div className="grid sm:grid-cols-2 gap-6">
+            <Card className="dashboard-card lg:col-span-2 overflow-hidden"><CardHeader className="dashboard-card-head pb-3 rounded-t-xl"><CardTitle className="text-base font-semibold text-slate-800">FHA vs Conventional</CardTitle></CardHeader><CardContent className="pt-4"><div className="grid sm:grid-cols-2 gap-6">
               {[{m:mort,label:loanType.toUpperCase()},{m:mortAlt,label:loanType==="fha"?"CONVENTIONAL":"FHA"}].map(({m,label})=>(<div key={label}>
                 <h4 className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground mb-2">{label}</h4>
                 <Row l="P&I" v={$(m.pi)}/><Row l={`Tax (${(taxRate*100).toFixed(1)}%)`} v={$(m.tax)}/><Row l="Insurance" v={$(m.ins)}/><Row l={label.includes("FHA")?"MIP":"PMI"} v={$(m.mip+m.pmi)}/>
