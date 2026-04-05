@@ -50,31 +50,18 @@ const PROGRAMS:DPA[]=[
   {id:"chenoa",name:"Chenoa Fund DPA",short:"Chenoa Fund",max:20000,pctCap:3.5,type:"Forgivable (3yr)",forgiveYrs:3,incomeLimit:999999,ficoMin:620,priceLimit:552000,status:"open",coverage:"Nationwide",url:"chenoafund.org",phone:"chenoafund.org",notes:"Covers FHA 3.5% as second mortgage.",reqFirstTime:false,reqFirstGen:false},
   {id:"naf",name:"New American Funding DPA",short:"NAF DPA",max:6000,type:"Deferred",incomeLimit:999999,ficoMin:620,priceLimit:766550,status:"open",coverage:"Nationwide",url:"newamericanfunding.com",phone:"newamericanfunding.com",notes:"Combinable with MN Housing DPA.",reqFirstTime:false,reqFirstGen:false},
 ];
-// Illustrative sample photos verified directly from Unsplash search results. Not actual MLS photos.
-const IMG=[
-  "https://images.unsplash.com/photo-1768941124460-6fa7161715ff?w=480&h=300&fit=crop&auto=format",  // suburban house, garage, manicured bushes
-  "https://images.unsplash.com/photo-1761494657203-c8e02a1ac818?w=480&h=300&fit=crop&auto=format",  // two cars parked in front of a garage
-  "https://images.unsplash.com/photo-1774743101904-f7769eb411db?w=480&h=300&fit=crop&auto=format",  // house with garage and lawn
-  "https://images.unsplash.com/photo-1764339838883-4728d4bcfe49?w=480&h=300&fit=crop&auto=format",  // white two-story house with garage
-  "https://images.unsplash.com/photo-1760648984277-2c7ea436a10b?w=480&h=300&fit=crop&auto=format",  // large modern house, garage, green lawn
-  "https://images.unsplash.com/photo-1773427621086-1f8511c78e39?w=480&h=300&fit=crop&auto=format",  // large suburban house with green lawn
-  "https://images.unsplash.com/photo-1766804627085-66e8c60a9208?w=480&h=300&fit=crop&auto=format",  // brick house with garage and tiled roof
-  "https://images.unsplash.com/photo-1761494666841-dec7dc336e83?w=480&h=300&fit=crop&auto=format",  // two garages with solar panels
-  "https://images.unsplash.com/photo-1773427640897-98400b5fe05f?w=480&h=300&fit=crop&auto=format",  // modern brick house with large green lawn
-  "https://images.unsplash.com/photo-1759355787121-eaef014a501d?w=480&h=300&fit=crop&auto=format",  // modern house with garage and balcony
-];
-
+// Real Zillow listing metadata; images are resolved server-side from each property page.
 const CURATED:Listing[]=[
-  {id:1,name:"21878 Denton Ave, Whispering Fields",price:317990,beds:3,baths:3,sqft:1782,city:"Farmington",builder:"Lennar",url:"https://www.zillow.com/farmington-mn-55024/new-homes/",image:IMG[0]},
-  {id:2,name:"21926 Wisteria Way, Wisteria",price:334990,beds:3,baths:3,sqft:1804,city:"Farmington",builder:"Lennar",url:"https://www.zillow.com/farmington-mn-55024/new-homes/",image:IMG[1]},
-  {id:3,name:"4792 218th St W, Voyageur Farms",price:358085,beds:3,baths:2,sqft:1281,city:"Farmington",builder:"Lennar",url:"https://www.zillow.com/farmington-mn/new-homes/",image:IMG[2]},
-  {id:4,name:"19139 Crystal Ter, M/I Homes",price:426990,beds:3,baths:2,sqft:1892,city:"Farmington",builder:"M/I Homes",url:"https://www.zillow.com/farmington-mn-55024/new-homes/",image:IMG[3]},
-  {id:5,name:"4870 218th Ct, Voyageur Farms",price:449390,beds:3,baths:2,sqft:1281,city:"Farmington",builder:"Lennar",url:"https://www.zillow.com/farmington-mn/new-homes/",image:IMG[4]},
-  {id:6,name:"4884 218th Ct, Voyageur Farms",price:460485,beds:5,baths:3,sqft:2505,city:"Farmington",builder:"Lennar",url:"https://www.zillow.com/farmington-mn/new-homes/",image:IMG[5]},
-  {id:7,name:"20947 Flanders Way, Whispering Fields",price:479990,beds:3,baths:3,sqft:2200,city:"Farmington",builder:"D.R. Horton",url:"https://www.zillow.com/farmington-mn-55024/new-homes/",image:IMG[6]},
-  {id:8,name:"Xxx3 217th St, Vita Attiva",price:455000,beds:2,baths:2,sqft:1503,city:"Farmington",builder:"Vita Attiva",url:"https://www.zillow.com/farmington-mn-55024/new-homes/",image:IMG[7]},
-  {id:9,name:"Cordelia Ashton Plan, Lakeville",price:499990,beds:4,baths:3,sqft:2400,city:"Lakeville",builder:"D.R. Horton",url:"https://www.zillow.com/lakeville-mn/new-homes/",image:IMG[8]},
-  {id:10,name:"Pheasant Run 6BD, Lakeville",price:515000,beds:6,baths:3,sqft:2400,city:"Lakeville",builder:"D.R. Horton",url:"https://www.zillow.com/lakeville-mn/new-homes/",image:IMG[9]},
+  {id:1,name:"4767 218th St W",price:394910,beds:4,baths:3,sqft:1828,city:"Farmington",builder:"Lennar",url:"https://www.zillow.com/homedetails/4767-218th-St-W-Farmington-MN-55024/459877037_zpid/"},
+  {id:2,name:"21603 Azalea Ln",price:319970,beds:3,baths:3,sqft:1792,city:"Farmington",builder:"Lennar",url:"https://www.zillow.com/homedetails/21603-Azalea-Ln-Farmington-MN-55024/460211335_zpid/"},
+  {id:3,name:"4474 223rd St W",price:424900,beds:4,baths:3,sqft:2425,city:"Farmington",builder:"Capstone Homes",url:"https://www.zillow.com/homedetails/4474-223rd-St-W-Farmington-MN-55024/461444789_zpid/"},
+  {id:4,name:"4482 223rd St W",price:379900,beds:3,baths:3,sqft:1603,city:"Farmington",builder:"Capstone Homes",url:"https://www.zillow.com/homedetails/4482-223rd-St-W-Farmington-MN-55024/461471513_zpid/"},
+  {id:5,name:"4768 218th St W",price:361990,beds:3,baths:2,sqft:1281,city:"Farmington",builder:"Lennar",url:"https://www.zillow.com/homedetails/4768-218th-St-W-Farmington-MN-55024/460212288_zpid/"},
+  {id:6,name:"21653 Lilac Dr",price:359985,beds:3,baths:3,sqft:1906,city:"Farmington",builder:"Lennar",url:"https://www.zillow.com/homedetails/21653-Lilac-Dr-Farmington-MN-55024/460212315_zpid/"},
+  {id:7,name:"The Sawyer Plan",price:379990,beds:2,baths:2,sqft:1240,city:"Farmington",builder:"D.R. Horton",url:"https://www.zillow.com/community/whispering-fields/458366099_zpid/"},
+  {id:8,name:"11046 203rd St W",price:364975,beds:3,baths:3,sqft:1580,city:"Lakeville",builder:"Lennar",url:"https://www.zillow.com/homedetails/11046-203rd-St-W-Lakeville-MN-55044/460212292_zpid/"},
+  {id:9,name:"17559 Driscoll Pl",price:329990,beds:3,baths:3,sqft:1707,city:"Lakeville",builder:"D.R. Horton",url:"https://www.zillow.com/homedetails/17559-Driscoll-Pl-Lakeville-MN-55044/459847583_zpid/"},
+  {id:10,name:"20318 Gadget Cir",price:519375,beds:4,baths:3,sqft:3379,city:"Lakeville",builder:"Lennar",url:"https://www.zillow.com/homedetails/20318-Gadget-Cir-Lakeville-MN-55044/459429162_zpid/"},
 ];
 const CHECKLIST=[
   {id:"credit",label:"Check credit score (all 3 bureaus)",tip:"Free at annualcreditreport.com. Lenders use FICO 2, 4, 5."},
@@ -176,13 +163,10 @@ function ListingMedia({image,builder,city}:{image?:string;builder:string;city:st
   return(
     <div className="relative h-44 w-full shrink-0 overflow-hidden bg-slate-100">
       {image?(
-        <>
-          <img src={image} alt="" className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.04]" loading="lazy"/>
-          <span className="absolute bottom-2 right-2 rounded-md bg-black/50 px-1.5 py-0.5 text-[9px] font-medium uppercase tracking-wider text-white/90 backdrop-blur-sm">Illustrative photo</span>
-        </>
+        <img src={image} alt="" className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.04]" loading="lazy"/>
       ):(
         <div className="listing-media-sample property-card-media-fallback relative flex h-full w-full flex-col items-center justify-center gap-1 p-4 text-center">
-          <span className="absolute top-2 right-2 rounded bg-black/35 px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wider text-white/95 backdrop-blur-sm">Sample</span>
+          <span className="absolute top-2 right-2 rounded bg-black/35 px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wider text-white/95 backdrop-blur-sm">No Zillow photo</span>
           <span className="text-3xl font-bold tracking-tight text-white">{initial}</span>
           <span className="text-[11px] font-medium text-white/85">{builder}</span>
           <span className="text-[10px] uppercase tracking-[0.15em] text-white/55">{city}</span>
@@ -370,12 +354,32 @@ export default function App(){
   const [isSearching,setIsSearching]=useState(false);
   const [selectedResult,setSelectedResult]=useState<SearchResult|null>(null);
   const [selectedCurated,setSelectedCurated]=useState<number|null>(null);
-  const [searchMode,setSearchMode]=useState<"curated"|"api">("curated");
+  const [,setSearchMode]=useState<"curated"|"api">("curated");
+  const [spotlightListings,setSpotlightListings]=useState<Listing[]>(CURATED);
+  const [spotlightLoading,setSpotlightLoading]=useState(false);
   const [customPrice,setCustomPrice]=useState(0);
   const [liveRates,setLiveRates]=useState<{rate30:number;rate15:number;date:string}|null>(null);
 
   // Fetch live mortgage rates on mount
   useEffect(()=>{fetchLiveRates().then(r=>{if(r){setLiveRates(r);setRate(r.rate30);}});},[]);
+
+  useEffect(()=>{
+    if(!started)return;
+    let ignore=false;
+    setSpotlightLoading(true);
+    fetch("/api/zillow-spotlight")
+      .then(async res=>{
+        if(!res.ok)throw new Error("spotlight_fetch_failed");
+        return res.json();
+      })
+      .then((data:{listings?:Listing[]})=>{
+        if(ignore||!Array.isArray(data?.listings)||data.listings.length===0)return;
+        setSpotlightListings(data.listings);
+      })
+      .catch(()=>{})
+      .finally(()=>{if(!ignore)setSpotlightLoading(false);});
+    return()=>{ignore=true;};
+  },[started]);
 
   useEffect(()=>{if(started)saveProfile(p);},[p,started]);
 
@@ -425,8 +429,8 @@ export default function App(){
 
   const curatedInBudgetCount=useMemo(()=>{
     if(buyingPower.totalPower<=0)return 0;
-    return CURATED.filter(l=>l.price<=buyingPower.totalPower).length;
-  },[buyingPower.totalPower]);
+    return spotlightListings.filter(l=>l.price<=buyingPower.totalPower).length;
+  },[buyingPower.totalPower,spotlightListings]);
 
   const toggleProg=useCallback((id:string)=>{setSelProgs(prev=>{const n=new Set(prev);n.has(id)?n.delete(id):n.add(id);return n;});},[]);
 
@@ -689,10 +693,11 @@ export default function App(){
               <Card className="dashboard-card overflow-hidden border-slate-200/90 shadow-md">
                 <div className="bg-gradient-to-br from-[#1a2e44] via-[#1e4a2a] to-[#2d6a2e] px-4 py-3 text-white">
                   <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-white/70">South Metro spotlight</p>
-                  <CardTitle className="text-base font-bold text-white mt-1">Curated new construction</CardTitle>
-                  <p className="text-xs text-white/85 mt-1.5 leading-relaxed">Illustrative new-build samples (not MLS photos)—scores and DPA flags update from your profile and selected programs.</p>
+                  <CardTitle className="text-base font-bold text-white mt-1">Zillow new construction</CardTitle>
+                  <p className="text-xs text-white/85 mt-1.5 leading-relaxed">Live South Metro examples sourced from Zillow property pages. If a Zillow page does not expose a photo, the card falls back to a neutral placeholder instead of a fake stock image.</p>
                   <div className="flex flex-wrap gap-2 mt-3">
-                    <Badge className="bg-white/15 text-white border-0 text-[11px] font-medium">{CURATED.length} listings</Badge>
+                    <Badge className="bg-white/15 text-white border-0 text-[11px] font-medium">{spotlightListings.length} listings</Badge>
+                    {spotlightLoading&&<Badge className="bg-white/10 text-white/85 border border-white/10 text-[11px] font-medium">Refreshing Zillow photos…</Badge>}
                     {buyingPower.totalPower>0&&(
                       <Badge className="bg-emerald-400/25 text-emerald-50 border border-emerald-300/40 text-[11px] font-medium">{curatedInBudgetCount} within {$(buyingPower.totalPower)} budget</Badge>
                     )}
@@ -704,7 +709,7 @@ export default function App(){
                 <CardContent className="p-3 sm:p-4">
                   <div className="max-h-[min(520px,55vh)] overflow-y-auto pr-1 -mr-1">
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                      {CURATED.map(l=>(<PropertyCard key={l.id} listing={l} maxLoan={buyingPower.maxLoan} totalDPA={totalDPA} buyingPower={buyingPower.totalPower} onSelect={()=>selectProperty(l)} isSelected={selectedCurated===l.id}/>))}
+                      {spotlightListings.map(l=>(<PropertyCard key={l.id} listing={l} maxLoan={buyingPower.maxLoan} totalDPA={totalDPA} buyingPower={buyingPower.totalPower} onSelect={()=>selectProperty(l)} isSelected={selectedCurated===l.id}/>))}
                     </div>
                   </div>
                 </CardContent>
@@ -715,7 +720,7 @@ export default function App(){
             <Card className="dashboard-card lg:col-span-3"><CardContent className="p-0">
               {(selectedCurated||selectedResult)?(()=>{
                 const sel=selectedResult?{name:selectedResult.address,price:selectedResult.price,beds:selectedResult.bedrooms,baths:selectedResult.bathrooms,sqft:selectedResult.livingArea,city:selectedResult.city,image:selectedResult.imgSrc,url:selectedResult.detailUrl}
-                  :CURATED.find(l=>l.id===selectedCurated)?{...CURATED.find(l=>l.id===selectedCurated)!}:null;
+                  :spotlightListings.find(l=>l.id===selectedCurated)?{...spotlightListings.find(l=>l.id===selectedCurated)!}:null;
                 if(!sel)return null;
                 const m=calcMort(loanType);
                 const affordable=sel.price<=buyingPower.totalPower;
