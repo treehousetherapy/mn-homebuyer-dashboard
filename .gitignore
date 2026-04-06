@@ -5,3 +5,9 @@ dist/
 bundle.html
 
 .vercel
+
+# Git worktrees
+.worktrees/
+
+# Brainstorming session files
+.superpowers/
