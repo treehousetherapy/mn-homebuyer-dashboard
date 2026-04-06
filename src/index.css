@@ -4,8 +4,9 @@
 
 @layer base {
   :root {
-    --background: 210 20% 98%;
-    --foreground: 215 25% 15%;
+    /* Warm stone / off-white base, evergreen accent (journey UI) */
+    --background: 40 20% 97%;
+    --foreground: 215 22% 16%;
     --card: 0 0% 100%;
     --card-foreground: 215 25% 15%;
     --popover: 60 20% 99%;
@@ -55,13 +56,13 @@
   .brand-btn { background: linear-gradient(135deg, var(--brand-navy) 0%, var(--brand-green) 100%); }
   .gold-accent { color: var(--brand-gold); }
   .dashboard-page-bg {
-    background-color: hsl(215 20% 97%);
+    background-color: hsl(40 18% 97%);
     background-image:
-      linear-gradient(rgba(26, 46, 68, 0.022) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(26, 46, 68, 0.022) 1px, transparent 1px),
-      radial-gradient(ellipse 85% 55% at 50% -15%, rgba(26, 46, 68, 0.045), transparent 52%),
-      linear-gradient(180deg, hsl(215 20% 98%) 0%, hsl(215 18% 96%) 100%);
-    background-size: 20px 20px, 20px 20px, auto, auto;
+      linear-gradient(rgba(26, 46, 68, 0.018) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(26, 46, 68, 0.018) 1px, transparent 1px),
+      radial-gradient(ellipse 85% 55% at 50% -15%, rgba(15, 118, 110, 0.04), transparent 52%),
+      linear-gradient(180deg, hsl(40 22% 98%) 0%, hsl(215 16% 96%) 100%);
+    background-size: 20px 20px, auto, auto;
   }
   .dashboard-card {
     @apply rounded-xl border border-slate-200/70 bg-white shadow-[0_1px_2px_rgba(15,23,42,0.04),0_8px_24px_-4px_rgba(15,23,42,0.06)];
@@ -77,12 +78,18 @@
   }
   .landing-shell {
     min-height: 100vh;
-    background-color: hsl(215 22% 97%);
+    background-color: hsl(40 22% 97%);
     background-image:
-      linear-gradient(rgba(26, 46, 68, 0.03) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(26, 46, 68, 0.03) 1px, transparent 1px);
+      linear-gradient(rgba(26, 46, 68, 0.024) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(26, 46, 68, 0.024) 1px, transparent 1px);
     background-size: 24px 24px;
   }
+  .page-enter > * {
+    animation: _fi 0.4s ease both;
+  }
+  .page-enter > *:nth-child(1) { animation-delay: 0ms; }
+  .page-enter > *:nth-child(2) { animation-delay: 40ms; }
+  .page-enter > *:nth-child(3) { animation-delay: 80ms; }
   .property-card-media-fallback {
     background: linear-gradient(155deg, #1a2e44 0%, #1e3d52 45%, #1e5631 100%);
   }

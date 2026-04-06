@@ -62,7 +62,7 @@ export function Sidebar({ onReset }: SidebarProps) {
               href={phase.href}
               className={`w-full flex items-center gap-3 px-3 py-2.5 transition-colors border-l-2 no-underline ${
                 active
-                  ? 'border-[#2d6a2e] bg-white/[0.08] text-white'
+                  ? 'border-[var(--brand-green)] bg-white/[0.08] text-white'
                   : 'border-transparent text-white/50 hover:text-white/80 hover:bg-white/[0.04]'
               }`}
             >

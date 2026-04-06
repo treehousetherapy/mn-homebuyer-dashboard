@@ -88,3 +88,12 @@ export interface LiveRates {
 }
 
 export type ToggleField = 'firstTime' | 'firstGen' | 'education' | 'isSelfEmployed'
+
+/** Shape expected by `/api/chat` and AIChatbot (legacy name). */
+export interface BuyerProfile {
+  annualIncome: number
+  creditScore: number
+  isFirstGen: boolean
+  targetCity: string
+  monthlyDebt: number
+}

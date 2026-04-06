@@ -23,7 +23,7 @@ export function NextStepCard({ action, hasProfile }: NextStepCardProps) {
   }
 
   return (
-    <div className="mx-4 mt-3 flex items-center gap-3 rounded-xl border border-emerald-200/80 bg-emerald-50 px-4 py-3">
+    <div className="mx-4 mt-3 flex items-center gap-3 rounded-xl border border-emerald-200/80 bg-emerald-50/90 px-4 py-3 shadow-sm shadow-emerald-900/5">
       {/* Pulse dot */}
       <span className="relative flex h-2 w-2 shrink-0">
         <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />

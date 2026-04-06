@@ -1,5 +1,6 @@
 // src/features/shell/AppShell.tsx
 import { type ReactNode } from 'react'
+import { TooltipProvider } from '@/components/ui/tooltip'
 import { Sidebar } from './Sidebar'
 import { TopProgress } from './TopProgress'
 import { MobileNav } from './MobileNav'
@@ -16,6 +17,7 @@ interface AppShellProps {
 
 export function AppShell({ children, completionPct, hasProfile, nextAction, onReset }: AppShellProps) {
   return (
+    <TooltipProvider>
     <div className="min-h-screen flex">
       {/* Desktop sidebar */}
       <div className="hidden md:flex">
@@ -28,7 +30,7 @@ export function AppShell({ children, completionPct, hasProfile, nextAction, onRe
         <NextStepCard action={nextAction} hasProfile={hasProfile} />
 
         {/* Page content */}
-        <main className="flex-1 mx-auto w-full max-w-[1300px] p-4 lg:p-6">
+        <main className="flex-1 mx-auto w-full max-w-[1300px] p-4 lg:p-6 page-enter">
           {children}
         </main>
       </div>
@@ -36,5 +38,6 @@ export function AppShell({ children, completionPct, hasProfile, nextAction, onRe
       {/* Mobile bottom nav */}
       <MobileNav />
     </div>
+    </TooltipProvider>
   )
 }
