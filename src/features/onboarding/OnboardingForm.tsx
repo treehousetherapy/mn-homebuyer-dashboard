@@ -9,18 +9,33 @@ import { Switch } from '@/components/ui/switch'
 import { useAppContext } from '@/features/shell/RootLayout'
 import { COUNTIES } from '@/lib/data'
 import { clamp } from '@/lib/calc'
+import { isProfileComplete } from '@/lib/profile'
 import { logoImg } from '@/features/shared/logo'
 import type { ToggleField } from '@/lib/types'
 
-export function OnboardingForm() {
+export function OnboardingForm({ mode = 'new' }: { mode?: 'new' | 'welcomeEdit' }) {
   const { profile, setProfile } = useAppContext()
   const navigate = useNavigate()
   const p = profile
 
-  const canContinue = Boolean(p.income && p.fico && p.county)
+  const canContinue = isProfileComplete(p)
+  const isEdit = mode === 'welcomeEdit'
+
+  const handlePrimary = () => {
+    if (!canContinue) return
+    if (isEdit) {
+      navigate({ to: '/', replace: true })
+      return
+    }
+    navigate({ to: '/get-ready' })
+  }
+
+  const handleCancelEdit = () => {
+    navigate({ to: '/', replace: true })
+  }
 
   return (
-    <div className="landing-shell flex min-h-[calc(100vh-8rem)] flex-col items-stretch justify-center fade-in">
+    <div className="landing-shell flex min-h-screen flex-col items-stretch justify-center py-8 fade-in">
       <div className="mx-auto grid w-full max-w-5xl gap-8 lg:grid-cols-[1fr_minmax(0,28rem)] lg:items-center lg:gap-12">
         <div className="space-y-4 text-left">
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
@@ -57,10 +72,12 @@ export function OnboardingForm() {
               <img src={logoImg} alt="" className="h-11 w-11 object-contain" />
               <div>
                 <CardTitle className="font-display text-lg font-semibold tracking-tight text-slate-900">
-                  Create your profile
+                  {isEdit ? 'Welcome form' : 'Create your profile'}
                 </CardTitle>
                 <CardDescription className="text-sm text-slate-500">
-                  Used to personalize every chart and estimate below.
+                  {isEdit
+                    ? 'Update the details you entered on the welcome screen.'
+                    : 'Used to personalize every chart and estimate below.'}
                 </CardDescription>
               </div>
             </div>
@@ -104,12 +121,15 @@ export function OnboardingForm() {
                 />
               </div>
               <div>
-                <Label className="text-xs">FICO Score</Label>
+                <Label className="text-xs">FICO Score (300–850)</Label>
                 <Input
                   type="number"
                   placeholder="e.g. 640"
                   value={p.fico || ''}
-                  onChange={(e) => setProfile({ fico: clamp(+e.target.value, 0, 850) })}
+                  onChange={(e) => {
+                    const raw = e.target.value
+                    setProfile({ fico: raw === '' ? 0 : clamp(+raw, 0, 850) })
+                  }}
                   className="mt-1 h-9"
                 />
               </div>
@@ -193,15 +213,25 @@ export function OnboardingForm() {
               ))}
             </div>
             {!canContinue && (
-              <p className="text-xs text-destructive">Enter income, FICO, and county to continue.</p>
+              <p className="text-xs text-destructive leading-relaxed">
+                Complete all required fields: your name, county, annual income, FICO between 300 and 850, and household
+                size (1–10) before continuing.
+              </p>
             )}
-            <Button
-              className="mt-2 w-full h-11 font-semibold brand-btn text-white shadow-md"
-              disabled={!canContinue}
-              onClick={() => navigate({ to: '/get-ready' })}
-            >
-              Continue to dashboard
-            </Button>
+            <div className="flex flex-col gap-2">
+              <Button
+                className="w-full h-11 font-semibold brand-btn text-white shadow-md"
+                disabled={!canContinue}
+                onClick={handlePrimary}
+              >
+                {isEdit ? 'Save and return home' : 'Continue to dashboard'}
+              </Button>
+              {isEdit && (
+                <Button type="button" variant="ghost" className="w-full h-9 text-sm" onClick={handleCancelEdit}>
+                  Cancel
+                </Button>
+              )}
+            </div>
             <p className="text-center text-[11px] text-slate-500">Educational tool only. Not financial, legal, or tax advice.</p>
           </CardContent>
         </Card>

@@ -38,7 +38,20 @@ export function saveProfile(p: Profile): void {
   }
 }
 
+/**
+ * Minimum fields required before unlocking the dashboard shell and journey routes.
+ * (Stricter than a single field — name, income, valid FICO range, county, household.)
+ */
+export function isProfileComplete(p: Profile): boolean {
+  const nameOk = p.name.trim().length > 0
+  const incomeOk = p.income > 0
+  const ficoOk = p.fico >= 300 && p.fico <= 850
+  const countyOk = p.county !== ''
+  const householdOk = p.household >= 1 && p.household <= 10
+  return nameOk && incomeOk && ficoOk && countyOk && householdOk
+}
+
 /** Returns true when the profile has enough data to show the dashboard. */
 export function hasProfile(p: Profile): boolean {
-  return p.income > 0 && p.fico > 0 && p.county !== ''
+  return isProfileComplete(p)
 }

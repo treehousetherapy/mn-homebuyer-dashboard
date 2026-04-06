@@ -1,5 +1,5 @@
 // src/features/shell/RootLayout.tsx
-import { Outlet } from '@tanstack/react-router'
+import { Outlet, Navigate, useRouterState } from '@tanstack/react-router'
 import { useState, useEffect, useMemo, createContext, useContext } from 'react'
 import { AppShell } from './AppShell'
 import { loadProfile, saveProfile, hasProfile, DEFAULT_PROFILE, STORAGE_KEY } from '@/lib/profile'
@@ -48,6 +48,10 @@ export function useAppContext(): AppContextValue {
 }
 
 export function RootLayout() {
+  const pathname = useRouterState({ select: (s) => s.location.pathname })
+  const welcomeEdit = useRouterState({
+    select: (s) => new URLSearchParams(s.location.search).get('welcome') === '1',
+  })
   const [profile, setProfileState] = useState<Profile>(() => loadProfile() ?? DEFAULT_PROFILE)
   const [selectedPropertyId, setSelectedPropertyId] = useState<number | null>(null)
   const [checkIds, setCheckIds] = useState<Set<string>>(new Set())
@@ -106,6 +110,11 @@ export function RootLayout() {
     window.location.href = '/'
   }
 
+  const profileReady = hasProfile(profile)
+  /** Full-bleed welcome / onboarding: no sidebar until profile is done, or when revisiting the welcome form. */
+  const bareLanding =
+    !profileReady || (profileReady && welcomeEdit && pathname === '/')
+
   const appContext: AppContextValue = {
     profile,
     setProfile: (updates) => setProfileState((prev) => ({ ...prev, ...updates })),
@@ -132,11 +141,29 @@ export function RootLayout() {
     taxRate,
   }
 
+  if (!profileReady && pathname !== '/') {
+    return (
+      <AppContext.Provider value={appContext}>
+        <Navigate to="/" replace />
+      </AppContext.Provider>
+    )
+  }
+
+  if (bareLanding) {
+    return (
+      <AppContext.Provider value={appContext}>
+        <div className="min-h-screen landing-shell">
+          <Outlet />
+        </div>
+      </AppContext.Provider>
+    )
+  }
+
   return (
     <AppContext.Provider value={appContext}>
       <AppShell
         completionPct={completionPct}
-        hasProfile={hasProfile(profile)}
+        hasProfile
         nextAction={nextAction}
         onReset={handleReset}
       >

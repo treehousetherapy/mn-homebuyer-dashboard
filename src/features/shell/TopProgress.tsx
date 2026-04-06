@@ -1,4 +1,5 @@
 // src/features/shell/TopProgress.tsx
+import { Link } from '@tanstack/react-router'
 import { Home } from 'lucide-react'
 import { Progress } from '@/components/ui/progress'
 import { Button } from '@/components/ui/button'
@@ -42,7 +43,10 @@ export function TopProgress({ completionPct, hasProfile }: TopProgressProps) {
         className="hidden sm:inline-flex h-8 gap-1.5 border-slate-200 bg-white px-3 text-slate-700 shadow-sm text-xs"
         asChild
       >
-        <a href="/"><Home className="h-3.5 w-3.5" />Home</a>
+        <Link to="/">
+          <Home className="h-3.5 w-3.5" />
+          Home
+        </Link>
       </Button>
     </div>
   )

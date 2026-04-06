@@ -1,4 +1,5 @@
 // src/features/shell/MobileNav.tsx
+import { Link } from '@tanstack/react-router'
 import { LineChart, Wallet, Gift, Search, ClipboardCheck } from 'lucide-react'
 
 const TABS = [
@@ -17,16 +18,16 @@ export function MobileNav() {
       {TABS.map((tab) => {
         const active = pathname === tab.href || pathname.startsWith(tab.href + '/')
         return (
-          <a
+          <Link
             key={tab.href}
-            href={tab.href}
+            to={tab.href}
             className={`flex flex-col items-center gap-0.5 px-2 py-1 rounded-xl min-w-[3.25rem] transition-colors no-underline ${
               active ? 'text-[#2d6a2e] bg-emerald-50/60' : 'text-muted-foreground'
             }`}
           >
             <tab.Icon className="h-5 w-5" aria-hidden />
             <span className="text-[9px] font-medium leading-tight text-center">{tab.label}</span>
-          </a>
+          </Link>
         )
       })}
     </div>

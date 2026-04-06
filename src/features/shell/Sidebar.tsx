@@ -1,6 +1,7 @@
 // src/features/shell/Sidebar.tsx
 import { useState } from 'react'
-import { LineChart, Wallet, Gift, Search, ClipboardCheck, Home, User } from 'lucide-react'
+import { Link } from '@tanstack/react-router'
+import { LineChart, Wallet, Gift, Search, ClipboardCheck, Home, User, PenLine } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
 const faviconLink = document.querySelector('link[rel="icon"]') as HTMLLinkElement | null
@@ -57,9 +58,9 @@ export function Sidebar({ onReset }: SidebarProps) {
         {PHASES.map((phase) => {
           const active = pathname === phase.href || pathname.startsWith(phase.href + '/')
           return (
-            <a
+            <Link
               key={phase.href}
-              href={phase.href}
+              to={phase.href}
               className={`w-full flex items-center gap-3 px-3 py-2.5 transition-colors border-l-2 no-underline ${
                 active
                   ? 'border-[var(--brand-green)] bg-white/[0.08] text-white'
@@ -73,7 +74,7 @@ export function Sidebar({ onReset }: SidebarProps) {
               )}
               <phase.Icon className="h-4 w-4 shrink-0 opacity-90" aria-hidden />
               {open && <span className="text-xs font-medium leading-tight">{phase.label}</span>}
-            </a>
+            </Link>
           )
         })}
       </nav>
@@ -81,13 +82,21 @@ export function Sidebar({ onReset }: SidebarProps) {
       {/* Footer */}
       {open && (
         <div className="border-t border-white/10 p-3 space-y-1">
-          <a
-            href="/profile"
+          <Link
+            to="/profile"
             className="flex items-center gap-2 w-full rounded-lg px-2 py-1.5 text-[11px] text-white/60 hover:text-white hover:bg-white/5 no-underline transition-colors"
           >
             <User className="h-3.5 w-3.5 shrink-0" />
             Edit profile
-          </a>
+          </Link>
+          <Link
+            to="/"
+            search={{ welcome: '1' }}
+            className="flex items-center gap-2 w-full rounded-lg px-2 py-1.5 text-[11px] text-white/60 hover:text-white hover:bg-white/5 no-underline transition-colors"
+          >
+            <PenLine className="h-3.5 w-3.5 shrink-0" />
+            Welcome form
+          </Link>
           {!resetConfirm ? (
             <button
               type="button"
