@@ -1,13 +1,41 @@
 // src/features/shell/RootLayout.tsx
 import { Outlet } from '@tanstack/react-router'
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect, useMemo, createContext, useContext } from 'react'
 import { AppShell } from './AppShell'
 import { loadProfile, saveProfile, hasProfile, DEFAULT_PROFILE, STORAGE_KEY } from '@/lib/profile'
-import { effectiveDebt, calcBuyingPower } from '@/lib/calc'
+import { effectiveDebt, calcBuyingPower, type BuyingPower } from '@/lib/calc'
 import { PROGRAMS } from '@/lib/data'
 import { eligibleFor } from '@/lib/eligibility'
 import { getNextAction } from '@/lib/nextAction'
 import type { Profile } from '@/lib/types'
+
+// ── App context ─────────────────────────────────────────────────────────────
+export interface AppContextValue {
+  profile: Profile
+  setProfile: (updates: Partial<Profile>) => void
+  selProgs: Set<string>
+  setSelProgs: React.Dispatch<React.SetStateAction<Set<string>>>
+  selectedPropertyId: number | null
+  setSelectedPropertyId: (id: number | null) => void
+  checkCount: number
+  setCheckCount: (n: number) => void
+  price: number
+  setPrice: (p: number) => void
+  rate: number
+  setRate: (r: number) => void
+  totalDPA: number
+  buyingPower: BuyingPower
+  effDebt: number
+}
+
+const AppContext = createContext<AppContextValue | null>(null)
+
+/** Hook for page components to read app-wide state. */
+export function useAppContext(): AppContextValue {
+  const ctx = useContext(AppContext)
+  if (!ctx) throw new Error('useAppContext must be used inside RootLayout')
+  return ctx
+}
 
 export function RootLayout() {
   const [profile, setProfileState] = useState<Profile>(() => loadProfile() ?? DEFAULT_PROFILE)
@@ -88,12 +116,9 @@ export function RootLayout() {
     window.location.href = '/'
   }
 
-  // App-wide context passed to child routes via Outlet context
-  const appContext = {
+  const appContext: AppContextValue = {
     profile,
-    setProfile: (updates: Partial<Profile>) => {
-      setProfileState((prev) => ({ ...prev, ...updates }))
-    },
+    setProfile: (updates) => setProfileState((prev) => ({ ...prev, ...updates })),
     selProgs,
     setSelProgs,
     selectedPropertyId,
@@ -110,13 +135,15 @@ export function RootLayout() {
   }
 
   return (
-    <AppShell
-      completionPct={completionPct}
-      hasProfile={hasProfile(profile)}
-      nextAction={nextAction}
-      onReset={handleReset}
-    >
-      <Outlet context={appContext} />
-    </AppShell>
+    <AppContext.Provider value={appContext}>
+      <AppShell
+        completionPct={completionPct}
+        hasProfile={hasProfile(profile)}
+        nextAction={nextAction}
+        onReset={handleReset}
+      >
+        <Outlet />
+      </AppShell>
+    </AppContext.Provider>
   )
 }
