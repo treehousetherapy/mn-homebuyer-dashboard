@@ -202,7 +202,7 @@ export function HomesPage() {
               <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-white/70">South Metro spotlight</p>
               <CardTitle className="text-base font-bold text-white mt-1">Zillow new construction</CardTitle>
               <p className="text-xs text-white/85 mt-1.5 leading-relaxed">
-                Live examples from Zillow. Missing photos show a neutral placeholder.
+                Live new-construction picks from Zillow—scroll sideways to browse. Cards without photos use a branded placeholder.
               </p>
               <div className="flex flex-wrap gap-2 mt-3">
                 <Badge className="bg-white/15 text-white border-0 text-[11px] font-medium">{spotlightListings.length} listings</Badge>
@@ -218,19 +218,29 @@ export function HomesPage() {
                 )}
               </div>
             </div>
-            <CardContent className="p-3 sm:p-4">
-              <div className="max-h-[min(520px,55vh)] overflow-y-auto pr-1 -mr-1">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <CardContent className="p-0 sm:p-1">
+              <div className="px-3 pb-4 pt-2 sm:px-4">
+                <p className="mb-3 text-[11px] text-slate-500">
+                  <span className="font-medium text-slate-600">Swipe or scroll</span> — select a home to analyze payment and DTI on the right.
+                </p>
+                <div
+                  className="listing-carousel -mx-1 flex gap-4 overflow-x-auto px-1 pb-1 pt-0.5 scroll-smooth snap-x snap-mandatory"
+                  style={{ WebkitOverflowScrolling: 'touch' }}
+                >
                   {spotlightListings.map((l) => (
-                    <PropertyCard
+                    <div
                       key={l.id}
-                      listing={l}
-                      maxLoan={buyingPower.maxLoan}
-                      totalDPA={totalDPA}
-                      buyingPower={buyingPower.totalPower}
-                      onSelect={() => selectProperty(l)}
-                      isSelected={selectedPropertyId === l.id}
-                    />
+                      className="w-[min(100%,300px)] shrink-0 snap-start sm:w-[288px]"
+                    >
+                      <PropertyCard
+                        listing={l}
+                        maxLoan={buyingPower.maxLoan}
+                        totalDPA={totalDPA}
+                        buyingPower={buyingPower.totalPower}
+                        onSelect={() => selectProperty(l)}
+                        isSelected={selectedPropertyId === l.id}
+                      />
+                    </div>
                   ))}
                 </div>
               </div>

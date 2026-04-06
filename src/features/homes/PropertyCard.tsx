@@ -1,28 +1,39 @@
 import type { KeyboardEvent } from 'react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { ImageOff } from 'lucide-react'
 import type { Listing } from '@/lib/types'
 import { fmt, clamp } from '@/lib/calc'
 
 function ListingMedia({ image, builder, city }: { image?: string; builder: string; city: string }) {
   const initial = builder.replace(/[^A-Za-z0-9]/g, '').slice(0, 2).toUpperCase() || 'NH'
   return (
-    <div className="relative h-44 w-full shrink-0 overflow-hidden bg-slate-100">
+    <div className="relative aspect-[4/3] w-full shrink-0 overflow-hidden rounded-t-xl bg-slate-100">
       {image ? (
         <img
           src={image}
           alt=""
-          className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.04]"
+          className="h-full w-full object-cover transition-transform duration-300 ease-out group-hover:scale-[1.03]"
           loading="lazy"
         />
       ) : (
-        <div className="listing-media-sample property-card-media-fallback relative flex h-full w-full flex-col items-center justify-center gap-1 p-4 text-center">
-          <span className="absolute top-2 right-2 rounded bg-black/35 px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wider text-white/95 backdrop-blur-sm">
-            No Zillow photo
-          </span>
-          <span className="text-3xl font-bold tracking-tight text-white">{initial}</span>
-          <span className="text-[11px] font-medium text-white/85">{builder}</span>
-          <span className="text-[10px] uppercase tracking-[0.15em] text-white/55">{city}</span>
+        <div className="listing-photo-placeholder relative flex h-full w-full flex-col items-center justify-center gap-3 px-4 text-center">
+          <div className="flex flex-col items-center gap-2">
+            <div
+              className="flex h-14 w-14 items-center justify-center rounded-2xl border border-white/15 bg-white/10 text-lg font-bold tracking-tight text-white shadow-inner backdrop-blur-[2px]"
+              aria-hidden
+            >
+              {initial}
+            </div>
+            <div className="space-y-0.5">
+              <p className="text-[13px] font-semibold leading-tight text-white/95">{builder}</p>
+              <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-white/50">{city}</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-1.5 rounded-full border border-white/10 bg-black/20 px-2.5 py-1 text-[10px] font-medium text-white/75 backdrop-blur-sm">
+            <ImageOff className="h-3 w-3 shrink-0 opacity-80" aria-hidden />
+            Photo unavailable
+          </div>
         </div>
       )}
     </div>
@@ -58,69 +69,95 @@ export function PropertyCard({
     }
   }
 
+  const matchLabel =
+    matchPct >= 80 ? 'Strong fit' : matchPct >= 65 ? 'Good fit' : matchPct >= 50 ? 'Moderate' : 'Stretch'
+
   return (
     <Card
-      className={`dashboard-card group overflow-hidden transition-all duration-200 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2d6a2e] focus-visible:ring-offset-2 ${
-        isSelected ? 'ring-2 ring-[#2d6a2e] shadow-md' : 'hover:shadow-md hover:-translate-y-0.5'
-      } ${!affordable ? 'opacity-65' : ''}`}
+      className={`group flex h-full flex-col overflow-hidden rounded-xl border border-slate-200/80 bg-white shadow-[0_2px_8px_rgba(15,23,42,0.06)] transition-all duration-200 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2d6a2e] focus-visible:ring-offset-2 ${
+        isSelected
+          ? 'ring-2 ring-[#2d6a2e] shadow-[0_8px_28px_-6px_rgba(45,106,46,0.35)]'
+          : 'hover:border-slate-300/90 hover:shadow-[0_12px_32px_-12px_rgba(15,23,42,0.12)] hover:-translate-y-px'
+      } ${!affordable ? 'opacity-[0.72]' : ''}`}
       onClick={onSelect}
       onKeyDown={onKeyDown}
       tabIndex={0}
       role="button"
+      aria-label={`${listing.name}, ${fmt(listing.price)}. ${matchLabel} ${matchPct}% match.`}
+      aria-pressed={isSelected}
     >
       <ListingMedia image={listing.image} builder={listing.builder} city={listing.city} />
-      <CardContent className="p-3.5 space-y-2 min-h-[7.5rem]">
-        <div className="flex justify-between items-start gap-2">
-          <p className="text-xl font-bold tabular-nums leading-none" style={{ color: 'var(--brand-navy)' }}>
-            {fmt(listing.price)}
-          </p>
-          <div className="text-right shrink-0">
+      <CardContent className="flex flex-1 flex-col gap-3 p-4 pt-3.5">
+        <div className="flex flex-wrap items-start justify-between gap-2">
+          <div className="min-w-0 flex-1">
             <p
-              className="text-sm font-bold tabular-nums"
-              style={{
-                color: matchPct >= 70 ? '#2d6a2e' : matchPct >= 50 ? '#d4a017' : '#dc2626',
-              }}
+              className="font-display text-[1.35rem] font-bold leading-none tracking-tight tabular-nums"
+              style={{ color: 'var(--brand-navy)' }}
             >
-              {matchPct}%
+              {fmt(listing.price)}
             </p>
-            <p className="text-[10px] text-muted-foreground">match</p>
+            {!affordable && (
+              <p className="mt-1 text-[10px] font-semibold uppercase tracking-wide text-red-600/90">Above buying power</p>
+            )}
+          </div>
+          <div
+            className={`shrink-0 rounded-lg px-2.5 py-1.5 text-right ${
+              matchPct >= 70
+                ? 'bg-emerald-50 text-emerald-900 ring-1 ring-emerald-200/80'
+                : matchPct >= 50
+                  ? 'bg-amber-50 text-amber-900 ring-1 ring-amber-200/80'
+                  : 'bg-red-50 text-red-800 ring-1 ring-red-200/80'
+            }`}
+          >
+            <p className="text-base font-bold tabular-nums leading-none">{matchPct}%</p>
+            <p className="mt-0.5 text-[9px] font-medium uppercase tracking-wide opacity-80">{matchLabel}</p>
           </div>
         </div>
-        <p className="text-sm font-semibold leading-snug line-clamp-2">{listing.name}</p>
-        <p className="text-xs text-muted-foreground">
-          {listing.beds} bd · {listing.baths} ba · {listing.sqft.toLocaleString()} sf · {listing.city}
-        </p>
-        <div className="flex gap-1.5 flex-wrap">
+
+        <div className="min-h-0 space-y-1.5">
+          <p className="text-[15px] font-semibold leading-snug text-slate-900 line-clamp-2">{listing.name}</p>
+          <p className="text-[13px] text-slate-600">
+            <span className="tabular-nums">{listing.beds}</span> bd
+            <span className="mx-1 text-slate-300">·</span>
+            <span className="tabular-nums">{listing.baths}</span> ba
+            <span className="mx-1 text-slate-300">·</span>
+            <span className="tabular-nums">{listing.sqft.toLocaleString()}</span> sq ft
+          </p>
+          <p className="text-xs font-medium text-slate-500">{listing.city}</p>
+        </div>
+
+        <div className="mt-auto flex flex-wrap gap-1.5 border-t border-slate-100 pt-3">
           {listing.builder && (
-            <Badge variant="outline" className="text-[10px] py-0.5 h-5 font-normal">
+            <Badge variant="outline" className="border-slate-200/90 text-[10px] font-medium text-slate-700">
               {listing.builder}
             </Badge>
           )}
           {firstGenOk && (
-            <Badge className="text-[10px] py-0.5 h-5 bg-emerald-50 text-emerald-800 border border-emerald-200/80">
+            <Badge className="border border-emerald-200/80 bg-emerald-50/90 text-[10px] font-medium text-emerald-900">
               First-Gen
             </Badge>
           )}
           {withinDTI && (
-            <Badge className="text-[10px] py-0.5 h-5 bg-emerald-50 text-emerald-800 border border-emerald-200/80">
+            <Badge className="border border-emerald-200/80 bg-emerald-50/90 text-[10px] font-medium text-emerald-900">
               In budget
             </Badge>
           )}
           {reachWithDPA && (
-            <Badge className="text-[10px] py-0.5 h-5 bg-sky-50 text-sky-800 border border-sky-200/80">DPA reach</Badge>
+            <Badge className="border border-sky-200/90 bg-sky-50 text-[10px] font-medium text-sky-900">DPA reach</Badge>
           )}
           {!affordable && (
-            <Badge className="text-[10px] py-0.5 h-5 bg-red-50 text-red-800 border border-red-200/80">Over</Badge>
+            <Badge className="border border-red-200/90 bg-red-50 text-[10px] font-medium text-red-900">Over</Badge>
           )}
         </div>
+
         {reachWithDPA && (
-          <p className="text-[11px] text-sky-800 bg-sky-50/90 border border-sky-100 p-2 rounded-md leading-snug">
-            Reachable with {fmt(totalDPA)} in selected DPA.
+          <p className="text-[11px] leading-snug text-sky-900 bg-sky-50/90 border border-sky-100/90 px-2.5 py-2 rounded-lg">
+            Reachable with {fmt(totalDPA)} in selected DPA programs.
           </p>
         )}
         {!affordable && listing.price < buyingPower * 1.15 && (
-          <p className="text-[11px] text-amber-800 bg-amber-50 border border-amber-100 p-2 rounded-md leading-snug">
-            Tip: ~{fmt(Math.round((listing.price - buyingPower) * 0.006))}/mo less debt could qualify this price.
+          <p className="text-[11px] leading-snug text-amber-900 bg-amber-50 border border-amber-100 px-2.5 py-2 rounded-lg">
+            Tip: ~{fmt(Math.round((listing.price - buyingPower) * 0.006))}/mo less debt could help qualify at this price.
           </p>
         )}
       </CardContent>
