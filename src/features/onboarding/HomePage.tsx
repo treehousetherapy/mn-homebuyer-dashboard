@@ -13,5 +13,5 @@ export function HomePage() {
     return <OnboardingForm mode="welcomeEdit" />
   }
 
-  return <OnboardingForm mode={hasProfile(profile) ? 'saved' : 'new'} />
+  return <OnboardingForm />
 }

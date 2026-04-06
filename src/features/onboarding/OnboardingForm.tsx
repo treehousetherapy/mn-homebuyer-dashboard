@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { useNavigate } from '@tanstack/react-router'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -9,18 +10,26 @@ import { Switch } from '@/components/ui/switch'
 import { useAppContext } from '@/features/shell/RootLayout'
 import { COUNTIES } from '@/lib/data'
 import { clamp } from '@/lib/calc'
-import { isProfileComplete } from '@/lib/profile'
+import { DEFAULT_PROFILE, isProfileComplete } from '@/lib/profile'
 import { logoImg } from '@/features/shared/logo'
+import type { Profile } from '@/lib/types'
 import type { ToggleField } from '@/lib/types'
 
-export function OnboardingForm({ mode = 'new' }: { mode?: 'new' | 'saved' | 'welcomeEdit' }) {
+export function OnboardingForm({ mode = 'new' }: { mode?: 'new' | 'welcomeEdit' }) {
   const { profile, setProfile } = useAppContext()
   const navigate = useNavigate()
-  const p = profile
+  const isEdit = mode === 'welcomeEdit'
+  const [draft, setDraft] = useState<Profile>(DEFAULT_PROFILE)
+  const p = isEdit ? profile : draft
+  const updateProfile = (updates: Partial<Profile>) => {
+    if (isEdit) {
+      setProfile(updates)
+      return
+    }
+    setDraft((prev) => ({ ...prev, ...updates }))
+  }
 
   const canContinue = isProfileComplete(p)
-  const isEdit = mode === 'welcomeEdit'
-  const hasSavedProfile = mode === 'saved'
 
   const handlePrimary = () => {
     if (!canContinue) return
@@ -28,6 +37,7 @@ export function OnboardingForm({ mode = 'new' }: { mode?: 'new' | 'saved' | 'wel
       navigate({ to: '/get-ready', replace: true })
       return
     }
+    setProfile(p)
     navigate({ to: '/get-ready' })
   }
 
@@ -73,14 +83,12 @@ export function OnboardingForm({ mode = 'new' }: { mode?: 'new' | 'saved' | 'wel
               <img src={logoImg} alt="" className="h-11 w-11 object-contain" />
               <div>
                 <CardTitle className="font-display text-lg font-semibold tracking-tight text-slate-900">
-                  {isEdit ? 'Welcome form' : hasSavedProfile ? 'Continue where you left off' : 'Create your profile'}
+                  {isEdit ? 'Welcome form' : 'Create your profile'}
                 </CardTitle>
                 <CardDescription className="text-sm text-slate-500">
                   {isEdit
                     ? 'Update the details you entered on the welcome screen.'
-                    : hasSavedProfile
-                      ? 'Your saved profile is loaded from this browser. Review it, then continue to the dashboard.'
-                      : 'Used to personalize every chart and estimate below.'}
+                    : 'Used to personalize every chart and estimate below.'}
                 </CardDescription>
               </div>
             </div>
@@ -92,13 +100,13 @@ export function OnboardingForm({ mode = 'new' }: { mode?: 'new' | 'saved' | 'wel
                 <Input
                   placeholder="First name"
                   value={p.name}
-                  onChange={(e) => setProfile({ name: e.target.value })}
+                  onChange={(e) => updateProfile({ name: e.target.value })}
                   className="mt-1 h-9"
                 />
               </div>
               <div>
                 <Label className="text-xs">County</Label>
-                <Select value={p.county} onValueChange={(v) => setProfile({ county: v })}>
+                <Select value={p.county} onValueChange={(v) => updateProfile({ county: v })}>
                   <SelectTrigger className="mt-1 h-9">
                     <SelectValue placeholder="Select..." />
                   </SelectTrigger>
@@ -119,7 +127,7 @@ export function OnboardingForm({ mode = 'new' }: { mode?: 'new' | 'saved' | 'wel
                   type="number"
                   placeholder="e.g. 90000"
                   value={p.income || ''}
-                  onChange={(e) => setProfile({ income: +e.target.value })}
+                  onChange={(e) => updateProfile({ income: +e.target.value })}
                   className="mt-1 h-9"
                 />
               </div>
@@ -131,7 +139,7 @@ export function OnboardingForm({ mode = 'new' }: { mode?: 'new' | 'saved' | 'wel
                   value={p.fico || ''}
                   onChange={(e) => {
                     const raw = e.target.value
-                    setProfile({ fico: raw === '' ? 0 : clamp(+raw, 0, 850) })
+                    updateProfile({ fico: raw === '' ? 0 : clamp(+raw, 0, 850) })
                   }}
                   className="mt-1 h-9"
                 />
@@ -144,7 +152,7 @@ export function OnboardingForm({ mode = 'new' }: { mode?: 'new' | 'saved' | 'wel
                   type="number"
                   placeholder="e.g. 800"
                   value={p.debt || ''}
-                  onChange={(e) => setProfile({ debt: +e.target.value })}
+                  onChange={(e) => updateProfile({ debt: +e.target.value })}
                   className="mt-1 h-9"
                 />
               </div>
@@ -154,7 +162,7 @@ export function OnboardingForm({ mode = 'new' }: { mode?: 'new' | 'saved' | 'wel
                   type="number"
                   placeholder="e.g. 10000"
                   value={p.savings || ''}
-                  onChange={(e) => setProfile({ savings: +e.target.value })}
+                  onChange={(e) => updateProfile({ savings: +e.target.value })}
                   className="mt-1 h-9"
                 />
               </div>
@@ -166,7 +174,7 @@ export function OnboardingForm({ mode = 'new' }: { mode?: 'new' | 'saved' | 'wel
                   type="number"
                   placeholder="1"
                   value={p.household || ''}
-                  onChange={(e) => setProfile({ household: clamp(+e.target.value, 1, 10) })}
+                  onChange={(e) => updateProfile({ household: clamp(+e.target.value, 1, 10) })}
                   className="mt-1 h-9"
                 />
               </div>
@@ -176,7 +184,7 @@ export function OnboardingForm({ mode = 'new' }: { mode?: 'new' | 'saved' | 'wel
                   type="number"
                   placeholder="2"
                   value={p.jobYears || ''}
-                  onChange={(e) => setProfile({ jobYears: +e.target.value })}
+                  onChange={(e) => updateProfile({ jobYears: +e.target.value })}
                   className="mt-1 h-9"
                 />
               </div>
@@ -188,13 +196,13 @@ export function OnboardingForm({ mode = 'new' }: { mode?: 'new' | 'saved' | 'wel
                   type="number"
                   placeholder="e.g. 40000"
                   value={p.studentLoanBal || ''}
-                  onChange={(e) => setProfile({ studentLoanBal: +e.target.value })}
+                  onChange={(e) => updateProfile({ studentLoanBal: +e.target.value })}
                   className="mt-1 h-9"
                 />
               </div>
               <div className="flex items-end pb-1">
                 <div className="flex items-center gap-2">
-                  <Switch checked={p.studentLoanIDR} onCheckedChange={(v) => setProfile({ studentLoanIDR: v })} />
+                  <Switch checked={p.studentLoanIDR} onCheckedChange={(v) => updateProfile({ studentLoanIDR: v })} />
                   <Label className="text-[10px] text-muted-foreground leading-tight">On IDR plan</Label>
                 </div>
               </div>
@@ -211,7 +219,7 @@ export function OnboardingForm({ mode = 'new' }: { mode?: 'new' | 'saved' | 'wel
               ).map(([label, key]) => (
                 <div key={key} className="flex items-center justify-between">
                   <Label className="text-xs">{label}</Label>
-                  <Switch checked={Boolean(p[key])} onCheckedChange={(v) => setProfile({ [key]: v })} />
+                  <Switch checked={Boolean(p[key])} onCheckedChange={(v) => updateProfile({ [key]: v })} />
                 </div>
               ))}
             </div>
