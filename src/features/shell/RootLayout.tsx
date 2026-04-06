@@ -68,8 +68,12 @@ export function RootLayout() {
 
   useEffect(() => {
     try {
-      localStorage.removeItem('mn_homebuyer_profile')
-    } catch { /* ok */ }
+      if (localStorage.getItem(STORAGE_KEY)) {
+        localStorage.removeItem('mn_homebuyer_profile')
+      }
+    } catch {
+      /* ok */
+    }
   }, [])
 
   const effDebt = useMemo(() => effectiveDebt(profile), [profile])

@@ -40,18 +40,25 @@ export function ReadinessPage() {
             <CardTitle className="text-base font-semibold text-slate-800">Mortgage Readiness</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4 pt-4">
-            <div className="flex justify-center">
+            <div className="flex flex-col items-center gap-1">
               <Gauge score={readiness.score} label={readiness.label} color={readiness.color} />
+              <p className="text-center text-[10px] leading-snug text-slate-500 max-w-[220px]">
+                Strength score weights credit, DTI, savings, and other factors—not only checklist count.
+              </p>
             </div>
             <div className="divide-y divide-slate-100 rounded-lg border border-slate-100 bg-slate-50/40">
               {readiness.items.map((item) => (
                 <div key={item.label} className="flex items-start gap-3 px-3 py-2.5 first:rounded-t-lg last:rounded-b-lg">
                   <div
                     className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded border text-[10px] font-bold ${
-                      item.ok ? 'border-emerald-200 bg-emerald-50 text-emerald-800' : 'border-red-200 bg-red-50 text-red-700'
+                      item.tier === 'strong'
+                        ? 'border-emerald-200 bg-emerald-50 text-emerald-800'
+                        : item.tier === 'ok'
+                          ? 'border-amber-200 bg-amber-50 text-amber-900'
+                          : 'border-red-200 bg-red-50 text-red-700'
                     }`}
                   >
-                    {item.ok ? '✓' : '✗'}
+                    {item.tier === 'weak' ? '✗' : '✓'}
                   </div>
                   <div className="min-w-0 flex-1">
                     <p className="text-xs font-medium text-slate-800">{item.label}</p>

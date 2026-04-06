@@ -21,13 +21,26 @@ export const DEFAULT_PROFILE: Profile = {
   debtReduce: 0,
 }
 
+const LEGACY_STORAGE_KEY = 'mn_homebuyer_profile'
+
 export function loadProfile(): Profile | null {
   try {
     const d = localStorage.getItem(STORAGE_KEY)
-    return d ? (JSON.parse(d) as Profile) : null
+    if (d) return JSON.parse(d) as Profile
+    const legacy = localStorage.getItem(LEGACY_STORAGE_KEY)
+    if (legacy) {
+      const parsed = JSON.parse(legacy) as Profile
+      try {
+        localStorage.setItem(STORAGE_KEY, legacy)
+      } catch {
+        /* ignore */
+      }
+      return parsed
+    }
   } catch {
     return null
   }
+  return null
 }
 
 export function saveProfile(p: Profile): void {

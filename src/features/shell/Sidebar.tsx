@@ -1,6 +1,6 @@
 // src/features/shell/Sidebar.tsx
 import { useState } from 'react'
-import { Link } from '@tanstack/react-router'
+import { Link, useRouterState } from '@tanstack/react-router'
 import { LineChart, Wallet, Gift, Search, ClipboardCheck, Home, User, PenLine } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
@@ -22,7 +22,7 @@ interface SidebarProps {
 export function Sidebar({ onReset }: SidebarProps) {
   const [open, setOpen] = useState(true)
   const [resetConfirm, setResetConfirm] = useState(false)
-  const pathname = window.location.pathname
+  const pathname = useRouterState({ select: (s) => s.location.pathname })
 
   return (
     <aside
@@ -39,8 +39,8 @@ export function Sidebar({ onReset }: SidebarProps) {
         >
           <span className="text-lg leading-none">≡</span>
         </button>
-        <a
-          href="/"
+        <Link
+          to="/"
           className="flex min-w-0 flex-1 items-center gap-2 rounded-lg py-1.5 pl-1 pr-2 transition-colors hover:bg-white/10 no-underline"
           title="Go home"
         >
@@ -50,7 +50,7 @@ export function Sidebar({ onReset }: SidebarProps) {
               MN Homebuyer
             </span>
           )}
-        </a>
+        </Link>
       </div>
 
       {/* Phase nav */}
@@ -79,58 +79,110 @@ export function Sidebar({ onReset }: SidebarProps) {
         })}
       </nav>
 
-      {/* Footer */}
-      {open && (
-        <div className="border-t border-white/10 p-3 space-y-1">
-          <Link
-            to="/profile"
-            className="flex items-center gap-2 w-full rounded-lg px-2 py-1.5 text-[11px] text-white/60 hover:text-white hover:bg-white/5 no-underline transition-colors"
-          >
-            <User className="h-3.5 w-3.5 shrink-0" />
-            Edit profile
-          </Link>
-          <Link
-            to="/"
-            search={{ welcome: '1' }}
-            className="flex items-center gap-2 w-full rounded-lg px-2 py-1.5 text-[11px] text-white/60 hover:text-white hover:bg-white/5 no-underline transition-colors"
-          >
-            <PenLine className="h-3.5 w-3.5 shrink-0" />
-            Welcome form
-          </Link>
-          {!resetConfirm ? (
-            <button
-              type="button"
-              onClick={() => setResetConfirm(true)}
-              className="flex items-center gap-2 w-full rounded-lg px-2 py-1.5 text-[11px] text-white/30 hover:text-red-300 hover:bg-white/5 transition-colors"
+      {/* Footer — full labels when expanded; icon-only when collapsed so Welcome form stays reachable */}
+      <div className={`border-t border-white/10 ${open ? 'p-3 space-y-1' : 'p-2 flex flex-col items-center gap-2'}`}>
+        {open ? (
+          <>
+            <Link
+              to="/profile"
+              className="flex items-center gap-2 w-full rounded-lg px-2 py-1.5 text-[11px] text-white/60 hover:text-white hover:bg-white/5 no-underline transition-colors"
             >
-              <Home className="h-3.5 w-3.5 shrink-0" />
-              Reset profile
-            </button>
-          ) : (
-            <div className="flex gap-1.5">
-              <Button
-                size="sm"
-                variant="destructive"
-                className="h-7 flex-1 text-[10px]"
-                onClick={() => {
-                  onReset?.()
-                  setResetConfirm(false)
-                }}
+              <User className="h-3.5 w-3.5 shrink-0" />
+              Edit profile
+            </Link>
+            <Link
+              to="/"
+              search={{ welcome: '1' }}
+              className="flex items-center gap-2 w-full rounded-lg px-2 py-1.5 text-[11px] text-white/60 hover:text-white hover:bg-white/5 no-underline transition-colors"
+            >
+              <PenLine className="h-3.5 w-3.5 shrink-0" />
+              Welcome form
+            </Link>
+            {!resetConfirm ? (
+              <button
+                type="button"
+                onClick={() => setResetConfirm(true)}
+                className="flex items-center gap-2 w-full rounded-lg px-2 py-1.5 text-[11px] text-white/30 hover:text-red-300 hover:bg-white/5 transition-colors"
               >
-                Yes, reset
-              </Button>
-              <Button
-                size="sm"
-                variant="ghost"
-                className="h-7 flex-1 text-[10px] text-white/60 hover:text-white"
-                onClick={() => setResetConfirm(false)}
+                <Home className="h-3.5 w-3.5 shrink-0" />
+                Reset profile
+              </button>
+            ) : (
+              <div className="flex gap-1.5">
+                <Button
+                  size="sm"
+                  variant="destructive"
+                  className="h-7 flex-1 text-[10px]"
+                  onClick={() => {
+                    onReset?.()
+                    setResetConfirm(false)
+                  }}
+                >
+                  Yes, reset
+                </Button>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  className="h-7 flex-1 text-[10px] text-white/60 hover:text-white"
+                  onClick={() => setResetConfirm(false)}
+                >
+                  Cancel
+                </Button>
+              </div>
+            )}
+          </>
+        ) : (
+          <>
+            <Link
+              to="/profile"
+              title="Edit profile"
+              className="flex h-9 w-9 items-center justify-center rounded-lg text-white/60 hover:text-white hover:bg-white/10 no-underline"
+            >
+              <User className="h-4 w-4" />
+            </Link>
+            <Link
+              to="/"
+              search={{ welcome: '1' }}
+              title="Welcome form"
+              className="flex h-9 w-9 items-center justify-center rounded-lg text-white/60 hover:text-white hover:bg-white/10 no-underline"
+            >
+              <PenLine className="h-4 w-4" />
+            </Link>
+            {!resetConfirm ? (
+              <button
+                type="button"
+                title="Reset profile"
+                onClick={() => setResetConfirm(true)}
+                className="flex h-9 w-9 items-center justify-center rounded-lg text-white/30 hover:text-red-300 hover:bg-white/10"
               >
-                Cancel
-              </Button>
-            </div>
-          )}
-        </div>
-      )}
+                <Home className="h-4 w-4" />
+              </button>
+            ) : (
+              <div className="flex flex-col gap-1 w-full px-0.5">
+                <Button
+                  size="sm"
+                  variant="destructive"
+                  className="h-7 text-[9px] px-1"
+                  onClick={() => {
+                    onReset?.()
+                    setResetConfirm(false)
+                  }}
+                >
+                  Reset
+                </Button>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  className="h-7 text-[9px] text-white/60 hover:text-white px-1"
+                  onClick={() => setResetConfirm(false)}
+                >
+                  Cancel
+                </Button>
+              </div>
+            )}
+          </>
+        )}
+      </div>
     </aside>
   )
 }
