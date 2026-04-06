@@ -49,9 +49,6 @@ export function useAppContext(): AppContextValue {
 
 export function RootLayout() {
   const pathname = useRouterState({ select: (s) => s.location.pathname })
-  const welcomeEdit = useRouterState({
-    select: (s) => new URLSearchParams(s.location.search).get('welcome') === '1',
-  })
   const [profile, setProfileState] = useState<Profile>(() => loadProfile() ?? DEFAULT_PROFILE)
   const [selectedPropertyId, setSelectedPropertyId] = useState<number | null>(null)
   const [checkIds, setCheckIds] = useState<Set<string>>(new Set())
@@ -115,9 +112,8 @@ export function RootLayout() {
   }
 
   const profileReady = hasProfile(profile)
-  /** Full-bleed welcome / onboarding: no sidebar until profile is done, or when revisiting the welcome form. */
-  const bareLanding =
-    !profileReady || (profileReady && welcomeEdit && pathname === '/')
+  /** Root is always the welcome landing; other routes require a complete profile. */
+  const bareLanding = pathname === '/'
 
   const appContext: AppContextValue = {
     profile,

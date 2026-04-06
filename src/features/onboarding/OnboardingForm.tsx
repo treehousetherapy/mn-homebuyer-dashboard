@@ -13,25 +13,26 @@ import { isProfileComplete } from '@/lib/profile'
 import { logoImg } from '@/features/shared/logo'
 import type { ToggleField } from '@/lib/types'
 
-export function OnboardingForm({ mode = 'new' }: { mode?: 'new' | 'welcomeEdit' }) {
+export function OnboardingForm({ mode = 'new' }: { mode?: 'new' | 'saved' | 'welcomeEdit' }) {
   const { profile, setProfile } = useAppContext()
   const navigate = useNavigate()
   const p = profile
 
   const canContinue = isProfileComplete(p)
   const isEdit = mode === 'welcomeEdit'
+  const hasSavedProfile = mode === 'saved'
 
   const handlePrimary = () => {
     if (!canContinue) return
     if (isEdit) {
-      navigate({ to: '/', replace: true })
+      navigate({ to: '/get-ready', replace: true })
       return
     }
     navigate({ to: '/get-ready' })
   }
 
   const handleCancelEdit = () => {
-    navigate({ to: '/', replace: true })
+    navigate({ to: '/get-ready', replace: true })
   }
 
   return (
@@ -72,12 +73,14 @@ export function OnboardingForm({ mode = 'new' }: { mode?: 'new' | 'welcomeEdit' 
               <img src={logoImg} alt="" className="h-11 w-11 object-contain" />
               <div>
                 <CardTitle className="font-display text-lg font-semibold tracking-tight text-slate-900">
-                  {isEdit ? 'Welcome form' : 'Create your profile'}
+                  {isEdit ? 'Welcome form' : hasSavedProfile ? 'Continue where you left off' : 'Create your profile'}
                 </CardTitle>
                 <CardDescription className="text-sm text-slate-500">
                   {isEdit
                     ? 'Update the details you entered on the welcome screen.'
-                    : 'Used to personalize every chart and estimate below.'}
+                    : hasSavedProfile
+                      ? 'Your saved profile is loaded from this browser. Review it, then continue to the dashboard.'
+                      : 'Used to personalize every chart and estimate below.'}
                 </CardDescription>
               </div>
             </div>
@@ -224,7 +227,7 @@ export function OnboardingForm({ mode = 'new' }: { mode?: 'new' | 'welcomeEdit' 
                 disabled={!canContinue}
                 onClick={handlePrimary}
               >
-                {isEdit ? 'Save and return home' : 'Continue to dashboard'}
+                {isEdit ? 'Save and return to dashboard' : 'Continue to dashboard'}
               </Button>
               {isEdit && (
                 <Button type="button" variant="ghost" className="w-full h-9 text-sm" onClick={handleCancelEdit}>
