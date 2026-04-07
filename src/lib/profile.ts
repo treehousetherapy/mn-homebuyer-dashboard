@@ -1,7 +1,7 @@
 // src/lib/profile.ts
 import type { Profile } from './types'
 
-export const STORAGE_KEY = 'mn_homebuyer_v2'
+export const STORAGE_KEY = 'mn_homebuyer_v3'
 
 export const DEFAULT_PROFILE: Profile = {
   name: '',

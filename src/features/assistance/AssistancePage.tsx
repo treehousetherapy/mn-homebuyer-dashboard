@@ -91,7 +91,7 @@ export function AssistancePage() {
               </p>
               <Badge
                 variant="outline"
-                className={`text-[9px] mt-1 ${pr.status === 'open' ? 'bg-sky-50 text-sky-700 border-sky-200' : 'bg-red-50 text-red-700 border-red-200'}`}
+                className={`text-[9px] mt-1 ${pr.status === 'open' ? 'bg-sky-50 text-sky-700 border-sky-200' : pr.status === 'limited' ? 'bg-amber-50 text-amber-700 border-amber-200' : 'bg-red-50 text-red-700 border-red-200'}`}
               >
                 {pr.status}
               </Badge>

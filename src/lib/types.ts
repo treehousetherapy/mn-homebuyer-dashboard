@@ -29,7 +29,7 @@ export interface DPA {
   incomeLimit: number
   ficoMin: number
   priceLimit: number
-  status: 'open' | 'closed'
+  status: 'open' | 'closed' | 'limited'
   coverage: string
   url: string
   phone: string
