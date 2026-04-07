@@ -28,15 +28,14 @@ export function ReadinessPage() {
 
   return (
     <div className="space-y-4">
-      <header className="border-b border-slate-200/70 pb-3">
-        <p className="text-[10px] font-medium uppercase tracking-[0.18em] text-slate-500">Phase 1</p>
-        <h1 className="text-xl font-semibold text-slate-900 font-display">Get ready</h1>
-        <p className="text-sm text-slate-600 mt-1">Mortgage readiness, debt picture, and payment at your target price.</p>
+      <header className="pb-5">
+        <h1 className="text-2xl font-bold text-slate-800">Get Ready</h1>
+        <p className="text-sm text-slate-400 mt-1">Mortgage readiness, debt picture, and payment at your target price.</p>
       </header>
 
       <div className="grid lg:grid-cols-3 gap-4 fade-in">
         <Card className="dashboard-card overflow-hidden">
-          <CardHeader className="dashboard-card-head pb-3 rounded-t-xl">
+          <CardHeader className="pb-3 pt-1">
             <CardTitle className="text-base font-semibold text-slate-800">Mortgage Readiness</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4 pt-4">
@@ -81,7 +80,7 @@ export function ReadinessPage() {
         </Card>
 
         <Card className="dashboard-card lg:col-span-2 overflow-hidden">
-          <CardHeader className="dashboard-card-head pb-3 rounded-t-xl">
+          <CardHeader className="pb-3 pt-1">
             <CardTitle className="text-base font-semibold text-slate-800">Financial Snapshot</CardTitle>
           </CardHeader>
           <CardContent className="pt-4">

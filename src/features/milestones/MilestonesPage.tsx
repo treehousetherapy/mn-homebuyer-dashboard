@@ -18,10 +18,9 @@ export function MilestonesPage() {
 
   return (
     <div className="space-y-4">
-      <header className="border-b border-slate-200/70 pb-3">
-        <p className="text-[10px] font-medium uppercase tracking-[0.18em] text-slate-500">Phase 5</p>
-        <h1 className="text-xl font-semibold text-slate-900 font-display">Close with confidence</h1>
-        <p className="text-sm text-slate-600 mt-1">Milestones, documents, contacts, and your AI coach.</p>
+      <header className="pb-5">
+        <h1 className="text-2xl font-bold text-slate-800">Close with Confidence</h1>
+        <p className="text-sm text-slate-400 mt-1">Milestones, documents, contacts, and your AI coach.</p>
       </header>
 
       <div className="grid lg:grid-cols-2 gap-4 fade-in">

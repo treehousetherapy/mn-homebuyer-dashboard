@@ -60,15 +60,14 @@ export function AffordabilityPage() {
 
   return (
     <div className="space-y-4">
-      <header className="border-b border-slate-200/70 pb-3">
-        <p className="text-[10px] font-medium uppercase tracking-[0.18em] text-slate-500">Phase 2</p>
-        <h1 className="text-xl font-semibold text-slate-900 font-display">Your budget</h1>
-        <p className="text-sm text-slate-600 mt-1">Scenario builder, buying power, and FHA vs conventional comparison.</p>
+      <header className="pb-5">
+        <h1 className="text-2xl font-bold text-slate-800">Your Budget</h1>
+        <p className="text-sm text-slate-400 mt-1">Scenario builder, buying power, and FHA vs conventional comparison.</p>
       </header>
 
       <div className="grid lg:grid-cols-3 gap-4 fade-in">
         <Card className="dashboard-card overflow-hidden">
-          <CardHeader className="dashboard-card-head pb-3 rounded-t-xl">
+          <CardHeader className="pb-3 pt-1">
             <CardTitle className="text-base font-semibold text-slate-800">Scenario Builder</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4 pt-4">
@@ -148,7 +147,7 @@ export function AffordabilityPage() {
         </Card>
 
         <Card className="dashboard-card lg:col-span-2 overflow-hidden">
-          <CardHeader className="dashboard-card-head pb-3 rounded-t-xl">
+          <CardHeader className="pb-3 pt-1">
             <CardTitle className="text-base font-semibold text-slate-800">FHA vs Conventional</CardTitle>
           </CardHeader>
           <CardContent className="pt-4">

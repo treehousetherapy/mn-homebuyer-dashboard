@@ -100,10 +100,9 @@ export function HomesPage() {
 
   return (
     <div className="space-y-4">
-      <header className="border-b border-slate-200/70 pb-3">
-        <p className="text-[10px] font-medium uppercase tracking-[0.18em] text-slate-500">Phase 4</p>
-        <h1 className="text-xl font-semibold text-slate-900 font-display">Find a home</h1>
-        <p className="text-sm text-slate-600 mt-1">Search on Zillow, then analyze listings against your budget and DPA.</p>
+      <header className="pb-5">
+        <h1 className="text-2xl font-bold text-slate-800">Find a Home</h1>
+        <p className="text-sm text-slate-400 mt-1">Search on Zillow, then analyze listings against your budget and DPA.</p>
       </header>
 
       <div className="grid lg:grid-cols-5 gap-4 fade-in">

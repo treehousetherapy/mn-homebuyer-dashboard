@@ -28,10 +28,9 @@ export function AssistancePage() {
 
   return (
     <div className="space-y-4">
-      <header className="border-b border-slate-200/70 pb-3">
-        <p className="text-[10px] font-medium uppercase tracking-[0.18em] text-slate-500">Phase 3</p>
-        <h1 className="text-xl font-semibold text-slate-900 font-display">Help available</h1>
-        <p className="text-sm text-slate-600 mt-1">Stack DPA programs you may qualify for—amounts update your buying power.</p>
+      <header className="pb-5">
+        <h1 className="text-2xl font-bold text-slate-800">Help Available</h1>
+        <p className="text-sm text-slate-400 mt-1">Stack DPA programs you qualify for — amounts update your buying power automatically.</p>
       </header>
 
       <div className="flex items-center justify-between flex-wrap gap-2">

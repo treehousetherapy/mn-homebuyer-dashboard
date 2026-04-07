@@ -4,37 +4,36 @@
 
 @layer base {
   :root {
-    /* Clean blue-gray base matching reference dashboard */
-    --background: 220 16% 95%;
-    --foreground: 222 47% 14%;
+    /* Reference-matched light palette */
+    --background: 230 20% 97%;
+    --foreground: 225 40% 14%;
     --card: 0 0% 100%;
-    --card-foreground: 222 47% 14%;
+    --card-foreground: 225 40% 14%;
     --popover: 0 0% 100%;
-    --popover-foreground: 222 47% 14%;
-    --primary: 199 89% 48%;
+    --popover-foreground: 225 40% 14%;
+    --primary: 196 80% 50%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 199 30% 93%;
-    --secondary-foreground: 199 60% 25%;
-    --muted: 220 14% 91%;
-    --muted-foreground: 220 10% 50%;
-    --accent: 173 80% 38%;
+    --secondary: 220 14% 94%;
+    --secondary-foreground: 220 20% 35%;
+    --muted: 225 18% 93%;
+    --muted-foreground: 220 12% 55%;
+    --accent: 173 70% 42%;
     --accent-foreground: 0 0% 100%;
     --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 98%;
-    --border: 220 14% 89%;
-    --input: 220 14% 89%;
-    --ring: 199 89% 48%;
-    --radius: 1rem;
-    /* Brand palette */
+    --border: 225 18% 91%;
+    --input: 225 18% 91%;
+    --ring: 196 80% 50%;
+    --radius: 0.875rem;
+    /* Brand palette — reference-matched */
     --brand-navy:   #1a2e44;
-    --brand-sky:    #0ea5e9;
-    --brand-teal:   #14b8a6;
-    --brand-orange: #f97316;
-    --brand-pink:   #ec4899;
-    --brand-purple: #8b5cf6;
+    --brand-sky:    #29b6d5;
+    --brand-teal:   #4dd9c0;
+    --brand-orange: #ffa94d;
+    --brand-pink:   #f472b6;
+    --brand-purple: #a78bfa;
     --brand-green:  #2d6a2e;
     --brand-gold:   #d4a017;
-    --brand-cream:  #f4f6f9;
   }
 }
 
@@ -42,76 +41,78 @@
   * { @apply border-border; }
   body {
     @apply bg-background text-foreground antialiased;
-    font-family: 'IBM Plex Sans', system-ui, -apple-system, sans-serif;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
     font-feature-settings: "tnum" 1, "lnum" 1;
+    -webkit-font-smoothing: antialiased;
   }
-  .font-display { font-family: 'IBM Plex Sans', system-ui, sans-serif; }
+  .font-display { font-family: 'Inter', system-ui, sans-serif; font-weight: 700; }
 }
 
 @layer utilities {
-  .fade-in  { animation: _fi .45s ease both; }
+  .fade-in  { animation: _fi .4s ease both; }
   .slide-up { animation: _su .4s ease both; }
-  @keyframes _fi { from { opacity: 0; transform: translateY(6px)  } to { opacity: 1; transform: translateY(0) } }
-  @keyframes _su { from { opacity: 0; transform: translateY(16px) } to { opacity: 1; transform: translateY(0) } }
+  @keyframes _fi { from { opacity: 0; transform: translateY(5px)  } to { opacity: 1; transform: translateY(0) } }
+  @keyframes _su { from { opacity: 0; transform: translateY(14px) } to { opacity: 1; transform: translateY(0) } }
 
-  .gauge-anim  { transition: stroke-dashoffset 1s cubic-bezier(.4,0,.2,1); }
-  .chart-anim  { transition: stroke-dasharray .8s cubic-bezier(.4,0,.2,1), stroke-dashoffset .8s cubic-bezier(.4,0,.2,1); }
+  .gauge-anim { transition: stroke-dashoffset 1.1s cubic-bezier(.4,0,.2,1); }
+  .chart-anim { transition: stroke-dasharray .9s cubic-bezier(.4,0,.2,1), stroke-dashoffset .9s cubic-bezier(.4,0,.2,1); }
 
-  /* ── main content background — clean light gray, no grid noise ── */
+  /* ── clean light-gray page background — no grid, no texture ── */
   .dashboard-page-bg {
-    background-color: hsl(220 16% 95%);
+    background-color: hsl(230 20% 97%);
   }
 
-  /* ── card — white, big radius, soft floating shadow ── */
+  /* ── white card with barely-there shadow, like the reference ── */
   .dashboard-card {
-    @apply rounded-2xl border-0 bg-white;
-    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06), 0 0 0 1px rgba(15, 23, 42, 0.04);
+    @apply rounded-[14px] border-0 bg-white;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.05), 0 4px 16px rgba(15, 23, 42, 0.06);
   }
+
+  /* ── card section header — plain white, simple border ── */
   .dashboard-card-head {
     @apply border-b border-slate-100 bg-white;
   }
 
-  /* ── KPI card ── */
-  .kpi-card {
-    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06), 0 0 0 1px rgba(15, 23, 42, 0.04);
-  }
+  /* ── KPI hover ── */
   .kpi-card:hover {
-    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.10), 0 0 0 1px rgba(15, 23, 42, 0.06);
+    box-shadow: 0 4px 20px rgba(15, 23, 42, 0.10);
     transform: translateY(-1px);
   }
 
-  /* ── primary button ── */
-  .brand-btn  { background: linear-gradient(135deg, #0ea5e9 0%, #38bdf8 100%); }
-  .brand-gradient { background: linear-gradient(135deg, #1a2e44, #0ea5e9); }
-  .gold-accent { color: var(--brand-gold); }
+  /* ── primary action button ── */
+  .brand-btn      { background: linear-gradient(135deg, #29b6d5 0%, #56d8f0 100%); }
+  .brand-gradient { background: linear-gradient(135deg, #1a2e44, #29b6d5); }
+  .gold-accent    { color: var(--brand-gold); }
 
-  /* ── landing page shell ── */
+  /* ── landing page ── */
   .landing-shell {
     min-height: 100vh;
-    background-color: hsl(220 16% 95%);
+    background-color: hsl(230 20% 97%);
   }
 
-  /* ── staggered page-enter animations ── */
-  .page-enter > * { animation: _fi 0.4s ease both; }
+  /* ── staggered enter ── */
+  .page-enter > * { animation: _fi 0.38s ease both; }
   .page-enter > *:nth-child(1) { animation-delay:  0ms; }
-  .page-enter > *:nth-child(2) { animation-delay: 40ms; }
-  .page-enter > *:nth-child(3) { animation-delay: 80ms; }
+  .page-enter > *:nth-child(2) { animation-delay: 38ms; }
+  .page-enter > *:nth-child(3) { animation-delay: 76ms; }
 
-  /* ── homes listing ── */
+  /* ── homes listing placeholder ── */
   .listing-photo-placeholder {
     background:
-      radial-gradient(ellipse 120% 80% at 20% 0%,  rgba(14, 165, 233, 0.30), transparent 55%),
-      radial-gradient(ellipse 100% 60% at 100% 100%, rgba(20, 184, 166, 0.35), transparent 50%),
-      linear-gradient(165deg, #0c2340 0%, #0f3460 40%, #0f3460 100%);
+      radial-gradient(ellipse 120% 80% at 20% 0%,  rgba(41, 182, 213, 0.28), transparent 55%),
+      radial-gradient(ellipse 100% 60% at 100% 100%, rgba(20, 184, 166, 0.30), transparent 50%),
+      linear-gradient(165deg, #0c2340 0%, #0f3460 60%, #0f3460 100%);
   }
+
+  /* ── horizontal carousel scrollbar ── */
   .listing-carousel {
     scrollbar-width: thin;
-    scrollbar-color: rgba(14, 165, 233, 0.25) transparent;
+    scrollbar-color: rgba(41, 182, 213, 0.25) transparent;
   }
   .listing-carousel::-webkit-scrollbar       { height: 6px; }
   .listing-carousel::-webkit-scrollbar-track { background: transparent; }
   .listing-carousel::-webkit-scrollbar-thumb {
-    background: rgba(14, 165, 233, 0.22);
+    background: rgba(41, 182, 213, 0.22);
     border-radius: 999px;
   }
 }

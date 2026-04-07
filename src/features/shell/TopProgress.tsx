@@ -26,8 +26,8 @@ export function TopProgress({ completionPct, hasProfile }: TopProgressProps) {
     .sort((a, b) => b[0].length - a[0].length)[0]?.[1]
 
   return (
-    <div className="h-11 flex items-center px-4 gap-4 bg-white border-b border-slate-100 shrink-0">
-      <span className="text-sm font-medium text-slate-700 shrink-0">
+    <div className="h-12 flex items-center px-5 gap-4 bg-white border-b border-slate-100/80 shrink-0">
+      <span className="text-[13px] font-semibold text-slate-700 shrink-0">
         {phase ? `Step ${phase.num} of 5 · ${phase.name}` : 'MN Homebuyer Dashboard'}
       </span>
 
