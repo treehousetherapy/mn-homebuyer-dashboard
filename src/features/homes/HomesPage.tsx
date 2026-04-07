@@ -212,7 +212,7 @@ export function HomesPage() {
                   </Badge>
                 )}
                 {buyingPower.totalPower > 0 && (
-                  <Badge className="bg-emerald-400/25 text-emerald-50 border border-emerald-300/40 text-[11px] font-medium">
+                  <Badge className="bg-sky-400/20 text-sky-50 border border-sky-300/40 text-[11px] font-medium">
                     {curatedInBudgetCount} within {fmt(buyingPower.totalPower)} budget
                   </Badge>
                 )}
@@ -277,7 +277,7 @@ export function HomesPage() {
                             {fmt(sel.price)}
                           </p>
                           {firstGenOk && (
-                            <Badge className="text-[8px] bg-emerald-50 text-emerald-700 border border-emerald-200">First-Gen Eligible</Badge>
+                            <Badge className="text-[8px] bg-sky-50 text-sky-700 border border-sky-200">First-Gen Eligible</Badge>
                           )}
                         </div>
                       </div>

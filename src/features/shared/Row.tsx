@@ -15,7 +15,7 @@ export function Row({
     >
       <span className={`text-xs ${bold ? 'font-medium text-slate-700' : 'text-slate-500'}`}>{l}</span>
       <span
-        className={`text-xs tabular-nums ${green ? 'text-emerald-600 font-semibold' : ''} ${bold ? 'text-sm font-bold text-slate-900' : ''}`}
+        className={`text-xs tabular-nums ${green ? 'text-sky-600 font-semibold' : ''} ${bold ? 'text-sm font-bold text-slate-900' : ''}`}
       >
         {v}
       </span>

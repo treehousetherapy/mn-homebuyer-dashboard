@@ -36,7 +36,7 @@ export function AssistancePage() {
 
       <div className="flex items-center justify-between flex-wrap gap-2">
         <p className="text-sm text-muted-foreground">
-          <span className="font-bold" style={{ color: 'var(--brand-green)' }}>
+          <span className="font-bold" style={{ color: 'var(--brand-sky)' }}>
             {fmt(totalDPA)}
           </span>{' '}
           from {selProgs.size} program(s)
@@ -83,16 +83,16 @@ export function AssistancePage() {
                   onClick={(e) => e.stopPropagation()}
                 />
               </div>
-              <p className="text-xl font-bold" style={{ color: 'var(--brand-green)' }}>
+              <p className="text-xl font-bold" style={{ color: 'var(--brand-sky)' }}>
                 {fmt(pr.max)}
               </p>
               <Badge
                 variant="outline"
-                className={`text-[9px] mt-1 ${pr.status === 'open' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-red-50 text-red-700 border-red-200'}`}
+                className={`text-[9px] mt-1 ${pr.status === 'open' ? 'bg-sky-50 text-sky-700 border-sky-200' : 'bg-red-50 text-red-700 border-red-200'}`}
               >
                 {pr.status}
               </Badge>
-              <Badge className={`text-[9px] mt-1 ml-1 ${pr.ok ? 'bg-emerald-50 text-emerald-700' : 'bg-red-50 text-red-700'}`}>
+              <Badge className={`text-[9px] mt-1 ml-1 ${pr.ok ? 'bg-sky-50 text-sky-700' : 'bg-red-50 text-red-700'}`}>
                 {pr.ok ? 'Eligible' : pr.reason}
               </Badge>
               <div className="grid grid-cols-2 gap-x-3 gap-y-0.5 text-[10px] mt-2">

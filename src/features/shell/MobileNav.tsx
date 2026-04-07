@@ -22,7 +22,7 @@ export function MobileNav() {
             key={tab.href}
             to={tab.href}
             className={`flex flex-col items-center gap-0.5 px-2 py-1 rounded-xl min-w-[3.25rem] transition-colors no-underline ${
-              active ? 'text-[#2d6a2e] bg-emerald-50/60' : 'text-muted-foreground'
+              active ? 'text-sky-500 bg-sky-50/70' : 'text-muted-foreground'
             }`}
           >
             <tab.Icon className="h-5 w-5" aria-hidden />

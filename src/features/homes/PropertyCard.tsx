@@ -133,17 +133,17 @@ export function PropertyCard({
             </Badge>
           )}
           {firstGenOk && (
-            <Badge className="border border-emerald-200/80 bg-emerald-50/90 text-[10px] font-medium text-emerald-900">
+            <Badge className="border border-teal-200/80 bg-teal-50/90 text-[10px] font-medium text-teal-900">
               First-Gen
             </Badge>
           )}
           {withinDTI && (
-            <Badge className="border border-emerald-200/80 bg-emerald-50/90 text-[10px] font-medium text-emerald-900">
+            <Badge className="border border-sky-200/80 bg-sky-50/90 text-[10px] font-medium text-sky-900">
               In budget
             </Badge>
           )}
           {reachWithDPA && (
-            <Badge className="border border-sky-200/90 bg-sky-50 text-[10px] font-medium text-sky-900">DPA reach</Badge>
+            <Badge className="border border-orange-200/90 bg-orange-50 text-[10px] font-medium text-orange-900">DPA reach</Badge>
           )}
           {!affordable && (
             <Badge className="border border-red-200/90 bg-red-50 text-[10px] font-medium text-red-900">Over</Badge>

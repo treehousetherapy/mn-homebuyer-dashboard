@@ -37,7 +37,7 @@ export function MilestonesPage() {
               <div
                 key={item.id}
                 className={`flex items-start gap-3 p-2.5 rounded-lg transition-colors ${
-                  checkIds.has(item.id) ? 'bg-emerald-50' : 'hover:bg-muted/50'
+                  checkIds.has(item.id) ? 'bg-sky-50' : 'hover:bg-muted/50'
                 }`}
               >
                 <Checkbox

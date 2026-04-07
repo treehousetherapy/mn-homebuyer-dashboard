@@ -7,20 +7,20 @@ export function Gauge({ score, label, color }: { score: number; label: string; c
   const circ = 2 * Math.PI * r
   const arc = circ * 0.75
   const off = arc - (score / 100) * arc
-  const endGreen = '#0f766e'
+  const endColor = '#38bdf8'
   return (
-    <div className="w-full rounded-2xl border border-slate-200/70 bg-gradient-to-b from-white via-white to-slate-50/60 p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.95),0_1px_2px_rgba(15,23,42,0.04)]">
+    <div className="w-full rounded-2xl bg-white p-5 shadow-[0_2px_8px_rgba(15,23,42,0.06),0_0_0_1px_rgba(15,23,42,0.04)]">
       <svg width="100%" height="112" viewBox="0 0 128 104" className="max-w-[200px] mx-auto overflow-visible" aria-hidden>
         <defs>
           <linearGradient id={`${gid}-g`} x1="0%" y1="0%" x2="100%" y2="0%">
             <stop offset="0%" stopColor={color} />
-            <stop offset="100%" stopColor={endGreen} />
+            <stop offset="100%" stopColor={endColor} />
           </linearGradient>
         </defs>
         <path
           d="M 14 80 A 50 50 0 1 1 114 80"
           fill="none"
-          stroke="hsl(214 32% 91%)"
+          stroke="hsl(220 14% 91%)"
           strokeWidth="11"
           strokeLinecap="round"
         />

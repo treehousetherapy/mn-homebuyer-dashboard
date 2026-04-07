@@ -172,8 +172,8 @@ export function AffordabilityPage() {
                   <Row l="DPA" v={`(${fmt(totalDPA)})`} green />
                   <Row l="Out-of-Pocket" v={fmt(m.oop)} bold />
                   <div
-                    className={`mt-2 text-[10px] font-semibold px-2 py-1 rounded ${
-                      m.bDTI <= 43 ? 'bg-emerald-50 text-emerald-700' : m.bDTI <= 50 ? 'bg-amber-50 text-amber-700' : 'bg-red-50 text-red-700'
+                    className={`mt-2 text-[10px] font-semibold px-2 py-1 rounded-lg ${
+                      m.bDTI <= 43 ? 'bg-sky-50 text-sky-700' : m.bDTI <= 50 ? 'bg-amber-50 text-amber-700' : 'bg-red-50 text-red-700'
                     }`}
                   >
                     {m.bDTI <= 43 ? '✓ Qualifies' : m.bDTI <= 50 ? '⚡ Borderline' : '⚠ Over limit'}

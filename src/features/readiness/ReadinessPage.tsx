@@ -114,10 +114,10 @@ export function ReadinessPage() {
                   size={175}
                   label={fmt(mort.total)}
                   segments={[
-                    { value: mort.pi, color: '#1e3a5f', label: `P&I ${fmt(mort.pi)}` },
-                    { value: mort.tax, color: '#3f5e4f', label: `Tax ${fmt(mort.tax)}` },
-                    { value: mort.ins, color: '#9a7b2e', label: `Ins ${fmt(mort.ins)}` },
-                    { value: mort.mip + mort.pmi, color: '#4a6fa5', label: `${loanType === 'fha' ? 'MIP' : 'PMI'} ${fmt(mort.mip + mort.pmi)}` },
+                    { value: mort.pi, color: '#0ea5e9', label: `P&I ${fmt(mort.pi)}` },
+                    { value: mort.tax, color: '#14b8a6', label: `Tax ${fmt(mort.tax)}` },
+                    { value: mort.ins, color: '#f97316', label: `Ins ${fmt(mort.ins)}` },
+                    { value: mort.mip + mort.pmi, color: '#ec4899', label: `${loanType === 'fha' ? 'MIP' : 'PMI'} ${fmt(mort.mip + mort.pmi)}` },
                   ]}
                 />
                 <p className="text-[10px] text-center text-slate-500 mt-2">
