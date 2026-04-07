@@ -10,7 +10,7 @@ export const DEFAULT_PROFILE: Profile = {
   debt: 0,
   savings: 0,
   county: '',
-  household: 1,
+  household: 0,
   jobYears: 0,
   firstTime: false,
   firstGen: false,

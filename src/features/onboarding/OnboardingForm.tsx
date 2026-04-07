@@ -172,9 +172,9 @@ export function OnboardingForm({ mode = 'new' }: { mode?: 'new' | 'welcomeEdit' 
                 <Label className="text-xs">Household Size</Label>
                 <Input
                   type="number"
-                  placeholder="1"
+                  placeholder="e.g. 2"
                   value={p.household || ''}
-                  onChange={(e) => updateProfile({ household: clamp(+e.target.value, 1, 10) })}
+                  onChange={(e) => updateProfile({ household: e.target.value === '' ? 0 : clamp(+e.target.value, 1, 10) })}
                   className="mt-1 h-9"
                 />
               </div>

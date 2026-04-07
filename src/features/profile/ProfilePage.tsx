@@ -89,8 +89,9 @@ export function ProfilePage() {
               <Label className="text-xs">Household Size</Label>
               <Input
                 type="number"
+                placeholder="e.g. 2"
                 value={p.household || ''}
-                onChange={(e) => setProfile({ household: clamp(+e.target.value, 1, 10) })}
+                onChange={(e) => setProfile({ household: e.target.value === '' ? 0 : clamp(+e.target.value, 1, 10) })}
                 className="mt-1 h-9"
               />
             </div>
