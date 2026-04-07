@@ -133,14 +133,13 @@ export function AffordabilityPage() {
             </div>
             <Separator />
             <div className="rounded-lg bg-muted/60 p-3 space-y-1">
-              <Row l="Buying power (DTI only)" v={buyingPower.dtiMax > 0 ? fmt(buyingPower.dtiMax) : '--'} />
-              <Row l="Buying power (with DPA)" v={buyingPower.totalPower > 0 ? fmt(buyingPower.totalPower) : '--'} bold />
-              <Row l="Target" v={fmt(price)} />
+              <Row l="Max price (DTI-based)" v={buyingPower.dtiMax > 0 ? fmt(buyingPower.dtiMax) : '--'} bold />
+              <Row l="Target price" v={fmt(price)} />
               <Row
-                l={price <= buyingPower.totalPower ? 'Within budget' : 'Over budget'}
-                v={price <= buyingPower.totalPower ? '✓' : '⚠'}
+                l={price <= buyingPower.dtiMax ? 'Within budget' : 'Over DTI limit'}
+                v={price <= buyingPower.dtiMax ? '✓' : '⚠ reduce debt'}
                 bold
-                green={price <= buyingPower.totalPower}
+                green={price <= buyingPower.dtiMax}
               />
             </div>
           </CardContent>

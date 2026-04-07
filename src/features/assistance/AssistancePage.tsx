@@ -10,9 +10,13 @@ import { fmt } from '@/lib/calc'
 import { DPAWatchlist } from '@/components/DPAWatchlist'
 
 export function AssistancePage() {
-  const { profile, selProgs, setSelProgs, totalDPA } = useAppContext()
+  const { profile, selProgs, setSelProgs, totalDPA, price } = useAppContext()
 
-  const eligProgs = useMemo(() => PROGRAMS.map((pr) => ({ ...pr, ...eligibleFor(pr, profile) })), [profile])
+  // Pass current price so programs over their price cap show ineligible
+  const eligProgs = useMemo(
+    () => PROGRAMS.map((pr) => ({ ...pr, ...eligibleFor(pr, profile, price) })),
+    [profile, price],
+  )
 
   const toggleProg = useCallback(
     (id: string) => {

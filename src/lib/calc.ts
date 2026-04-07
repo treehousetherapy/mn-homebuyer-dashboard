@@ -63,7 +63,6 @@ export function calcBuyingPower(
   monthlyIncome: number,
   effDebt: number,
   rate: number,
-  totalDPA: number,
 ): BuyingPower {
   if (monthlyIncome <= 0) return { maxLoan: 0, dtiMax: 0, totalPower: 0 }
   const maxPmt = monthlyIncome * 0.43 - effDebt
@@ -73,9 +72,10 @@ export function calcBuyingPower(
   const maxLoan = mr === 0
     ? maxPmt * n
     : maxPmt * (Math.pow(1 + mr, n) - 1) / (mr * Math.pow(1 + mr, n))
+  // dtiMax = the home price supportable at 43% back-DTI with FHA 3.5% down.
+  // DPA does NOT raise this ceiling — it reduces cash needed, not the DTI constraint.
   const dtiMax = Math.round((maxLoan / (1 - 0.035)) / 1000) * 1000
-  const totalPower = dtiMax + Math.round(totalDPA * 0.8 / 1000) * 1000
-  return { maxLoan, dtiMax, totalPower }
+  return { maxLoan, dtiMax, totalPower: dtiMax }
 }
 
 export function effectiveDebt(p: Profile): number {

@@ -11,12 +11,13 @@ export function useProgramMatches(profile: Profile, price: number) {
       if (prev.size > 0) return prev
       const s = new Set<string>()
       PROGRAMS.forEach((pr) => {
-        const { ok } = eligibleFor(pr, profile)
-        if (ok && pr.status !== 'closed') s.add(pr.id)
+        // Pass price so programs over their price cap are excluded on auto-select.
+        // Closed programs are filtered by eligibleFor.
+        const { ok } = eligibleFor(pr, profile, price)
+        if (ok) s.add(pr.id)
       })
       return s
     })
-  // Intentionally once on mount for auto-select
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -25,12 +26,15 @@ export function useProgramMatches(profile: Profile, price: number) {
     selProgs.forEach((id) => {
       const pr = PROGRAMS.find((x) => x.id === id)
       if (!pr) return
+      // Only count programs that are still eligible at the current price
+      const { ok } = eligibleFor(pr, profile, price)
+      if (!ok) return
       let a = pr.max
       if (pr.pctCap) a = Math.min(a, (price * pr.pctCap) / 100)
       t += a
     })
     return t
-  }, [selProgs, price])
+  }, [selProgs, price, profile])
 
   return { selProgs, setSelProgs, totalDPA }
 }

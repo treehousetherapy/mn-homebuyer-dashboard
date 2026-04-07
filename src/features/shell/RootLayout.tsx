@@ -3,7 +3,7 @@ import { Outlet, Navigate, useRouterState } from '@tanstack/react-router'
 import { useState, useEffect, useMemo, createContext, useContext } from 'react'
 import { AppShell } from './AppShell'
 import { loadProfile, saveProfile, hasProfile, DEFAULT_PROFILE, STORAGE_KEY } from '@/lib/profile'
-import { effectiveDebt, calcBuyingPower, getTax, type BuyingPower } from '@/lib/calc'
+import { effectiveDebt, calcBuyingPower, getTax, pmtCalc, type BuyingPower } from '@/lib/calc'
 import { getNextAction } from '@/lib/nextAction'
 import { calcReadiness, type ReadinessScore } from '@/lib/eligibility'
 import { useJourneyPhase } from '@/hooks/useJourneyPhase'
@@ -80,11 +80,29 @@ export function RootLayout() {
     [profile.studentLoanBal, profile.studentLoanIDR],
   )
   const taxRate = getTax(profile.county)
-  const readiness = useMemo(() => calcReadiness(profile, effDebt, mi), [profile, effDebt, mi])
+
+  // Estimate the monthly housing payment at the current target price (FHA basis),
+  // so the readiness DTI row reflects the back-DTI a lender would actually see.
+  const scenarioHousingPmt = useMemo(() => {
+    if (mi <= 0 || price <= 0) return 0
+    const dp = price * 0.035
+    const loan = price - dp
+    const loanWithMip = loan * 1.0175 // FHA upfront MIP rolled in
+    const pi = pmtCalc(loanWithMip, rate, 30)
+    const tax = (price * taxRate) / 12
+    const ins = 200
+    const mip = (loan * 0.0055) / 12
+    return pi + tax + ins + mip
+  }, [price, rate, taxRate, mi])
+
+  const readiness = useMemo(
+    () => calcReadiness(profile, effDebt, mi, scenarioHousingPmt),
+    [profile, effDebt, mi, scenarioHousingPmt],
+  )
 
   const buyingPower = useMemo(
-    () => calcBuyingPower(profile.income / 12, effDebt, rate, totalDPA),
-    [profile.income, effDebt, rate, totalDPA],
+    () => calcBuyingPower(profile.income / 12, effDebt, rate),
+    [profile.income, effDebt, rate],
   )
 
   const checkCount = checkIds.size

@@ -6,11 +6,18 @@ export interface EligResult {
   reason: string
 }
 
-export function eligibleFor(pr: DPA, p: Profile): EligResult {
-  if (pr.reqFirstGen && !p.firstGen) return { ok: false, reason: 'First-gen only' }
-  if (pr.reqFirstTime && !p.firstTime) return { ok: false, reason: 'First-time only' }
+/**
+ * Returns eligibility for a DPA program.
+ * Pass `price` so programs with a price cap (priceLimit) are correctly excluded.
+ * Closed programs are always ineligible.
+ */
+export function eligibleFor(pr: DPA, p: Profile, price = 0): EligResult {
+  if (pr.status === 'closed') return { ok: false, reason: 'Program currently closed' }
+  if (pr.reqFirstGen && !p.firstGen) return { ok: false, reason: 'First-gen buyers only' }
+  if (pr.reqFirstTime && !p.firstTime) return { ok: false, reason: 'First-time buyers only' }
   if (p.income > pr.incomeLimit && pr.incomeLimit < 900000) return { ok: false, reason: 'Income over limit' }
   if (p.fico < pr.ficoMin && pr.ficoMin > 0) return { ok: false, reason: `FICO < ${pr.ficoMin}` }
+  if (price > 0 && price > pr.priceLimit) return { ok: false, reason: `Price over $${Math.round(pr.priceLimit / 1000)}K limit` }
   return { ok: true, reason: 'Eligible' }
 }
 
@@ -39,31 +46,52 @@ function lerp(a: number, b: number, t: number): number {
 }
 
 /**
- * Weighted 0–100 strength score (not “6/6 boxes checked = 100%”).
- * The gauge reflects how strong the file is; rows show strong / ok / weak tiers.
+ * Weighted 0–100 mortgage-readiness score.
+ *
+ * @param p            User profile
+ * @param effDebt      Effective monthly non-housing debt
+ * @param monthlyIncome Gross monthly income
+ * @param housingPmt   Estimated monthly housing payment at the target price (optional).
+ *                     When supplied, the DTI dimension scores the BACK DTI
+ *                     (debt + housing) rather than only the pre-housing DTI.
  */
-export function calcReadiness(p: Profile, effDebt: number, monthlyIncome: number): ReadinessScore {
+export function calcReadiness(
+  p: Profile,
+  effDebt: number,
+  monthlyIncome: number,
+  housingPmt = 0,
+): ReadinessScore {
   const fmtCurrency = (n: number) =>
     new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(n)
 
-  const dtiPct = monthlyIncome > 1 ? (effDebt / monthlyIncome) * 100 : 0
+  // Pre-housing DTI (existing debt only) — used for the detail label
+  const preDtiPct = monthlyIncome > 1 ? (effDebt / monthlyIncome) * 100 : 0
 
-  // Sub-scores 0–100 for weighting
+  // Back DTI including the estimated housing payment — used for scoring
+  const backDtiPct = monthlyIncome > 1 ? ((effDebt + housingPmt) / monthlyIncome) * 100 : 0
+  const dtiPct = housingPmt > 0 ? backDtiPct : preDtiPct
+
+  // ── Sub-scores 0–100 ──────────────────────────────────────────────────────
   let creditPts = 0
   if (p.fico < 620) creditPts = 0
   else if (p.fico >= 740) creditPts = 100
   else creditPts = lerp(35, 95, (p.fico - 620) / (740 - 620))
 
   const employmentPts = p.jobYears >= 2 ? 100 : 0
-
   const incomePts = p.income > 0 ? 100 : 0
 
   let dtiPts = 0
-  if (monthlyIncome <= 1) dtiPts = 0
-  else if (dtiPct <= 36) dtiPts = 100
-  else if (dtiPct <= 43) dtiPts = lerp(100, 72, (dtiPct - 36) / (43 - 36))
-  else if (dtiPct <= 50) dtiPts = lerp(72, 25, (dtiPct - 43) / (50 - 43))
-  else dtiPts = clamp(25 - (dtiPct - 50) * 3, 0, 25)
+  if (monthlyIncome <= 1) {
+    dtiPts = 0
+  } else if (dtiPct <= 36) {
+    dtiPts = 100
+  } else if (dtiPct <= 43) {
+    dtiPts = lerp(100, 72, (dtiPct - 36) / (43 - 36))
+  } else if (dtiPct <= 50) {
+    dtiPts = lerp(72, 25, (dtiPct - 43) / (50 - 43))
+  } else {
+    dtiPts = clamp(25 - (dtiPct - 50) * 3, 0, 25)
+  }
 
   const savingsPts =
     p.savings <= 0
@@ -76,7 +104,7 @@ export function calcReadiness(p: Profile, effDebt: number, monthlyIncome: number
 
   const educationPts = p.education ? 100 : 0
 
-  const W = { credit: 0.22, employment: 0.18, income: 0.1, dti: 0.25, savings: 0.15, education: 0.1 }
+  const W = { credit: 0.22, employment: 0.18, income: 0.10, dti: 0.25, savings: 0.15, education: 0.10 }
   const score = Math.round(
     W.credit * creditPts +
       W.employment * employmentPts +
@@ -86,12 +114,28 @@ export function calcReadiness(p: Profile, effDebt: number, monthlyIncome: number
       W.education * educationPts,
   )
 
+  // ── Tiers ─────────────────────────────────────────────────────────────────
   const creditTier: ReadinessTier =
     p.fico < 620 ? 'weak' : p.fico >= 740 ? 'strong' : 'ok'
   const employmentTier: ReadinessTier = p.jobYears >= 2 ? 'strong' : 'weak'
   const incomeTier: ReadinessTier = p.income > 0 ? 'strong' : 'weak'
+
+  // DTI tier and label use the back-DTI (most meaningful for approval)
   const dtiTier: ReadinessTier =
     monthlyIncome <= 1 ? 'weak' : dtiPct <= 36 ? 'strong' : dtiPct <= 43 ? 'ok' : 'weak'
+
+  let dtiDetail: string
+  if (monthlyIncome <= 1) {
+    dtiDetail = 'N/A — enter income'
+  } else if (housingPmt > 0) {
+    const preStr = `${preDtiPct.toFixed(0)}% pre-housing`
+    const backStr = `${backDtiPct.toFixed(0)}% with mortgage`
+    const status = dtiPct <= 36 ? 'strong' : dtiPct <= 43 ? 'within limit' : 'over 43% — needs work'
+    dtiDetail = `${preStr} · ${backStr} — ${status}`
+  } else {
+    dtiDetail = `${preDtiPct.toFixed(0)}% — ${preDtiPct <= 36 ? 'strong' : preDtiPct <= 43 ? 'within limit' : 'over 43%'}`
+  }
+
   const savingsTier: ReadinessTier =
     p.savings >= 20000 ? 'strong' : p.savings >= 5000 ? 'ok' : 'weak'
   const educationTier: ReadinessTier = p.education ? 'strong' : 'weak'
@@ -115,12 +159,9 @@ export function calcReadiness(p: Profile, effDebt: number, monthlyIncome: number
       detail: p.income > 0 ? `${fmtCurrency(p.income)}/yr` : 'Enter income',
     },
     {
-      label: 'DTI',
+      label: housingPmt > 0 ? 'DTI (w/ mortgage)' : 'DTI',
       tier: dtiTier,
-      detail:
-        monthlyIncome > 1
-          ? `${dtiPct.toFixed(0)}% — ${dtiPct <= 36 ? 'strong' : dtiPct <= 43 ? 'within limit' : 'over 43%'}`
-          : 'N/A',
+      detail: dtiDetail,
     },
     {
       label: 'Savings',
